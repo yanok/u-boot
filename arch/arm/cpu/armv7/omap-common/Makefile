@@ -29,7 +29,9 @@ SOBJS	:= reset.o
 
 COBJS	:= timer.o
 COBJS	+= utils.o
+ifdef CONFIG_OMAP
 COBJS	+= gpio.o
+endif
 
 ifneq ($(CONFIG_OMAP44XX)$(CONFIG_OMAP54XX),)
 COBJS	+= hwinit-common.o
