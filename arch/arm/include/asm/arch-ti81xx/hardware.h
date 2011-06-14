@@ -19,14 +19,22 @@
 
 /* The objective is to keep only the overall memory map here
  * The break-up of the memory map for individual modules registers should
- * in a diff file like cpu.h so that when this is the only place
- * where change is needed for new SoCs when the ip is the same
+ * be in a different file like cpu.h so that this is the only place
+ * where change is needed for new SoCs when the IP is otherwise the same
  */
+#ifdef CONFIG_AM335X
+#define SRAM0_START			0x402F0400
+#else
 #define SRAM0_START			0x40300000
-
+#endif
+#ifdef CONFIG_AM335X
+#define UART0_BASE			0x44E09000
+#else
 #define UART0_BASE			0x48020000
+#endif
 #define UART1_BASE			0x48022000
 #define UART2_BASE			0x48024000
+#define UART3_BASE			0x481A6000
 
 /* DM Timer base addresses */
 #define DM_TIMER0_BASE			0x4802C000
@@ -41,18 +49,32 @@
 /* GPIO Base address */
 #define GPIO0_BASE			0x48032000
 #define GPIO1_BASE			0x4804C000
-
+#ifdef CONFIG_AM335X
+#define GPIO2_BASE			0x481AC000
+#endif
 /* BCH Error Location Module */
 #define ELM_BASE			0x48080000
 
 /* Watchdog Timer */
+#ifdef CONFIG_AM335X
+#define WDT_BASE			0x44E35000
+#else
 #define WDT_BASE			0x480C2000
+#endif
 
 /* Control Module Base Address */
+#ifdef CONFIG_AM335X
+#define CTRL_BASE			0x44E10000
+#else
 #define CTRL_BASE			0x48140000
+#endif
 
 /* PRCM Base Address */
+#ifdef CONFIG_AM335X
+#define PRCM_BASE			0x44E00000
+#else
 #define PRCM_BASE			0x48180000
+#endif
 
 /* PLL Subsystem Base Address */
 #ifdef CONFIG_TI814X
@@ -76,6 +98,10 @@
 #define DDRPHY_CONFIG_BASE 		((emif == 0) ? DDRPHY_0_CONFIG_BASE:DDRPHY_1_CONFIG_BASE)
 #endif
 
+#ifdef CONFIG_AM335X
+#define DDRPHY_0_CONFIG_BASE		(CTRL_BASE + 0x1400)
+#define DDRPHY_CONFIG_BASE		DDRPHY_0_CONFIG_BASE
+#endif
 
 /* GPMC Base address */
 #define GPMC_BASE			0x50000000
@@ -83,6 +109,12 @@
 /* CPSW Config space */
 #define TI814X_CPSW_BASE               0x4A100000
 #define TI814X_CPSW_MDIO_BASE          0x4A100800
+
+#define AM335X_CPSW_BASE               0x4A100000
+#define AM335X_CPSW_MDIO_BASE          0x4A101000
+
+/* RTC base address */
+#define AM335X_RTC_BASE			0x44E3E000
 
 #endif /* __TI81XX_HARDWARE_H */
 

@@ -29,6 +29,16 @@
 _TEXT_BASE:
 	.word	CONFIG_SYS_TEXT_BASE	/* Load address (RAM) */
 
+.global save_boot_params
+save_boot_params:
+#ifdef CONFIG_SPL_BUILD
+	ldr	r4, =ti81xx_boot_device
+	ldr	r5, [r0, #BOOT_DEVICE_OFFSET]
+	and	r5, r5, #BOOT_DEVICE_MASK
+	str	r5, [r4]
+#endif
+	bx	lr
+
 #ifdef CONFIG_NOR_BOOT
 /* GPMC CFG values for Spansion S29GL512P11TFI010 & S29GL512N11TFI010
  * This should work for most NOR, else we might have to move
@@ -41,8 +51,11 @@ _TEXT_BASE:
 #define SPNOR_GPMC_CONFIG4	0x0f031003
 #define SPNOR_GPMC_CONFIG5	0x000f1111
 #define SPNOR_GPMC_CONFIG6	0x0f030080
+#ifndef CONFIG_AM335X
 #define SPNOR_GPMC_CONFIG7	0x00000C08
-
+#else
+#define SPNOR_GPMC_CONFIG7	0x00000F08
+#endif
 /* default gpmc pad config valaue */
 #define GPMC_PAD_DEF_VAL	(0x00000001)
 
@@ -97,10 +110,10 @@ gpmc_next_wait0:
 	ands r2, r2, #0x00030000
 	cmp r2, #0
 	bne gpmc_next_wait0
-
+#ifndef CONFIG_AM335X
 	/****** GPIO out of reset *******/
-	ldr r5, cm_alwon_gpio0_clkctrl_addr
-	ldr r2, cm_alwon_gpio0_clkctrl_val
+	ldr r5, cm_alwon_gpio_clkctrl_addr
+	ldr r2, cm_alwon_gpio_clkctrl_val
 	str r2, [r5]
 	/* wait for gpio enable to settle */
 gpio_next_wait0:
@@ -110,13 +123,13 @@ gpio_next_wait0:
 	bne gpio_next_wait0
 
 	/****** Set GPIO-20 to low */
-	ldr r5, gpio0_data_addr
+	ldr r5, gpio_data_addr
 	mov r2, #0x0
 	str r2, [r5]
-	ldr r5, gpio0_cfg_addr
-	ldr r2, gpio0_cfg_val
+	ldr r5, gpio_cfg_addr
+	ldr r2, gpio_cfg_val
 	str r2, [r5]
-
+#endif
 	/***** GPMC CS0 init ******/
 	/* disable CS0 */
 	ldr r5, gpmc_cfg7_addr
@@ -151,7 +164,7 @@ gpmc_next_wait1:
 	ldr r5, gpmc_cfg7_addr
 	ldr r2, gpmc_cfg7_val
 	str r2, [r5]
-
+#ifndef CONFIG_AM335X
 	/* do pin muxing */
 	mov r2, #0x1
 	ldr r5, gpmc_a12_addr
@@ -188,7 +201,32 @@ gpmc_next_wait1:
 	str r2, [r5]
 	ldr r5, gpmc_a27_addr
 	str r2, [r5]
-
+#else
+	mov r2, #0x9 /* MODE 1, PULLUP/DOWN Disabled */
+	ldr r5, gpmc_a12_addr
+	str r2, [r5]
+	ldr r5, gpmc_a13_addr
+	str r2, [r5]
+	ldr r5, gpmc_a14_addr
+	str r2, [r5]
+	ldr r5, gpmc_a15_addr
+	str r2, [r5]
+	ldr r5, gpmc_a16_addr
+	str r2, [r5]
+	ldr r5, gpmc_a17_addr
+	str r2, [r5]
+	ldr r5, gpmc_a18_addr
+	str r2, [r5]
+	ldr r5, gpmc_a19_addr
+	str r2, [r5]
+	mov r2, #0x4 /* MODE 4, */
+	ldr r5, gpmc_a20_addr
+	str r2, [r5]
+	ldr r5, gpmc_a21_addr
+	str r2, [r5]
+	ldr r5, gpmc_a22_addr
+	str r2, [r5]
+#endif
 	/* enable CS0 */
 	ldr r5, gpmc_cfg7_addr
 	ldr r2, gpmc_cfg7_val
@@ -210,15 +248,15 @@ gpmc_next_wait2:
 /* The Nor has to be in the Flash Base CS0 for this condition to happen */
 cm_alwon_gpmc_clkctrl_addr:
 	.word CM_ALWON_GPMC_CLKCTRL
-cm_alwon_gpio0_clkctrl_addr:
+cm_alwon_gpio_clkctrl_addr:
 	.word CM_ALWON_GPIO_0_CLKCTRL
-cm_alwon_gpio0_clkctrl_val:
+cm_alwon_gpio_clkctrl_val:
 	.word GPIO0_CLKCTRL_VAL
-gpio0_cfg_addr:
+gpio_cfg_addr:
 	.word (GPIO0_BASE + 0x134)
-gpio0_data_addr:
+gpio_data_addr:
 	.word (GPIO0_BASE + 0x13C)
-gpio0_cfg_val:
+gpio_cfg_val:
 	.word GPIO0_CFG_VAL
 sram_pc_start:
 	.word (SRAM0_START + 0x10000)
@@ -277,6 +315,7 @@ gpmc_a21_addr:
 	.word GPMC_A21
 gpmc_a22_addr:
 	.word GPMC_A22
+#ifndef CONFIG_AM335X
 gpmc_a23_addr:
 	.word GPMC_A23
 gpmc_a24_addr:
@@ -287,6 +326,7 @@ gpmc_a27_addr:
 	.word GPMC_A27
 sc1_rst_addr:
 	.word  SC1_RST
+#endif
 ram_addr_mask:
 	.word RAM_ADDR_MASK
 #endif
@@ -340,8 +380,13 @@ ocmc_init_start:
 	/* wait for gpmc enable to settle */
 ocmc0_wait0:
 	ldr r2, [r5]
+#ifdef CONFIG_AM335X
 	ands r2, r2, #0x00000100
 	cmp r2, #0x00000100
+#else
+	ands r2, r2, #0x00000010
+	cmp r2, #0x00000010
+#endif
 	bne ocmc0_wait0
 	/* CLKCTRL */
 	ldr r5, cm_alwon_ocmc_0_clkctrl_addr
@@ -354,6 +399,7 @@ ocmc0_wait1:
 	cmp r2, #0
 	bne ocmc0_wait1
 
+#ifndef CONFIG_AM335X
 	/**** enable ocmc 1 ****/
 	/* CLKSTCTRL */
 	ldr r5, cm_alwon_ocmc_1_clkstctrl_addr
@@ -375,7 +421,7 @@ ocmc1_wait1:
 	ands r2, r2, #0x00030000
 	cmp r2, #0
 	bne ocmc1_wait1
-
+#endif
 nor_init_start:
 	/* gpmc init */
 	bl  cpy_nor_gpmc_code /* copy nor gpmc init code to sram */
@@ -399,16 +445,15 @@ cm_alwon_ocmc_0_clkstctrl_addr:
 	.word CM_ALWON_OCMC_0_CLKSTCTRL
 cm_alwon_ocmc_0_clkctrl_addr:
 	.word CM_ALWON_OCMC_0_CLKCTRL
+#ifndef CONFIG_AM335X
 cm_alwon_ocmc_1_clkstctrl_addr:
 	.word CM_ALWON_OCMC_1_CLKSTCTRL
 cm_alwon_ocmc_1_clkctrl_addr:
 	.word CM_ALWON_OCMC_1_CLKCTRL
-SRAM_STACK:
-	.word (SRAM0_START + SRAM0_SIZE - SRAM_GPMC_STACK_SIZE)
-#else
-SRAM_STACK:
-	.word (SRAM0_START + 0x2800)	/* we'll place stack+heap+gd in top 10 KB */
 #endif
+#endif
+SRAM_STACK:
+	.word LOW_LEVEL_SRAM_STACK
 
 _mark1:
 	.word mark1

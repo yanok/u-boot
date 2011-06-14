@@ -1,8 +1,7 @@
 #
-# Copyright (C) 2009, Texas Instruments, Incorporated
+# Makefile
 #
-# See file CREDITS for list of people who contributed to this
-# project.
+# Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -10,34 +9,27 @@
 #
 # This program is distributed "as is" WITHOUT ANY WARRANTY of any
 # kind, whether express or implied; without even the implied warranty
-# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 
 include $(TOPDIR)/config.mk
 
-LIB	= $(obj)lib$(SOC).o
+LIB	= $(obj)lib$(BOARD).o
 
-SOBJS	:= lowlevel_init.o
-SOBJS	+= cache.o
-
-COBJS	+= mem.o
-COBJS	+= sys_info.o
-COBJS	+= board.o
-
-COBJS-$(CONFIG_NAND_TI81XX)	+= elm.o
+COBJS	:= evm.o pll.o mux.o
 
 SRCS	:= $(SOBJS:.o=.S) $(COBJS:.o=.c)
-OBJS	:= $(addprefix $(obj),$(COBJS) $(COBJS-y) $(SOBJS))
+OBJS	:= $(addprefix $(obj),$(COBJS))
 
-$(LIB):	$(obj).depend $(OBJS)
+$(LIB):	$(OBJS)
 	$(call cmd_link_o_target, $(OBJS))
 
 clean:
-	rm -f $(SOBJS) $(OBJS)
+	rm -f $(OBJS)
 
 distclean:	clean
-	rm -f $(LIB) core *.bak .depend
+	rm -f $(LIB) core *.bak $(obj).depend
 
 #########################################################################
 
@@ -47,4 +39,3 @@ include $(SRCTREE)/rules.mk
 sinclude $(obj).depend
 
 #########################################################################
-

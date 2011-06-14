@@ -62,6 +62,12 @@ void preloader_console_init(void);
 #define BOOT_DEVICE_MMC2	5 /*emmc*/
 #define BOOT_DEVICE_MMC1	6
 #define BOOT_DEVICE_XIPWAIT	7
+#elif defined(CONFIG_TI81XX) /* AM33XX */
+#define BOOT_DEVICE_NONE	0
+#define BOOT_DEVICE_NAND	5 
+#define BOOT_DEVICE_MMC1	8
+#define BOOT_DEVICE_MMC2	9 /* eMMC or daughter card */
+#define BOOT_DEVICE_UART	65
 #endif
 
 /* Boot type */

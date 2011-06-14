@@ -210,6 +210,11 @@ int mv88e61xx_switch_initialize(struct mv88e61xx_config *swconfig);
 int fecmxc_register_mii_postcall(struct eth_device *dev, int (*cb)(int));
 
 #ifdef CONFIG_DRIVER_TI_CPSW
+enum {
+	CPSW_CTRL_VERSION_1 = 0, /* version1 devices */
+	CPSW_CTRL_VERSION_2      /* version2 devices */
+};
+
 struct cpsw_slave_data {
 	u32		slave_reg_ofs;
 	u32		sliver_reg_ofs;
@@ -231,7 +236,9 @@ struct cpsw_platform_data {
 	struct cpsw_slave_data  *slave_data;
 	void	(*control)(int enabled);
 	void	(*phy_init)(char *name, int addr);
+	u32	gigabit_en;	/* gigabit capable AND enabled		*/
 	u32	host_port_num;
+	u8	version;
 };
 
 int cpsw_register(struct cpsw_platform_data *data);

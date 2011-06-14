@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2004-2010
+ * (C) Copyright 2004-2008
  * Texas Instruments, <www.ti.com>
  *
  * See file CREDITS for list of people who contributed to this
@@ -20,43 +20,37 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307 USA
  */
-#ifndef _OMAP2PLUS_I2C_H_
-#define _OMAP2PLUS_I2C_H_
+#ifndef _I2C_H_
+#define _I2C_H_
 
-struct i2c {
-	unsigned short rev;	/* 0x00 */
-	unsigned short res1;
-	unsigned short ie;	/* 0x04 */
-	unsigned short res2;
-	unsigned short stat;	/* 0x08 */
-	unsigned short res3;
-	unsigned short iv;	/* 0x0C */
-	unsigned short res4;
-	unsigned short syss;	/* 0x10 */
-	unsigned short res4a;
-	unsigned short buf;	/* 0x14 */
-	unsigned short res5;
-	unsigned short cnt;	/* 0x18 */
-	unsigned short res6;
-	unsigned short data;	/* 0x1C */
-	unsigned short res7;
-	unsigned short sysc;	/* 0x20 */
-	unsigned short res8;
-	unsigned short con;	/* 0x24 */
-	unsigned short res9;
-	unsigned short oa;	/* 0x28 */
-	unsigned short res10;
-	unsigned short sa;	/* 0x2C */
-	unsigned short res11;
-	unsigned short psc;	/* 0x30 */
-	unsigned short res12;
-	unsigned short scll;	/* 0x34 */
-	unsigned short res13;
-	unsigned short sclh;	/* 0x38 */
-	unsigned short res14;
-	unsigned short systest;	/* 0x3c */
-	unsigned short res15;
-};
+#ifdef CONFIG_AM335X
+#define	I2C_BASE1	0x44E0B000
+#define	I2C_BASE2	0x4802A000
+#define	I2C_BASE3	0x4819C000
+#define I2C_BUS_MAX	3
+#else
+#define	I2C_BASE1	0x48028000
+#define	I2C_BASE2	0x4802A000
+#define I2C_BUS_MAX	2
+#endif
+
+#define I2C_DEFAULT_BASE	I2C_BASE1
+#define I2C_IP_CLK		48000000
+#define I2C_INTERNAL_SAMPLING_CLK	12000000
+
+#define I2C_REV		(I2C_DEFAULT_BASE + 0x00)
+#define I2C_IE		(I2C_DEFAULT_BASE + 0x2C)
+#define I2C_STAT	(I2C_DEFAULT_BASE + 0x28)
+#define I2C_BUF		(I2C_DEFAULT_BASE + 0x94)
+#define I2C_CNT		(I2C_DEFAULT_BASE + 0x98)
+#define I2C_DATA	(I2C_DEFAULT_BASE + 0x9c)
+#define I2C_CON		(I2C_DEFAULT_BASE + 0xA4)
+#define I2C_OA		(I2C_DEFAULT_BASE + 0xA8)
+#define I2C_SA		(I2C_DEFAULT_BASE + 0xAC)
+#define I2C_PSC		(I2C_DEFAULT_BASE + 0xB0)
+#define I2C_SCLL	(I2C_DEFAULT_BASE + 0xB4)
+#define I2C_SCLH	(I2C_DEFAULT_BASE + 0xB8)
+#define I2C_SYSTEST	(I2C_DEFAULT_BASE + 0xBc)
 
 /* I2C masks */
 
@@ -96,6 +90,8 @@ struct i2c {
 
 #define I2C_BUF_RDMA_EN		(1 << 15) /* Receive DMA channel enable */
 #define I2C_BUF_XDMA_EN		(1 << 7)  /* Transmit DMA channel enable */
+#define I2C_TXFIFO_CLEAR        (1 << 6)  /* TX FIFO clear */
+#define I2C_RXFIFO_CLEAR        (1 << 14) /* RX FIFO Clear */
 
 /* I2C Configuration Register (I2C_CON): */
 
@@ -119,10 +115,6 @@ struct i2c {
 #define I2C_SYSTEST_SCL_O	(1 << 2)  /* SCL line drive output value */
 #define I2C_SYSTEST_SDA_I	(1 << 1)  /* SDA line sense input value */
 #define I2C_SYSTEST_SDA_O	(1 << 0)  /* SDA line drive output value */
-
-/* I2C System Status Register (I2C_SYSS): */
-
-#define I2C_SYSS_RDONE          (1 << 0)  /* Internel reset monitoring */
 
 #define I2C_SCLL_SCLL		0
 #define I2C_SCLL_SCLL_M		0xFF
@@ -199,7 +191,22 @@ struct i2c {
 #define I2C_HIGHSPEED_PHASE_TWO_SCLH_TRIM	I2C_FASTSPEED_SCLH_TRIM
 #endif
 
+/*
+#define OMAP_I2C_STANDARD	100
+#define OMAP_I2C_FAST_MODE	400
+#define OMAP_I2C_HIGH_SPEED	3400
+
+#define SYSTEM_CLOCK_12		12000
+#define SYSTEM_CLOCK_13		13000
+#define SYSTEM_CLOCK_192	19200
+#define SYSTEM_CLOCK_96		96000
+
+#define I2C_IP_CLK		SYSTEM_CLOCK_12
+
+*/
+
+
 #define I2C_PSC_MAX		0x0f
 #define I2C_PSC_MIN		0x00
 
-#endif /* _OMAP24XX_I2C_H_ */
+#endif /* _I2C_H_ */

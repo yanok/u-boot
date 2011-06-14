@@ -21,4 +21,8 @@
 #ifndef _CLOCKS_H_
 #define _CLOCKS_H_
 
+#ifdef CONFIG_AM335X
+#include <asm/arch/clocks_am335x.h>
+#endif
+
 #endif

@@ -41,10 +41,14 @@
 #define CPDMA_RXCONTROL		0x014
 #define CPDMA_SOFTRESET		0x01c
 #define CPDMA_RXFREE		0x0e0
-#define CPDMA_TXHDP		0x100
-#define CPDMA_RXHDP		0x120
-#define CPDMA_TXCP		0x140
-#define CPDMA_RXCP		0x160
+#define CPDMA_TXHDP_VER1	0x100
+#define CPDMA_TXHDP_VER2	0x200
+#define CPDMA_RXHDP_VER1	0x120
+#define CPDMA_RXHDP_VER2	0x220
+#define CPDMA_TXCP_VER1		0x140
+#define CPDMA_TXCP_VER2		0x240
+#define CPDMA_RXCP_VER1		0x160
+#define CPDMA_RXCP_VER2		0x260
 
 /* Descriptor mode bits */
 #define CPDMA_DESC_SOP		BIT(31)
@@ -94,9 +98,12 @@ struct cpsw_slave_regs {
 	u32	flow_thresh;
 	u32	port_vlan;
 	u32	tx_pri_map;
+	u32	ts_seq_mtype;
+#ifdef CONFIG_TI814X
 	u32     ts_ctl;
 	u32     ts_seq_ltype;
 	u32     ts_vlan;
+#endif
 	u32	sa_lo;
 	u32	sa_hi;
 };
@@ -543,8 +550,20 @@ static void cpsw_slave_update_link(struct cpsw_slave *slave,
 
 		*link = 1;
 		mac_control = priv->data.mac_control;
-		if (speed == 1000)
-			mac_control |= BIT(7);	/* GIGABITEN	*/
+		if (speed == 10)
+			mac_control |= BIT(18);	/* In Band mode	*/
+		else if (speed == 100)
+			mac_control |= BIT(15);
+		else if (speed == 1000) {
+			if (priv->data.gigabit_en)
+				mac_control |= BIT(7);
+			else {
+				/* Disable gigabit as it's non-functional */
+				mac_control &= ~BIT(7);
+				speed = 100;
+			}
+		}
+
 		if (duplex == FULL)
 			mac_control |= BIT(0);	/* FULLDUPLEXEN	*/
 	}
@@ -735,24 +754,56 @@ static int cpsw_init(struct eth_device *dev, bd_t *bis)
 	priv->desc_free = &priv->descs[0];
 
 	/* initialize channels */
-	memset(&priv->rx_chan, 0, sizeof(struct cpdma_chan));
-	priv->rx_chan.hdp	= priv->dma_regs + CPDMA_RXHDP;
-	priv->rx_chan.cp	= priv->dma_regs + CPDMA_RXCP;
-	priv->rx_chan.rxfree	= priv->dma_regs + CPDMA_RXFREE;
+	if (priv->data.version == CPSW_CTRL_VERSION_2) {
+		memset(&priv->rx_chan, 0, sizeof(struct cpdma_chan));
+		priv->rx_chan.hdp	= priv->dma_regs + CPDMA_RXHDP_VER2;
+		priv->rx_chan.cp	= priv->dma_regs + CPDMA_RXCP_VER2;
+		priv->rx_chan.rxfree	= priv->dma_regs + CPDMA_RXFREE;
 
-	memset(&priv->tx_chan, 0, sizeof(struct cpdma_chan));
-	priv->tx_chan.hdp	= priv->dma_regs + CPDMA_TXHDP;
-	priv->tx_chan.cp	= priv->dma_regs + CPDMA_TXCP;
+		memset(&priv->tx_chan, 0, sizeof(struct cpdma_chan));
+		priv->tx_chan.hdp	= priv->dma_regs + CPDMA_TXHDP_VER2;
+		priv->tx_chan.cp	= priv->dma_regs + CPDMA_TXCP_VER2;
+	} else {
+		memset(&priv->rx_chan, 0, sizeof(struct cpdma_chan));
+		priv->rx_chan.hdp	= priv->dma_regs + CPDMA_RXHDP_VER1;
+		priv->rx_chan.cp	= priv->dma_regs + CPDMA_RXCP_VER1;
+		priv->rx_chan.rxfree	= priv->dma_regs + CPDMA_RXFREE;
+
+		memset(&priv->tx_chan, 0, sizeof(struct cpdma_chan));
+		priv->tx_chan.hdp	= priv->dma_regs + CPDMA_TXHDP_VER1;
+		priv->tx_chan.cp	= priv->dma_regs + CPDMA_TXCP_VER1;
+	}
 
 	/* clear dma state */
 	soft_reset(priv->dma_regs + CPDMA_SOFTRESET);
 
-	for (i = 0; i < priv->data.channels; i++) {
-		__raw_writel(0, priv->dma_regs + CPDMA_RXHDP + 4 * i);
-		__raw_writel(0, priv->dma_regs + CPDMA_RXFREE + 4 * i);
-		__raw_writel(0, priv->dma_regs + CPDMA_RXCP + 4 * i);
-		__raw_writel(0, priv->dma_regs + CPDMA_TXHDP + 4 * i);
-		__raw_writel(0, priv->dma_regs + CPDMA_TXCP + 4 * i);
+	if (priv->data.version == CPSW_CTRL_VERSION_2) {
+		for (i = 0; i < priv->data.channels; i++) {
+			__raw_writel(0, priv->dma_regs + CPDMA_RXHDP_VER2 + 4
+					* i);
+			__raw_writel(0, priv->dma_regs + CPDMA_RXFREE + 4
+					* i);
+			__raw_writel(0, priv->dma_regs + CPDMA_RXCP_VER2 + 4
+					* i);
+			__raw_writel(0, priv->dma_regs + CPDMA_TXHDP_VER2 + 4
+					* i);
+			__raw_writel(0, priv->dma_regs + CPDMA_TXCP_VER2 + 4
+					* i);
+		}
+	} else {
+		for (i = 0; i < priv->data.channels; i++) {
+			__raw_writel(0, priv->dma_regs + CPDMA_RXHDP_VER1 + 4
+					* i);
+			__raw_writel(0, priv->dma_regs + CPDMA_RXFREE + 4
+					* i);
+			__raw_writel(0, priv->dma_regs + CPDMA_RXCP_VER1 + 4
+					* i);
+			__raw_writel(0, priv->dma_regs + CPDMA_TXHDP_VER1 + 4
+					* i);
+			__raw_writel(0, priv->dma_regs + CPDMA_TXCP_VER1 + 4
+					* i);
+
+		}
 	}
 	__raw_writel(1, priv->dma_regs + CPDMA_TXCONTROL);
 	__raw_writel(1, priv->dma_regs + CPDMA_RXCONTROL);
