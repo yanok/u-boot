@@ -135,6 +135,7 @@ int nand_get_lock_status(nand_info_t *meminfo, loff_t offset);
 int nand_spl_load_image(uint32_t offs, unsigned int size, void *dst);
 void nand_deselect(void);
 
+void nand_scan_spl(struct mtd_info *mtd);
 void nand_read_buf16(struct mtd_info *mtd, uint8_t *buf, int len);
 void nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len);
 void nand_command(struct mtd_info *mtd, unsigned int command,

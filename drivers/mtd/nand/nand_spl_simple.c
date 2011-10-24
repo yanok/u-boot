@@ -148,10 +148,7 @@ void nand_init(void)
 
 	/* We only need a small part of the init sequence done. */
 	if (board_nand_init(&nand_chip) == 0)
-		nand_scan_ident(&mtd, 1, NULL);
-
-	/* Make sure that we've selected chip 0 */
-	nand_chip.select_chip(&mtd, 0);
+		nand_scan_spl(&mtd);
 }
 
 /* Unselect after operation */

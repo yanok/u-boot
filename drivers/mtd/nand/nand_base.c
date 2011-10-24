@@ -62,6 +62,7 @@
 #define CONFIG_SYS_NAND_RESET_CNT 200000
 #endif
 
+#ifndef CONFIG_SPL_BUILD
 /* Define default oob placement schemes for large and small page devices */
 static struct nand_ecclayout nand_oob_8 = {
 	.eccbytes = 3,
@@ -106,7 +107,6 @@ static struct nand_ecclayout nand_oob_128 = {
 		 .length = 78}}
 };
 
-
 static int nand_get_device(struct nand_chip *chip, struct mtd_info *mtd,
 			   int new_state);
 
@@ -124,6 +124,7 @@ static void nand_release_device (struct mtd_info *mtd)
 	struct nand_chip *this = mtd->priv;
 	this->select_chip(mtd, -1);	/* De-select the NAND device */
 }
+#endif
 
 /**
  * nand_read_byte - [DEFAULT] read one byte from the chip
@@ -402,7 +403,6 @@ static int nand_default_block_markbad(struct mtd_info *mtd, loff_t ofs)
 
 	return ret;
 }
-#endif
 
 /**
  * nand_check_wp - [GENERIC] check if the chip is write protected
@@ -445,6 +445,7 @@ static int nand_block_checkbad(struct mtd_info *mtd, loff_t ofs, int getchip,
 	/* Return info from the table */
 	return nand_isbad_bbt(mtd, ofs, allowbbt);
 }
+#endif
 
 /*
  * Wait for the ready pin, after a command
@@ -693,6 +694,7 @@ void nand_command_lp(struct mtd_info *mtd, unsigned int command,
 	nand_wait_ready(mtd);
 }
 
+#ifndef CONFIG_SPL_BUILD
 /**
  * nand_get_device - [GENERIC] Get chip for selected access
  * @chip:	the nand chip descriptor
@@ -707,7 +709,6 @@ static int nand_get_device (struct nand_chip *this, struct mtd_info *mtd, int ne
 	return 0;
 }
 
-#ifndef CONFIG_SPL_BUILD
 /**
  * nand_wait - [DEFAULT]  wait until the command is done
  * @mtd:	MTD device structure
@@ -759,6 +760,7 @@ static int nand_wait(struct mtd_info *mtd, struct nand_chip *this)
 }
 #endif
 
+#ifndef CONFIG_SPL_BUILD
 /**
  * nand_read_page_raw - [Intern] read raw page data without ecc
  * @mtd:	mtd info structure
@@ -2111,7 +2113,6 @@ static int nand_write_oob(struct mtd_info *mtd, loff_t to,
 	return ret;
 }
 
-#ifndef CONFIG_SPL_BUILD
 /**
  * single_erease_cmd - [GENERIC] NAND standard block erase command function
  * @mtd:	MTD device structure
@@ -2145,7 +2146,6 @@ static void multi_erase_cmd(struct mtd_info *mtd, int page)
 	chip->cmdfunc(mtd, NAND_CMD_ERASE1, -1, page);
 	chip->cmdfunc(mtd, NAND_CMD_ERASE2, -1, -1);
 }
-#endif
 
 /**
  * nand_erase - [MTD Interface] erase block(s)
@@ -2394,6 +2394,7 @@ static int nand_block_markbad(struct mtd_info *mtd, loff_t ofs)
 
 	return chip->block_markbad(mtd, ofs);
 }
+#endif
 
 /*
  * Set default functions
@@ -2560,6 +2561,7 @@ static void nand_flash_detect_non_onfi(struct mtd_info *mtd,
 	}
 }
 
+#ifndef CONFIG_SPL_BUILD
 /*
  * Get the flash and manufacturer id and lookup if the type is supported
  */
@@ -2650,11 +2652,6 @@ static const struct nand_flash_dev *nand_get_flash_type(struct mtd_info *mtd,
 			break;
 	}
 
-	/* 
-	 * SPL does not require this information or provides it in
-	 * static form.
-	 */
-#ifndef CONFIG_SPL_BUILD
 	/*
 	 * Check, if buswidth is correct. Hardware drivers should set
 	 * chip correct !
@@ -2700,7 +2697,6 @@ static const struct nand_flash_dev *nand_get_flash_type(struct mtd_info *mtd,
 	/* Do not replace user supplied command function ! */
 	if (mtd->writesize > 512 && chip->cmdfunc == nand_command)
 		chip->cmdfunc = nand_command_lp;
-#endif
 
 	MTDDEBUG (MTD_DEBUG_LEVEL0, "NAND device: Manufacturer ID:"
 		  " 0x%02x, Chip ID: 0x%02x (%s %s)\n", *maf_id, *dev_id,
@@ -2723,7 +2719,7 @@ static const struct nand_flash_dev *nand_get_flash_type(struct mtd_info *mtd,
 int nand_scan_ident(struct mtd_info *mtd, int maxchips,
 		    const struct nand_flash_dev *table)
 {
-	int i = 1, busw, nand_maf_id, nand_dev_id;
+	int i, busw, nand_maf_id, nand_dev_id;
 	struct nand_chip *chip = mtd->priv;
 	const struct nand_flash_dev *type;
 
@@ -2735,8 +2731,6 @@ int nand_scan_ident(struct mtd_info *mtd, int maxchips,
 	/* Read the flash type */
 	type = nand_get_flash_type(mtd, chip, busw, &nand_maf_id, &nand_dev_id, table);
 
-	/* A valid flash must have been found already for SPL to be running */
-#ifndef CONFIG_SPL
 	if (IS_ERR(type)) {
 #ifndef CONFIG_SYS_NAND_QUIET_TEST
 		printk(KERN_WARNING "No NAND device found!!!\n");
@@ -2744,12 +2738,9 @@ int nand_scan_ident(struct mtd_info *mtd, int maxchips,
 		chip->select_chip(mtd, -1);
 		return PTR_ERR(type);
 	}
-#endif
 
-	/* SPL only supports 1 chip, maximum. */
-#ifndef CONFIG_SPL_BUILD
 	/* Check for a chip array */
-	for (; i < maxchips; i++) {
+	for (i = 1; i < maxchips; i++) {
 		chip->select_chip(mtd, i);
 		/* See comment in nand_get_flash_type for reset */
 		chip->cmdfunc(mtd, NAND_CMD_RESET, -1, -1);
@@ -2764,7 +2755,6 @@ int nand_scan_ident(struct mtd_info *mtd, int maxchips,
 	if (i > 1)
 		printk(KERN_INFO "%d NAND chips detected\n", i);
 #endif
-#endif
 
 	/* Store the number of chips and calc total size for mtd */
 	chip->numchips = i;
@@ -2772,7 +2762,6 @@ int nand_scan_ident(struct mtd_info *mtd, int maxchips,
 
 	return 0;
 }
-
 
 /**
  * nand_scan_tail - [NAND Interface] Scan for the NAND device
@@ -3034,3 +3023,55 @@ void nand_release(struct mtd_info *mtd)
 	if (!(chip->options & NAND_OWN_BUFFERS))
 		kfree(chip->buffers);
 }
+#endif
+
+#ifdef CONFIG_SPL_BUILD
+/**
+ * nand_scan_spl - [NAND Interface] Scan for the NAND device, for SPL
+ * @mtd:	   MTD device structure
+ *
+ * This fills out many of the uninitialized function pointers with
+ * the defaults.  This is only sufficient for reading as that is all
+ * that SPL cares about today.  This is a condensed version of
+ * nand_scan_ident.
+ * The flash ID is read and the mtd/chip structures are
+ * filled with the appropriate values.  We must already be on a known
+ * and supported NAND device as error checking has been removed for
+ * space.
+ */
+void nand_scan_spl(struct mtd_info *mtd)
+{
+	int busw, maf_id, dev_id;
+	struct nand_chip *chip = mtd->priv;
+	const struct nand_flash_dev *type = nand_flash_ids;
+
+	/* Get buswidth to select the correct functions */
+	busw = chip->options & NAND_BUSWIDTH_16;
+	/* Set the default functions */
+	nand_set_defaults(chip, busw);
+
+	/* Select the device */
+	chip->select_chip(mtd, 0);
+
+	/*
+	 * See nand_get_flash_type comments for why we do things in this order.
+	 * For SPL, we drop error checking as there's not a lot we can do if
+	 * things go bad.
+         */
+	chip->cmdfunc(mtd, NAND_CMD_RESET, -1, -1);
+	chip->cmdfunc(mtd, NAND_CMD_READID, 0x00, -1);
+
+	/* Read manufacturer and device IDs */
+	maf_id = chip->read_byte(mtd);
+	dev_id = chip->read_byte(mtd);
+
+	for (; type->name != NULL; type++)
+		if (dev_id == type->id)
+			break;
+
+	chip->chipsize = (uint64_t)type->chipsize << 20;
+
+	if (!nand_flash_detect_onfi(mtd, chip, &busw))
+		nand_flash_detect_non_onfi(mtd, chip, type, &busw);
+}
+#endif
