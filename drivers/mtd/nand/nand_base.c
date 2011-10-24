@@ -113,8 +113,6 @@ static int nand_get_device(struct nand_chip *chip, struct mtd_info *mtd,
 static int nand_do_write_oob(struct mtd_info *mtd, loff_t to,
 			     struct mtd_oob_ops *ops);
 
-static int nand_wait(struct mtd_info *mtd, struct nand_chip *this);
-
 /**
  * nand_release_device - [GENERIC] release chip
  * @mtd:	MTD device structure
@@ -152,6 +150,7 @@ static uint8_t nand_read_byte16(struct mtd_info *mtd)
 	return (uint8_t) cpu_to_le16(readw(chip->IO_ADDR_R));
 }
 
+#ifndef CONFIG_SPL_BUILD
 /**
  * nand_read_word - [DEFAULT] read one word from the chip
  * @mtd:	MTD device structure
@@ -164,7 +163,9 @@ static u16 nand_read_word(struct mtd_info *mtd)
 	struct nand_chip *chip = mtd->priv;
 	return readw(chip->IO_ADDR_R);
 }
+#endif
 
+#ifndef CONFIG_SPL_BUILD
 /**
  * nand_select_chip - [DEFAULT] control CE line
  * @mtd:	MTD device structure
@@ -187,7 +188,16 @@ static void nand_select_chip(struct mtd_info *mtd, int chipnr)
 		BUG();
 	}
 }
+#else
+static void nand_select_chip(struct mtd_info *mtd, int chipnr)
+{
+	struct nand_chip *chip = mtd->priv;
 
+	chip->cmd_ctrl(mtd, NAND_CMD_NONE, 0 | NAND_CTRL_CHANGE);
+}
+#endif
+
+#ifndef CONFIG_SPL_BUILD
 /**
  * nand_write_buf - [DEFAULT] write buffer to chip
  * @mtd:	MTD device structure
@@ -204,6 +214,7 @@ static void nand_write_buf(struct mtd_info *mtd, const uint8_t *buf, int len)
 	for (i = 0; i < len; i++)
 		writeb(buf[i], chip->IO_ADDR_W);
 }
+#endif
 
 /**
  * nand_read_buf - [DEFAULT] read chip data into buffer
@@ -222,6 +233,7 @@ void nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
 		buf[i] = readb(chip->IO_ADDR_R);
 }
 
+#ifndef CONFIG_SPL_BUILD
 /**
  * nand_verify_buf - [DEFAULT] Verify chip data against buffer
  * @mtd:	MTD device structure
@@ -260,6 +272,7 @@ static void nand_write_buf16(struct mtd_info *mtd, const uint8_t *buf, int len)
 		writew(p[i], chip->IO_ADDR_W);
 
 }
+#endif
 
 /**
  * nand_read_buf16 - [DEFAULT] read chip data into buffer
@@ -280,6 +293,7 @@ void nand_read_buf16(struct mtd_info *mtd, uint8_t *buf, int len)
 		p[i] = readw(chip->IO_ADDR_R);
 }
 
+#ifndef CONFIG_SPL_BUILD
 /**
  * nand_verify_buf16 - [DEFAULT] Verify chip data against buffer
  * @mtd:	MTD device structure
@@ -388,6 +402,7 @@ static int nand_default_block_markbad(struct mtd_info *mtd, loff_t ofs)
 
 	return ret;
 }
+#endif
 
 /**
  * nand_check_wp - [GENERIC] check if the chip is write protected
@@ -461,7 +476,7 @@ void nand_wait_ready(struct mtd_info *mtd)
  * Send command to NAND device. This function is used for small page
  * devices (256/512 Bytes per page)
  */
-static void nand_command(struct mtd_info *mtd, unsigned int command,
+void nand_command(struct mtd_info *mtd, unsigned int command,
 			 int column, int page_addr)
 {
 	register struct nand_chip *chip = mtd->priv;
@@ -566,7 +581,7 @@ static void nand_command(struct mtd_info *mtd, unsigned int command,
  * devices We dont have the separate regions as we have in the small page
  * devices.  We must emulate NAND_CMD_READOOB to keep the code compatible.
  */
-static void nand_command_lp(struct mtd_info *mtd, unsigned int command,
+void nand_command_lp(struct mtd_info *mtd, unsigned int command,
 			    int column, int page_addr)
 {
 	register struct nand_chip *chip = mtd->priv;
@@ -692,6 +707,7 @@ static int nand_get_device (struct nand_chip *this, struct mtd_info *mtd, int ne
 	return 0;
 }
 
+#ifndef CONFIG_SPL_BUILD
 /**
  * nand_wait - [DEFAULT]  wait until the command is done
  * @mtd:	MTD device structure
@@ -741,6 +757,7 @@ static int nand_wait(struct mtd_info *mtd, struct nand_chip *this)
 
 	return this->read_byte(mtd);
 }
+#endif
 
 /**
  * nand_read_page_raw - [Intern] read raw page data without ecc
@@ -2094,6 +2111,7 @@ static int nand_write_oob(struct mtd_info *mtd, loff_t to,
 	return ret;
 }
 
+#ifndef CONFIG_SPL_BUILD
 /**
  * single_erease_cmd - [GENERIC] NAND standard block erase command function
  * @mtd:	MTD device structure
@@ -2127,6 +2145,7 @@ static void multi_erase_cmd(struct mtd_info *mtd, int page)
 	chip->cmdfunc(mtd, NAND_CMD_ERASE1, -1, page);
 	chip->cmdfunc(mtd, NAND_CMD_ERASE2, -1, -1);
 }
+#endif
 
 /**
  * nand_erase - [MTD Interface] erase block(s)
@@ -2385,6 +2404,13 @@ static void nand_set_defaults(struct nand_chip *chip, int busw)
 	if (!chip->chip_delay)
 		chip->chip_delay = 20;
 
+	if (!chip->select_chip)
+		chip->select_chip = nand_select_chip;
+
+	if (!chip->read_byte)
+		chip->read_byte = busw ? nand_read_byte16 : nand_read_byte;
+
+#ifndef CONFIG_SPL_BUILD
 	/* check, if a user supplied command function given */
 	if (chip->cmdfunc == NULL)
 		chip->cmdfunc = nand_command;
@@ -2393,10 +2419,6 @@ static void nand_set_defaults(struct nand_chip *chip, int busw)
 	if (chip->waitfunc == NULL)
 		chip->waitfunc = nand_wait;
 
-	if (!chip->select_chip)
-		chip->select_chip = nand_select_chip;
-	if (!chip->read_byte)
-		chip->read_byte = busw ? nand_read_byte16 : nand_read_byte;
 	if (!chip->read_word)
 		chip->read_word = nand_read_word;
 	if (!chip->block_bad)
@@ -2413,6 +2435,7 @@ static void nand_set_defaults(struct nand_chip *chip, int busw)
 		chip->scan_bbt = nand_default_bbt;
 	if (!chip->controller)
 		chip->controller = &chip->hwcontrol;
+#endif
 }
 
 #ifdef CONFIG_SYS_NAND_ONFI_DETECTION
@@ -2627,6 +2650,11 @@ static const struct nand_flash_dev *nand_get_flash_type(struct mtd_info *mtd,
 			break;
 	}
 
+	/* 
+	 * SPL does not require this information or provides it in
+	 * static form.
+	 */
+#ifndef CONFIG_SPL_BUILD
 	/*
 	 * Check, if buswidth is correct. Hardware drivers should set
 	 * chip correct !
@@ -2672,6 +2700,7 @@ static const struct nand_flash_dev *nand_get_flash_type(struct mtd_info *mtd,
 	/* Do not replace user supplied command function ! */
 	if (mtd->writesize > 512 && chip->cmdfunc == nand_command)
 		chip->cmdfunc = nand_command_lp;
+#endif
 
 	MTDDEBUG (MTD_DEBUG_LEVEL0, "NAND device: Manufacturer ID:"
 		  " 0x%02x, Chip ID: 0x%02x (%s %s)\n", *maf_id, *dev_id,
@@ -2694,7 +2723,7 @@ static const struct nand_flash_dev *nand_get_flash_type(struct mtd_info *mtd,
 int nand_scan_ident(struct mtd_info *mtd, int maxchips,
 		    const struct nand_flash_dev *table)
 {
-	int i, busw, nand_maf_id, nand_dev_id;
+	int i = 1, busw, nand_maf_id, nand_dev_id;
 	struct nand_chip *chip = mtd->priv;
 	const struct nand_flash_dev *type;
 
@@ -2706,6 +2735,8 @@ int nand_scan_ident(struct mtd_info *mtd, int maxchips,
 	/* Read the flash type */
 	type = nand_get_flash_type(mtd, chip, busw, &nand_maf_id, &nand_dev_id, table);
 
+	/* A valid flash must have been found already for SPL to be running */
+#ifndef CONFIG_SPL
 	if (IS_ERR(type)) {
 #ifndef CONFIG_SYS_NAND_QUIET_TEST
 		printk(KERN_WARNING "No NAND device found!!!\n");
@@ -2713,9 +2744,12 @@ int nand_scan_ident(struct mtd_info *mtd, int maxchips,
 		chip->select_chip(mtd, -1);
 		return PTR_ERR(type);
 	}
+#endif
 
+	/* SPL only supports 1 chip, maximum. */
+#ifndef CONFIG_SPL_BUILD
 	/* Check for a chip array */
-	for (i = 1; i < maxchips; i++) {
+	for (; i < maxchips; i++) {
 		chip->select_chip(mtd, i);
 		/* See comment in nand_get_flash_type for reset */
 		chip->cmdfunc(mtd, NAND_CMD_RESET, -1, -1);
@@ -2729,6 +2763,7 @@ int nand_scan_ident(struct mtd_info *mtd, int maxchips,
 #ifdef DEBUG
 	if (i > 1)
 		printk(KERN_INFO "%d NAND chips detected\n", i);
+#endif
 #endif
 
 	/* Store the number of chips and calc total size for mtd */

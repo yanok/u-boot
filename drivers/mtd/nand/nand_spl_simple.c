@@ -19,6 +19,7 @@
  */
 
 #include <common.h>
+#include <linux/mtd/mtd.h>
 #include <nand.h>
 #include <asm/io.h>
 
@@ -26,105 +27,12 @@ static int nand_ecc_pos[] = CONFIG_SYS_NAND_ECCPOS;
 static nand_info_t mtd;
 static struct nand_chip nand_chip;
 
-#if (CONFIG_SYS_NAND_PAGE_SIZE <= 512)
-/*
- * NAND command for small page NAND devices (512)
- */
-static int nand_command(int block, int page, uint32_t offs,
-	u8 cmd)
-{
-	struct nand_chip *this = mtd.priv;
-	int page_addr = page + block * CONFIG_SYS_NAND_PAGE_COUNT;
-
-	while (!this->dev_ready(&mtd))
-		;
-
-	/* Begin command latch cycle */
-	this->cmd_ctrl(&mtd, cmd, NAND_CTRL_CLE | NAND_CTRL_CHANGE);
-	/* Set ALE and clear CLE to start address cycle */
-	/* Column address */
-	this->cmd_ctrl(&mtd, offs, NAND_CTRL_ALE | NAND_CTRL_CHANGE);
-	this->cmd_ctrl(&mtd, page_addr & 0xff, NAND_CTRL_ALE); /* A[16:9] */
-	this->cmd_ctrl(&mtd, (page_addr >> 8) & 0xff,
-		       NAND_CTRL_ALE); /* A[24:17] */
-#ifdef CONFIG_SYS_NAND_4_ADDR_CYCLE
-	/* One more address cycle for devices > 32MiB */
-	this->cmd_ctrl(&mtd, (page_addr >> 16) & 0x0f,
-		       NAND_CTRL_ALE); /* A[28:25] */
-#endif
-	/* Latch in address */
-	this->cmd_ctrl(&mtd, NAND_CMD_NONE, NAND_NCE | NAND_CTRL_CHANGE);
-
-	/*
-	 * Wait a while for the data to be ready
-	 */
-	while (!this->dev_ready(&mtd))
-		;
-
-	return 0;
-}
-#else
-/*
- * NAND command for large page NAND devices (2k)
- */
-static int nand_command(int block, int page, uint32_t offs,
-	u8 cmd)
-{
-	struct nand_chip *this = mtd.priv;
-	int page_addr = page + block * CONFIG_SYS_NAND_PAGE_COUNT;
-	void (*hwctrl)(struct mtd_info *mtd, int cmd,
-			unsigned int ctrl) = this->cmd_ctrl;
-
-	while (!this->dev_ready(&mtd))
-		;
-
-	/* Emulate NAND_CMD_READOOB */
-	if (cmd == NAND_CMD_READOOB) {
-		offs += CONFIG_SYS_NAND_PAGE_SIZE;
-		cmd = NAND_CMD_READ0;
-	}
-
-	/* Shift the offset from byte addressing to word addressing. */
-	if (this->options & NAND_BUSWIDTH_16)
-		offs >>= 1;
-
-	/* Begin command latch cycle */
-	hwctrl(&mtd, cmd, NAND_CTRL_CLE | NAND_CTRL_CHANGE);
-	/* Set ALE and clear CLE to start address cycle */
-	/* Column address */
-	hwctrl(&mtd, offs & 0xff,
-		       NAND_CTRL_ALE | NAND_CTRL_CHANGE); /* A[7:0] */
-	hwctrl(&mtd, (offs >> 8) & 0xff, NAND_CTRL_ALE); /* A[11:9] */
-	/* Row address */
-	hwctrl(&mtd, (page_addr & 0xff), NAND_CTRL_ALE); /* A[19:12] */
-	hwctrl(&mtd, ((page_addr >> 8) & 0xff),
-		       NAND_CTRL_ALE); /* A[27:20] */
-#ifdef CONFIG_SYS_NAND_5_ADDR_CYCLE
-	/* One more address cycle for devices > 128MiB */
-	hwctrl(&mtd, (page_addr >> 16) & 0x0f,
-		       NAND_CTRL_ALE); /* A[31:28] */
-#endif
-	/* Latch in address */
-	hwctrl(&mtd, NAND_CMD_READSTART,
-		       NAND_CTRL_CLE | NAND_CTRL_CHANGE);
-	hwctrl(&mtd, NAND_CMD_NONE, NAND_NCE | NAND_CTRL_CHANGE);
-
-	/*
-	 * Wait a while for the data to be ready
-	 */
-	while (!this->dev_ready(&mtd))
-		;
-
-	return 0;
-}
-#endif
-
 static int nand_is_bad_block(int block)
 {
 	struct nand_chip *this = mtd.priv;
 
-	nand_command(block, 0, CONFIG_SYS_NAND_BAD_BLOCK_POS,
-		NAND_CMD_READOOB);
+	this->cmdfunc(&mtd, NAND_CMD_READOOB, CONFIG_SYS_NAND_BAD_BLOCK_POS,
+			block * CONFIG_SYS_NAND_PAGE_COUNT);
 
 	/*
 	 * Read one byte (or two if it's a 16 bit chip).
@@ -153,7 +61,8 @@ static int nand_read_page(int block, int page, void *dst)
 	uint8_t *p = dst;
 	int stat;
 
-	nand_command(block, page, 0, NAND_CMD_READ0);
+	this->cmdfunc(&mtd, NAND_CMD_READ0, 0,
+			page + block * CONFIG_SYS_NAND_PAGE_COUNT);
 
 	/* No malloc available for now, just use some temporary locations
 	 * in SDRAM
@@ -230,11 +139,19 @@ void nand_init(void)
 	mtd.priv = &nand_chip;
 	nand_chip.IO_ADDR_R = nand_chip.IO_ADDR_W =
 		(void  __iomem *)CONFIG_SYS_NAND_BASE;
-	nand_chip.options = 0;
-	board_nand_init(&nand_chip);
 
-	if (nand_chip.select_chip)
-		nand_chip.select_chip(&mtd, 0);
+#if (CONFIG_SYS_NAND_PAGE_SIZE <= 512)
+	nand_chip.cmdfunc = nand_command;
+#else
+	nand_chip.cmdfunc = nand_command_lp;
+#endif
+
+	/* We only need a small part of the init sequence done. */
+	if (board_nand_init(&nand_chip) == 0)
+		nand_scan_ident(&mtd, 1, NULL);
+
+	/* Make sure that we've selected chip 0 */
+	nand_chip.select_chip(&mtd, 0);
 }
 
 /* Unselect after operation */

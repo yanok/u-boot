@@ -137,6 +137,10 @@ void nand_deselect(void);
 
 void nand_read_buf16(struct mtd_info *mtd, uint8_t *buf, int len);
 void nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len);
+void nand_command(struct mtd_info *mtd, unsigned int command,
+		  int column, int page_addr);
+void nand_command_lp(struct mtd_info *mtd, unsigned int command,
+		     int column, int page_addr);
 
 #ifdef CONFIG_SYS_NAND_SELECT_DEVICE
 void board_nand_select_device(struct nand_chip *nand, int chip);
