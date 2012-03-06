@@ -161,6 +161,7 @@
 #define CONFIG_CMD_MMC		/* MMC support			*/
 #define CONFIG_USB_STORAGE	/* USB storage support		*/
 #define CONFIG_CMD_NAND		/* NAND support			*/
+#define CONFIG_CMD_NAND_TRIMFFS
 #define CONFIG_CMD_LED		/* LED support			*/
 #define CONFIG_CMD_NET      /* bootp, tftpboot, rarpboot    */
 #define CONFIG_CMD_NFS      /* NFS support          */
@@ -211,10 +212,18 @@
 #define CONFIG_JFFS2_PART_SIZE		0xf980000	/* size of jffs2 */
 							/* partition */
 
+/*
+ * BCH stuff
+ */
+#define CONFIG_BCH
+#define CONFIG_NAND_ECC_BCH
+
 /* Environment information */
 #define CONFIG_BOOTDELAY		2
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
+	"mtdids=" MTDIDS_DEFAULT "\0" \
+	"mtdparts=" MTDPARTS_DEFAULT "\0" \
 	"loadaddr=0x80200000\0" \
 	"rdaddr=0x81000000\0" \
 	"usbtty=cdc_acm\0" \
