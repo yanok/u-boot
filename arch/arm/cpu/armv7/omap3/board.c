@@ -39,6 +39,7 @@
 #include <asm/cache.h>
 #include <asm/armv7.h>
 #include <asm/arch/gpio.h>
+#include <asm/arch/omap_gpmc.h>
 #include <asm/omap_common.h>
 #include <i2c.h>
 
@@ -295,9 +296,15 @@ static int do_switch_ecc(cmd_tbl_t * cmdtp, int flag, int argc, char * const arg
 	if (argc != 2)
 		goto usage;
 	if (strncmp(argv[1], "hw", 2) == 0)
-		omap_nand_switch_ecc(1);
+		omap_nand_switch_ecc(GPMC_HW_ECC_1BIT);
 	else if (strncmp(argv[1], "sw", 2) == 0)
-		omap_nand_switch_ecc(0);
+		omap_nand_switch_ecc(GPMC_SW_ECC);
+	else if (strncmp(argv[1], "bch4", 4) == 0)
+		omap_nand_switch_ecc(GPMC_ECC_BCH4);
+	else if (strncmp(argv[1], "bch8", 4) == 0)
+		omap_nand_switch_ecc(GPMC_ECC_BCH8);
+	else if (strncmp(argv[1], "bch16", 5) == 0)
+		omap_nand_switch_ecc(GPMC_ECC_BCH16);
 	else
 		goto usage;
 
@@ -311,7 +318,7 @@ usage:
 U_BOOT_CMD(
 	nandecc, 2, 1,	do_switch_ecc,
 	"switch OMAP3 NAND ECC calculation algorithm",
-	"[hw/sw] - Switch between NAND hardware (hw) or software (sw) ecc algorithm"
+	"[hw/sw/bch4/bch8/bch16] - Switch between NAND hardware (hw) or software (sw) ecc algorithm"
 );
 
 #endif /* CONFIG_NAND_OMAP_GPMC & !CONFIG_SPL_BUILD */

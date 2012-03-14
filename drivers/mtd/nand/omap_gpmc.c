@@ -31,6 +31,12 @@
 
 static uint8_t cs;
 static struct nand_ecclayout hw_nand_oob = GPMC_NAND_HW_ECC_LAYOUT;
+static struct nand_ecclayout hw_bch8_nand_oob = GPMC_NAND_HW_BCH8_ECC_LAYOUT;
+#ifndef CONFIG_SPL_BUILD
+static struct nand_ecclayout hw_bch4_nand_oob = GPMC_NAND_HW_BCH4_ECC_LAYOUT;
+static struct nand_ecclayout hw_bch16_nand_oob = GPMC_NAND_HW_BCH16_ECC_LAYOUT;
+#endif
+
 
 /*
  * omap_nand_hwcontrol - Set the address pointers corretly for the
@@ -240,7 +246,7 @@ static void omap_enable_hwecc(struct mtd_info *mtd, int32_t mode)
  * @hardware - 1 -switch to h/w ecc, 0 - s/w ecc
  *
  */
-void omap_nand_switch_ecc(int32_t hardware)
+void omap_nand_switch_ecc(int32_t mode)
 {
 	struct nand_chip *nand;
 	struct mtd_info *mtd;
@@ -265,9 +271,12 @@ void omap_nand_switch_ecc(int32_t hardware)
 	nand->ecc.hwctl = NULL;
 	nand->ecc.correct = NULL;
 	nand->ecc.calculate = NULL;
+	nand->ecc.layout = NULL;
+	nand->ecc.size = 0;
 
 	/* Setup the ecc configurations again */
-	if (hardware) {
+	switch (mode) {
+	case GPMC_HW_ECC_1BIT:
 		nand->ecc.mode = NAND_ECC_HW;
 		nand->ecc.layout = &hw_nand_oob;
 		nand->ecc.size = 512;
@@ -276,12 +285,30 @@ void omap_nand_switch_ecc(int32_t hardware)
 		nand->ecc.correct = omap_correct_data;
 		nand->ecc.calculate = omap_calculate_ecc;
 		omap_hwecc_init(nand);
-		printf("HW ECC selected\n");
-	} else {
+		printf("1bit HW ECC selected\n");
+		break;
+	case GPMC_ECC_BCH4:
+		nand->ecc.mode = NAND_ECC_SOFT_BCH;
+		nand->ecc.size = 512;
+		nand->ecc.bytes = 7;
+		printf("BCH4 ECC selected\n");
+		break;
+	case GPMC_ECC_BCH8:
+		nand->ecc.mode = NAND_ECC_SOFT_BCH;
+		nand->ecc.size = 512;
+		nand->ecc.bytes = 13;
+		nand->ecc.layout = &hw_bch8_nand_oob;
+		printf("BCH8 ECC selected\n");
+		break;
+	case GPMC_ECC_BCH16:
+		nand->ecc.mode = NAND_ECC_SOFT_BCH;
+		nand->ecc.size = 512;
+		nand->ecc.bytes = 26;
+		printf("BCH16 ECC selected\n");
+		break;
+	case GPMC_SW_ECC:
 		nand->ecc.mode = NAND_ECC_SOFT;
-		/* Use mtd default settings */
-		nand->ecc.layout = NULL;
-		printf("SW ECC selected\n");
+		printf("1bit SW ECC selected\n");
 	}
 
 	/* Update NAND handling after ECC mode switch */
@@ -349,7 +376,10 @@ int board_nand_init(struct nand_chip *nand)
 	nand->chip_delay = 100;
 	/* Default ECC mode */
 #if !defined(CONFIG_SPL_BUILD) || defined(CONFIG_SPL_NAND_SOFTECC)
-	nand->ecc.mode = NAND_ECC_SOFT;
+	nand->ecc.mode = NAND_ECC_SOFT_BCH;
+	nand->ecc.size = 512;
+	nand->ecc.bytes = 13;
+	nand->ecc.layout = &hw_bch8_nand_oob;
 #else
 	nand->ecc.mode = NAND_ECC_HW;
 	nand->ecc.layout = &hw_nand_oob;
