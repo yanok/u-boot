@@ -48,30 +48,18 @@
 /* We have a 2KiB sector size */
 #define CONFIG_ENV_SIZE			(2 << 10)
 
+/* disallow overwriting serial# and ethaddr */
+#undef CONFIG_ENV_OVERWRITE
+
 /*
  * Hardware drivers
  */
 
-/*
- * NS16550 Configuration
- */
-#define V_NS16550_CLK			48000000	/* 48MHz (APLL96/2) */
-
-#define CONFIG_SYS_NS16550
-#define CONFIG_SYS_NS16550_SERIAL
-#define CONFIG_SYS_NS16550_REG_SIZE	(-4)
-#define CONFIG_SYS_NS16550_CLK		V_NS16550_CLK
-
-/*
- * select serial console configuration
- */
+/* Select serial console configuration. */
 #define CONFIG_CONS_INDEX		3
 #define CONFIG_SYS_NS16550_COM3		OMAP34XX_UART3
-#define CONFIG_SERIAL3			3	/* UART3 */
-
 #define CONFIG_BAUDRATE			115200
-#define CONFIG_SYS_BAUDRATE_TABLE	{4800, 9600, 19200, 38400, 57600,\
-					115200}
+
 #define CONFIG_GENERIC_MMC		1
 #define CONFIG_MMC			1
 #define CONFIG_OMAP_HSMMC		1
@@ -125,7 +113,6 @@
 #define CONFIG_TWL4030_POWER		1
 
 /* Environment information */
-#undef CONFIG_ENV_OVERWRITE	/* disallow overwriting serial# and ethaddr */
 #define CONFIG_BOOTDELAY		3
 
 #define CONFIG_EXTRA_ENV_SETTINGS \

@@ -64,16 +64,7 @@
 #define CONFIG_TWL4030_POWER		1
 
 /*
- * serial port - NS16550 compatible
- */
-#define V_NS16550_CLK			48000000	/* 48MHz (APLL96/2) */
-
-#define CONFIG_SYS_NS16550
-#define CONFIG_SYS_NS16550_SERIAL
-#define CONFIG_SYS_NS16550_REG_SIZE	(-4)
-#define CONFIG_SYS_NS16550_CLK		V_NS16550_CLK
-
-/* Original SDP u-boot used UART1 and thus J8 (innermost); that can be
+ * Original SDP u-boot used UART1 and thus J8 (innermost); that can be
  * swapped with UART2 via jumpering.  Downsides of using J8:  it doesn't
  * support UART boot (that's only for UART3); it prevents sharing a Linux
  * kernel (LL_DEBUG_UART3) or filesystem (getty ttyS2) with most boards.
@@ -83,22 +74,17 @@
  * since UART3 isn't in the CORE power domain, it may be a bit less
  * usable in certain PM-sensitive debug scenarios.
  */
+#define CONFIG_BAUDRATE			115200
 #undef CONSOLE_J9			/* else J8/UART1 (innermost) */
 
 #ifdef CONSOLE_J9
 #define CONFIG_CONS_INDEX		3
 #define CONFIG_SYS_NS16550_COM3		OMAP34XX_UART3
-#define CONFIG_SERIAL3			3	/* UART3 */
 #else
 #define CONFIG_CONS_INDEX		1
 #define CONFIG_SYS_NS16550_COM1		OMAP34XX_UART1
-#define CONFIG_SERIAL1			1	/* UART1 */
 #endif
 
-#define CONFIG_ENV_OVERWRITE
-#define CONFIG_BAUDRATE			115200
-#define CONFIG_SYS_BAUDRATE_TABLE	{4800, 9600, 19200, 38400, 57600,\
-					115200}
 
 /*
  * I2C for power management setup
@@ -190,9 +176,6 @@
  * Default boot order:  mmc bootscript, MMC uImage, NOR image.
  * Network booting environment must be configured at site.
  */
-
-/* allow overwriting serial config and ethaddr */
-#define CONFIG_ENV_OVERWRITE
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"loadaddr=0x82000000\0" \
