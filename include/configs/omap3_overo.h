@@ -19,17 +19,17 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-/*
- * High Level Configuration Options
- */
-#define CONFIG_OMAP				/* in a TI OMAP core */
-#define CONFIG_OMAP34XX				/* which is a 34XX */
-#define CONFIG_OMAP3_OVERO			/* working with overo */
-
-#define CONFIG_SDRC				/* The chip has SDRC controller */
-
 #include <asm/arch/cpu.h>			/* get chip and board defs */
-#include <asm/arch/omap3.h>
+
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_SDRC			/* The chip has SDRC controller */
+
+/*
+ * Other configuration options
+ */
+#define CONFIG_OMAP3_OVERO		/* working with overo */
 
 /*
  * Display CPU and Board information

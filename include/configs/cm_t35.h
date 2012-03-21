@@ -32,19 +32,20 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
+#include <asm/arch/cpu.h>		/* get chip and board defs */
+
 /*
- * High Level Configuration Options
+ * Values that differ from platform defaults or are unspecified.
  */
-#define CONFIG_OMAP	/* in a TI OMAP core */
-#define CONFIG_OMAP34XX	/* which is a 34XX */
-#define CONFIG_CM_T3X	/* working with CM-T35 and CM-T3730 */
+#define CONFIG_SDRC			/* The chip has SDRC controller */
+
+/*
+ * Other configuration options
+ */
+#define CONFIG_CM_T3X		/* working with CM-T35 and CM-T3730 */
 
 #define CONFIG_SYS_TEXT_BASE	0x80008000
 
-#define CONFIG_SDRC	/* The chip has SDRC controller */
-
-#include <asm/arch/cpu.h>		/* get chip and board defs */
-#include <asm/arch/omap3.h>
 
 /*
  * Display CPU and Board information

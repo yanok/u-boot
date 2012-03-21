@@ -20,30 +20,20 @@
 #ifndef __OMAP3_EVM_QUICK_MMC_H
 #define __OMAP3_EVM_QUICK_MMC_H
 
-#include <asm/arch/cpu.h>
-#include <asm/arch/omap3.h>
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_ENV_IS_NOWHERE
 
-/* ----------------------------------------------------------------------------
- * Supported U-boot commands
- * ----------------------------------------------------------------------------
+/* Platform defaults */
+#include "omap3_evm_common.h"
+
+/*
+ * Other configuration options
  */
 #define CONFIG_CMD_MMC
 #define CONFIG_CMD_FAT
-
-/*
- * Board revision is detected by probing the Ethernet chip.
- *
- * When revision is statically configured via CONFIG_STATIC_BOARD_REV,
- * this option can be removed. Generated binary is leaner by ~16Kbytes.
- */
-#define CONFIG_CMD_NET
-
-/* ----------------------------------------------------------------------------
- * Supported U-boot features
- * ----------------------------------------------------------------------------
- */
 #define CONFIG_SILENT_CONSOLE
-#define CONFIG_ENV_IS_NOWHERE
 
 /* ----------------------------------------------------------------------------
  * Supported hardware
@@ -55,12 +45,6 @@
 #define CONFIG_GENERIC_MMC
 #define CONFIG_OMAP_HSMMC
 #define CONFIG_DOS_PARTITION
-
-/* -----------------------------------------------------------------------------
- * Include common board configuration
- * -----------------------------------------------------------------------------
- */
-#include "omap3_evm_common.h"
 
 /* -----------------------------------------------------------------------------
  * Default environment

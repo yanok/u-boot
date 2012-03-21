@@ -33,8 +33,17 @@
 #ifndef __OMAP3EVM_CONFIG_H
 #define __OMAP3EVM_CONFIG_H
 
-#include <asm/arch/cpu.h>
-#include <asm/arch/omap3.h>
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_CMD_NAND
+
+/* Platform defaults */
+#include "omap3_evm_common.h"
+
+/*
+ * Other configuration options
+ */
 
 /* ----------------------------------------------------------------------------
  * Supported U-boot commands
@@ -48,7 +57,6 @@
 
 #define CONFIG_CMD_I2C
 #define CONFIG_CMD_MMC
-#define CONFIG_CMD_NAND
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_PING
 
@@ -123,12 +131,6 @@
 #define CONFIG_SYS_NAND_ECCBYTES	3
 #define CONFIG_SYS_NAND_U_BOOT_START   CONFIG_SYS_TEXT_BASE
 #define CONFIG_SYS_NAND_U_BOOT_OFFS	0x80000
-
-/* -----------------------------------------------------------------------------
- * Include common board configuration
- * -----------------------------------------------------------------------------
- */
-#include "omap3_evm_common.h"
 
 /* -----------------------------------------------------------------------------
  * Default environment

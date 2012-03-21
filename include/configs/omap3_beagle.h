@@ -28,17 +28,17 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-/*
- * High Level Configuration Options
- */
-#define CONFIG_OMAP		1	/* in a TI OMAP core */
-#define CONFIG_OMAP34XX		1	/* which is a 34XX */
-#define CONFIG_OMAP3_BEAGLE	1	/* working with BEAGLE */
-
-#define CONFIG_SDRC	/* The chip has SDRC controller */
-
 #include <asm/arch/cpu.h>		/* get chip and board defs */
-#include <asm/arch/omap3.h>
+
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_SDRC			/* The chip has SDRC controller */
+
+/*
+ * Other configuration options
+ */
+#define CONFIG_OMAP3_BEAGLE		/* working with BEAGLE */
 
 /*
  * Display CPU and Board information
