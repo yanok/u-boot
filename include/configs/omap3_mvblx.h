@@ -44,7 +44,6 @@
 #define CONFIG_MVBLX			/* working with mvBlueLYNX-X */
 #define CONFIG_MACH_TYPE		MACH_TYPE_MVBLX
 
-#undef CONFIG_USE_IRQ				/* no support for IRQs */
 #define CONFIG_MISC_INIT_R
 
 #define CONFIG_OF_LIBFDT		1

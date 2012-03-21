@@ -42,7 +42,6 @@
  */
 #define CONFIG_OMAP3_ZOOM2		/* working with Zoom II */
 
-#undef CONFIG_USE_IRQ		/* no support for IRQs */
 #define CONFIG_MISC_INIT_R
 
 #define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */

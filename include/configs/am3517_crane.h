@@ -37,7 +37,6 @@
  */
 #define CONFIG_OMAP3_AM3517CRANE	/* working with CRANEBOARD */
 
-#undef CONFIG_USE_IRQ				/* no support for IRQs */
 #define CONFIG_MISC_INIT_R
 
 #define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */
