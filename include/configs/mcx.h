@@ -46,11 +46,6 @@
 #define CONFIG_SYS_TEXT_BASE		0x80008000
 
 /*
- * Size of malloc() pool
- */
-#define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB sector */
-#define CONFIG_SYS_MALLOC_LEN		(1024 << 10)
-/*
  * DDR related
  */
 #define CONFIG_SYS_CS0_SIZE		(256 * 1024 * 1024)
