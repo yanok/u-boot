@@ -61,9 +61,6 @@
 #define CONFIG_SYS_LONGHELP
 #define CONFIG_SYS_HUSH_PARSER
 
-/* Allow to overwrite serial and ethaddr */
-#define CONFIG_ENV_OVERWRITE
-
 /* Add auto-completion support */
 #define CONFIG_AUTO_COMPLETE
 

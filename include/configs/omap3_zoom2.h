@@ -34,6 +34,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+#define CONFIG_SERIAL_MULTI
 
 /* Platform defaults */
 #include <configs/omap3_common.h>
@@ -54,30 +55,22 @@
 /*
  * NS16550 Configuration
  * Zoom2 uses the TL16CP754C on the debug board
- */
-#define CONFIG_SERIAL_MULTI		1
-/*
+ *
  * 0 - 1 : first  USB with respect to the left edge of the debug board
  * 2 - 3 : second USB with respect to the left edge of the debug board
  */
 #define ZOOM2_DEFAULT_SERIAL_DEVICE	(&zoom2_serial_device0)
 
-#define V_NS16550_CLK			(1843200)	/* 1.8432 Mhz */
-
 #define CONFIG_SYS_NS16550
 #define CONFIG_SYS_NS16550_REG_SIZE	(-2)
-#define CONFIG_SYS_NS16550_CLK		V_NS16550_CLK
+#define CONFIG_SYS_NS16550_CLK		(1843200)	/* 1.8432 Mhz */
 #define CONFIG_BAUDRATE			115200
 #define CONFIG_SYS_BAUDRATE_TABLE	{115200}
-
-/* allow to overwrite serial and ethaddr */
-#define CONFIG_ENV_OVERWRITE
 
 #define CONFIG_GENERIC_MMC		1
 #define CONFIG_MMC			1
 #define CONFIG_OMAP_HSMMC		1
 #define CONFIG_DOS_PARTITION		1
-
 /* Status LED */
 #define CONFIG_STATUS_LED		1 /* Status LED enabled	*/
 #define CONFIG_BOARD_SPECIFIC_LED	1

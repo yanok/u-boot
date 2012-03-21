@@ -59,19 +59,11 @@
 
 /* Hardware drivers */
 
-/* NS16550 Configuration */
-#define CONFIG_SYS_NS16550
-#define CONFIG_SYS_NS16550_SERIAL
-#define CONFIG_SYS_NS16550_REG_SIZE	(-4)
-#define CONFIG_SYS_NS16550_CLK		48000000 /* 48MHz (APLL96/2) */
 
-/* select serial console configuration */
+/* Select serial console configuration. */
 #define CONFIG_CONS_INDEX		3
 #define CONFIG_SYS_NS16550_COM3		OMAP34XX_UART3
-#define CONFIG_SERIAL3			3
 #define CONFIG_BAUDRATE			115200
-#define CONFIG_SYS_BAUDRATE_TABLE	{4800, 9600, 19200, 38400, 57600,\
-					115200}
 
 /* MMC */
 #define CONFIG_GENERIC_MMC
@@ -135,9 +127,6 @@
 #define CONFIG_RBTREE
 #define CONFIG_MTD_DEVICE       /* needed for mtdparts commands */
 #define CONFIG_MTD_PARTITIONS
-
-/* Environment information */
-#define CONFIG_ENV_OVERWRITE /* allow to overwrite serial and ethaddr */
 
 #define CONFIG_BOOTDELAY		3
 
