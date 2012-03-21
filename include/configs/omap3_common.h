@@ -49,4 +49,7 @@
 #define V_SCLK			(V_OSCK >> 1)
 #endif
 
+/* no support for IRQs */
+#undef CONFIG_USE_IRQ
+
 #endif /* __CONFIG_OMAP3_COMMON_H */

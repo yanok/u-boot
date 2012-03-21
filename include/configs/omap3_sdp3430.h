@@ -56,7 +56,6 @@
  */
 #define CONFIG_OMAP3_3430SDP		/* working with SDP Rev2 */
 
-#undef CONFIG_USE_IRQ			/* no support for IRQs */
 #define CONFIG_MISC_INIT_R
 
 #define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */

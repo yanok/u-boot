@@ -51,7 +51,6 @@
 
 #define CONFIG_SYS_TEXT_BASE	0x80008000
 
-#undef CONFIG_USE_IRQ				/* no support for IRQs */
 #define CONFIG_MISC_INIT_R
 
 #define CONFIG_OF_LIBFDT		1

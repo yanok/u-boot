@@ -44,8 +44,6 @@
  */
 #define CONFIG_OMAP3_LOGIC		/* working with Logic OMAP boards */
 
-#undef CONFIG_USE_IRQ			/* no support for IRQs */
-
 #define CONFIG_SYS_TEXT_BASE	0x80400000
 
 #define CONFIG_MISC_INIT_R		/* misc_init_r dumps the die id */

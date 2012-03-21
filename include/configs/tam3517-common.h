@@ -42,7 +42,6 @@
 
 #define CONFIG_SYS_CACHELINE_SIZE	64
 
-#undef CONFIG_USE_IRQ				/* no support for IRQs */
 #define CONFIG_MISC_INIT_R
 
 #define CONFIG_CMDLINE_TAG			/* enable passing of ATAGs */
