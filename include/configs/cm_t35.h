@@ -53,8 +53,6 @@
 #define CONFIG_DISPLAY_CPUINFO
 #define CONFIG_DISPLAY_BOARDINFO
 
-#define CONFIG_MISC_INIT_R
-
 #define CONFIG_OF_LIBFDT		1
 /*
  * The early kernel mapping on ARM currently only maps from the base of DRAM

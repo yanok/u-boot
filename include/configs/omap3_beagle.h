@@ -46,8 +46,6 @@
 #define CONFIG_DISPLAY_CPUINFO		1
 #define CONFIG_DISPLAY_BOARDINFO	1
 
-#define CONFIG_MISC_INIT_R
-
 #define CONFIG_OF_LIBFDT		1
 
 #define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */
