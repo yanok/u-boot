@@ -25,17 +25,17 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-/*
- * High Level Configuration Options
- */
-#define CONFIG_OMAP		1	/* in a TI OMAP core */
-#define CONFIG_OMAP34XX		1	/* which is a 34XX */
-#define CONFIG_OMAP3_AM3517EVM	1	/* working with AM3517EVM */
-
-#define CONFIG_EMIF4	/* The chip has EMIF4 controller */
-
 #include <asm/arch/cpu.h>		/* get chip and board defs */
-#include <asm/arch/omap3.h>
+
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_EMIF4			/* The chip has EMIF4 controller */
+
+/*
+ * Other configuration options
+ */
+#define CONFIG_OMAP3_AM3517EVM		/* working with AM3517EVM */
 
 /*
  * Display CPU and Board information

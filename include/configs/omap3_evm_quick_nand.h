@@ -20,35 +20,19 @@
 #ifndef __OMAP3_EVM_QUICK_NAND_H
 #define __OMAP3_EVM_QUICK_NAND_H
 
-#include <asm/arch/cpu.h>
-#include <asm/arch/omap3.h>
-
-/* ----------------------------------------------------------------------------
- * Supported U-boot commands
- * ----------------------------------------------------------------------------
+/*
+ * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_CMD_NAND
-
-/*
- * Board revision is detected by probing the Ethernet chip.
- *
- * When revision is statically configured via CONFIG_STATIC_BOARD_REV,
- * this option can be removed. Generated binary is leaner by ~16Kbytes.
- */
-#define CONFIG_CMD_NET
-
-/* ----------------------------------------------------------------------------
- * Supported U-boot features
- * ----------------------------------------------------------------------------
- */
-#define CONFIG_SILENT_CONSOLE
 #define CONFIG_ENV_IS_NOWHERE
 
-/* -----------------------------------------------------------------------------
- * Include common board configuration
- * -----------------------------------------------------------------------------
- */
+/* Platform defaults */
 #include "omap3_evm_common.h"
+
+/*
+ * Other configuration options
+ */
+#define CONFIG_SILENT_CONSOLE
 
 /* -----------------------------------------------------------------------------
  * Default environment

@@ -26,27 +26,8 @@
  * MA 02111-1307 USA
  */
 
-#ifndef __CONFIG_H
-#define __CONFIG_H
-
-/* TODO: REMOVE THE FOLLOWING
- * Retained the following till size.h is removed in u-boot
- */
-#include <asm/sizes.h>
 /*
- * High Level Configuration Options
- */
-#define CONFIG_OMAP		1	/* in a TI OMAP core */
-#define CONFIG_OMAP34XX		1	/* which is a 34XX */
-#define CONFIG_OMAP3_3430SDP	1	/* working with SDP Rev2 */
-
-#define CONFIG_SDRC	/* The chip has SDRC controller */
-
-#include <asm/arch/cpu.h>		/* get chip and board defs */
-#include <asm/arch/omap3.h>
-
-/*
- * NOTE:  these #defines presume standard SDP jumper settings.
+ * NOTE:  We assume standard SDP jumper settings.
  * In particular:
  *  - 26 MHz clock (not 19.2 or 38.4 MHz)
  *  - Boot from 128MB NOR, not NAND or OneNAND
@@ -54,6 +35,22 @@
  * At this writing, OMAP3 U-Boot support doesn't permit concurrent
  * support for all the flash types the board supports.
  */
+
+#ifndef __CONFIG_H
+#define __CONFIG_H
+
+#include <asm/arch/cpu.h>		/* get chip and board defs */
+
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_SDRC			/* The chip has SDRC controller */
+
+/*
+ * Other configuration options
+ */
+#define CONFIG_OMAP3_3430SDP		/* working with SDP Rev2 */
+
 #define CONFIG_DISPLAY_CPUINFO		1
 #define CONFIG_DISPLAY_BOARDINFO	1
 

@@ -21,22 +21,21 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-/*
- * High Level Configuration Options
- */
-#define CONFIG_OMAP			/* in a TI OMAP core */
-#define CONFIG_OMAP34XX			/* which is a 34XX */
-#define CONFIG_OMAP3_MCX		/* working with mcx */
+#include <asm/arch/cpu.h>		/* get chip and board defs */
 
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_EMIF4			/* The chip has EMIF4 controller */
+
+/*
+ * Other configuration options
+ */
+#define CONFIG_OMAP3_MCX		/* working with mcx */
 #define MACH_TYPE_MCX			3656
-#define CONFIG_MACH_TYPE	MACH_TYPE_MCX
+#define CONFIG_MACH_TYPE		MACH_TYPE_MCX
 
 #define CONFIG_SYS_CACHELINE_SIZE	64
-
-#define CONFIG_EMIF4	/* The chip has EMIF4 controller */
-
-#include <asm/arch/cpu.h>		/* get chip and board defs */
-#include <asm/arch/omap3.h>
 
 #define CONFIG_OF_LIBFDT
 #define CONFIG_FIT

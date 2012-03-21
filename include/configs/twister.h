@@ -24,8 +24,16 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+
+/* Platform defaults */
 #include "tam3517-common.h"
 
+/*
+ * Other configuration options
+ */
 #define MACH_TYPE_TAM3517	2818
 #define CONFIG_MACH_TYPE	MACH_TYPE_TAM3517
 

@@ -22,20 +22,19 @@
 #ifndef __TAM3517_H
 #define __TAM3517_H
 
-/*
- * High Level Configuration Options
- */
-#define CONFIG_OMAP		/* in a TI OMAP core */
-#define CONFIG_OMAP34XX		/* which is a 34XX */
+#include <asm/arch/cpu.h>		/* get chip and board defs */
 
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_EMIF4			/* The chip has EMIF4 controller */
+
+/*
+ * Other configuration options
+ */
 #define CONFIG_SYS_TEXT_BASE 0x80008000
 
 #define CONFIG_SYS_CACHELINE_SIZE	64
-
-#define CONFIG_EMIF4	/* The chip has EMIF4 controller */
-
-#include <asm/arch/cpu.h>		/* get chip and board defs */
-#include <asm/arch/omap3.h>
 
 /*
  * Display CPU and Board information
