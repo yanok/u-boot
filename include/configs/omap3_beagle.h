@@ -46,13 +46,6 @@
 #define CONFIG_OMAP3_BEAGLE		/* working with BEAGLE */
 
 /*
- * Size of malloc() pool
- */
-#define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB */
-						/* Sector */
-#define CONFIG_SYS_MALLOC_LEN		(CONFIG_ENV_SIZE + (128 << 10))
-
-/*
  * Hardware drivers
  */
 

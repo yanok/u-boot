@@ -50,12 +50,8 @@
 #define CONFIG_MVBLX			/* working with mvBlueLYNX-X */
 #define CONFIG_MACH_TYPE		MACH_TYPE_MVBLX
 
-/*
- * Size of malloc() pool
- */
-#define CONFIG_ENV_SIZE			(2 << 10)	/* 2 KiB */
-						/* Sector */
-#define CONFIG_SYS_MALLOC_LEN		(CONFIG_ENV_SIZE + (128 << 10))
+/* We have a 2KiB sector size */
+#define CONFIG_ENV_SIZE			(2 << 10)
 
 /*
  * Hardware drivers

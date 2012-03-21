@@ -62,4 +62,18 @@
 #define CONFIG_INITRD_TAG
 #define CONFIG_REVISION_TAG
 
+/*
+ * A minimum size of malloc() pool.  There are two common large users here.
+ * One of which is 'saveenv' which requires a pool of the size of the
+ * environment (CONFIG_ENV_SIZE).  A second user is UBI which requires
+ * at least 512KiB.  We default to 1MB worth of pool.  These can be
+ * overridden by the board if needed.
+ */
+#ifndef CONFIG_ENV_SIZE
+#define CONFIG_ENV_SIZE			(128 << 10)
+#endif
+#ifndef CONFIG_SYS_MALLOC_LEN
+#define CONFIG_SYS_MALLOC_LEN		(1024 << 10)
+#endif
+
 #endif /* __CONFIG_OMAP3_COMMON_H */

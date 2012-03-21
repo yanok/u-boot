@@ -44,12 +44,6 @@
 #define CONFIG_SYS_PTV			2	/* Divisor: 2^(PTV+1) => 8 */
 #define CONFIG_SYS_HZ			1000
 
-/* Size of environment - 128KB */
-#define CONFIG_ENV_SIZE			(128 << 10)
-
-/* Size of malloc pool */
-#define CONFIG_SYS_MALLOC_LEN		(CONFIG_ENV_SIZE + (128 << 10))
-
 /*
  * Stack sizes
  * These values are used in start.S
