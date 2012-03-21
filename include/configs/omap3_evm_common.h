@@ -38,12 +38,6 @@
 #undef CONFIG_USE_IRQ			/* no support for IRQs */
 
 /*
- * Clock related definitions
- */
-#define V_OSCK			26000000	/* Clock output from T2 */
-#define V_SCLK			(V_OSCK >> 1)
-
-/*
  * OMAP3 has 12 GP timers, they can be driven by the system clock
  * (12/13/16.8/19.2/38.4MHz) or by 32KHz clock. We use 13MHz (V_SCLK).
  * This rate is divided by a local divisor.

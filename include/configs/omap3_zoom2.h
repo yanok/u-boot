@@ -47,10 +47,6 @@
  */
 #define CONFIG_OMAP3_ZOOM2		/* working with Zoom II */
 
-/* Clock Defines */
-#define V_OSCK			26000000	/* Clock output from T2 */
-#define V_SCLK			(V_OSCK >> 1)
-
 #undef CONFIG_USE_IRQ		/* no support for IRQs */
 #define CONFIG_MISC_INIT_R
 

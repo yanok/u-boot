@@ -41,4 +41,12 @@
 #define CONFIG_DISPLAY_CPUINFO
 #define CONFIG_DISPLAY_BOARDINFO
 
+/* Clock Defines */
+#ifndef V_OSCK
+#define V_OSCK			26000000	/* Clock output from T2 */
+#endif
+#ifndef V_SCLK
+#define V_SCLK			(V_OSCK >> 1)
+#endif
+
 #endif /* __CONFIG_OMAP3_COMMON_H */
