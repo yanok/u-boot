@@ -40,11 +40,6 @@
 #define CONFIG_SYS_NS16550_COM3		OMAP34XX_UART3
 #define CONFIG_BAUDRATE			115200
 
-#define CONFIG_GENERIC_MMC
-#define CONFIG_MMC
-#define CONFIG_OMAP_HSMMC
-#define CONFIG_DOS_PARTITION
-
 /* commands to include */
 #define CONFIG_SYS_NO_FLASH	/* No CFI flash */
 #include <config_cmd_default.h>
