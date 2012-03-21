@@ -49,13 +49,6 @@
 #define CONFIG_MVBLX			/* working with mvBlueLYNX-X */
 #define CONFIG_MACH_TYPE		MACH_TYPE_MVBLX
 
-
-/*
- * Display CPU and Board information
- */
-#define CONFIG_DISPLAY_CPUINFO		1
-#define CONFIG_DISPLAY_BOARDINFO	1
-
 /* Clock Defines */
 #define V_OSCK			26000000	/* Clock output from T2 */
 #define V_SCLK			(V_OSCK >> 1)

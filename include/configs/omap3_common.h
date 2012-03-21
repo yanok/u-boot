@@ -37,4 +37,8 @@
 #include <asm/arch/cpu.h>
 #include <asm/arch/omap3.h>
 
+/* Display CPU and Board Info */
+#define CONFIG_DISPLAY_CPUINFO
+#define CONFIG_DISPLAY_BOARDINFO
+
 #endif /* __CONFIG_OMAP3_COMMON_H */
