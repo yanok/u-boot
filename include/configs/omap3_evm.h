@@ -33,9 +33,6 @@
 #ifndef __OMAP3EVM_CONFIG_H
 #define __OMAP3EVM_CONFIG_H
 
-#include <asm/arch/cpu.h>
-#include <asm/arch/omap3.h>
-
 /* ----------------------------------------------------------------------------
  * Supported U-boot commands
  * ----------------------------------------------------------------------------

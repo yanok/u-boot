@@ -32,11 +32,23 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-/* High Level Configuration Options */
-#define CONFIG_OMAP			/* in a TI OMAP core */
-#define CONFIG_OMAP34XX			/* which is a 34XX */
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_SDRC			/* The chip has SDRC controller */
 
+/* Platform defaults */
+#include <configs/omap3_common.h>
+
+/*
+ * Override the common platform file choices.
+ */
+
+/*
+ * Other configuration options
+ */
 #define CONFIG_MACH_TYPE		MACH_TYPE_TRICORDER
+
 /*
  * 1MB into the SDRAM to allow for SPL's bss at the beginning of SDRAM
  * 64 bytes before this address should be set aside for u-boot.img's
@@ -44,11 +56,6 @@
  * other needs.
  */
 #define CONFIG_SYS_TEXT_BASE		0x80100000
-
-#define CONFIG_SDRC			/* The chip has SDRC controller */
-
-#include <asm/arch/cpu.h>		/* get chip and board defs */
-#include <asm/arch/omap3.h>
 
 /* Display CPU and Board information */
 #define CONFIG_DISPLAY_CPUINFO

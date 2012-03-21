@@ -24,8 +24,20 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+
+/* Platform defaults */
 #include "tam3517-common.h"
 
+/*
+ * Override the common platform file choices.
+ */
+
+/*
+ * Other configuration options
+ */
 #define MACH_TYPE_TAM3517	2818
 #define CONFIG_MACH_TYPE	MACH_TYPE_TAM3517
 
@@ -50,5 +62,7 @@
 
 #define	CONFIG_EXTRA_ENV_SETTINGS	CONFIG_TAM3517_SETTINGS \
 	"bootcmd=run nandboot\0"
+
+#include <configs/omap3_common.h>
 
 #endif /* __CONFIG_H */

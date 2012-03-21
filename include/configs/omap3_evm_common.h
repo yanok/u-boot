@@ -18,13 +18,20 @@
 #define __OMAP3_EVM_COMMON_H
 
 /*
- * High level configuration options
+ * Values that differ from platform defaults or are unspecified.
  */
-#define CONFIG_OMAP			/* This is TI OMAP core */
-#define CONFIG_OMAP34XX			/* belonging to 34XX family */
-
 #define CONFIG_SDRC			/* The chip has SDRC controller */
 
+/* Platform defaults */
+#include <configs/omap3_common.h>
+
+/*
+ * Override the common platform file choices.
+ */
+
+/*
+ * Other configuration options
+ */
 #define CONFIG_OMAP3_EVM		/* This is a OMAP3 EVM */
 #define CONFIG_TWL4030_POWER		/* with TWL4030 PMIC */
 

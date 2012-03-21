@@ -31,10 +31,22 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-/* High Level Configuration Options */
-#define CONFIG_OMAP		1	/* in a TI OMAP core */
-#define CONFIG_OMAP34XX		1	/* which is a 34XX */
-#define CONFIG_OMAP3_DEVKIT8000	1	/* working with DevKit8000 */
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_SDRC			/* The chip has SDRC controller */
+
+/* Platform defaults */
+#include <configs/omap3_common.h>
+
+/*
+ * Override the common platform file choices.
+ */
+
+/*
+ * Other configuration options
+ */
+#define CONFIG_OMAP3_DEVKIT8000		/* working with DevKit8000 */
 
 /*
  * 1MB into the SDRAM to allow for SPL's bss at the beginning of SDRAM
@@ -44,10 +56,6 @@
  */
 #define CONFIG_SYS_TEXT_BASE	0x80100000
 
-#define CONFIG_SDRC	/* The chip has SDRC controller */
-
-#include <asm/arch/cpu.h>		/* get chip and board defs */
-#include <asm/arch/omap3.h>
 
 /* Display CPU and Board information */
 #define CONFIG_DISPLAY_CPUINFO		1

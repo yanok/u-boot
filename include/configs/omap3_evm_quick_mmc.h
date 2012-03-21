@@ -20,9 +20,6 @@
 #ifndef __OMAP3_EVM_QUICK_MMC_H
 #define __OMAP3_EVM_QUICK_MMC_H
 
-#include <asm/arch/cpu.h>
-#include <asm/arch/omap3.h>
-
 /* ----------------------------------------------------------------------------
  * Supported U-boot commands
  * ----------------------------------------------------------------------------
@@ -61,6 +58,10 @@
  * -----------------------------------------------------------------------------
  */
 #include "omap3_evm_common.h"
+
+/*
+ * Override the common platform file choices.
+ */
 
 /* -----------------------------------------------------------------------------
  * Default environment

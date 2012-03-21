@@ -23,18 +23,21 @@
 #ifndef __IGEP00X0_H
 #define __IGEP00X0_H
 
-#include <asm/sizes.h>
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+#define CONFIG_SDRC			/* The chip has SDRC controller */
+
+/* Platform defaults */
+#include <configs/omap3_common.h>
 
 /*
- * High Level Configuration Options
+ * Override the common platform file choices.
  */
-#define CONFIG_OMAP		1	/* in a TI OMAP core */
-#define CONFIG_OMAP34XX		1	/* which is a 34XX */
 
-#define CONFIG_SDRC	/* The chip has SDRC controller */
-
-#include <asm/arch/cpu.h>
-#include <asm/arch/omap3.h>
+/*
+ * Other configuration options
+ */
 
 /*
  * Display CPU and Board information

@@ -22,8 +22,21 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
+
+/*
+ * Values that differ from platform defaults or are unspecified.
+ */
+
+/* Platform defaults */
 #include "tam3517-common.h"
 
+/*
+ * Override the common platform file choices.
+ */
+
+/*
+ * Other configuration options
+ */
 #define MACH_TYPE_AM3517_MT_VENTOUX	3832
 #define CONFIG_MACH_TYPE	MACH_TYPE_AM3517_MT_VENTOUX
 

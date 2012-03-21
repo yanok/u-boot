@@ -23,19 +23,24 @@
 #define __TAM3517_H
 
 /*
- * High Level Configuration Options
+ * Values that differ from platform defaults or are unspecified.
  */
-#define CONFIG_OMAP		/* in a TI OMAP core */
-#define CONFIG_OMAP34XX		/* which is a 34XX */
+#define CONFIG_EMIF4			/* The chip has EMIF4 controller */
+
+/* Platform defaults */
+#include <configs/omap3_common.h>
+
+/*
+ * Override the common platform file choices.
+ */
+
+/*
+ * Other configuration options
+ */
 
 #define CONFIG_SYS_TEXT_BASE 0x80008000
 
 #define CONFIG_SYS_CACHELINE_SIZE	64
-
-#define CONFIG_EMIF4	/* The chip has EMIF4 controller */
-
-#include <asm/arch/cpu.h>		/* get chip and board defs */
-#include <asm/arch/omap3.h>
 
 /*
  * Display CPU and Board information
