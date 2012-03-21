@@ -25,6 +25,7 @@
  * ----------------------------------------------------------------------------
  */
 #define CONFIG_CMD_NAND
+#undef CONFIG_CMD_MMC
 
 /*
  * Board revision is detected by probing the Ethernet chip.
