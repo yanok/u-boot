@@ -33,4 +33,8 @@
 #define CONFIG_OMAP
 #define CONFIG_OMAP34XX
 
+/* Display CPU and Board Info */
+#define CONFIG_DISPLAY_CPUINFO
+#define CONFIG_DISPLAY_BOARDINFO
+
 #endif /* __ASM_CONFIG_ARCH_COMMON_H */
