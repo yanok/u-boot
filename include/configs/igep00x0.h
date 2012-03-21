@@ -40,10 +40,6 @@
 #define CONFIG_DISPLAY_CPUINFO		1
 #define CONFIG_DISPLAY_BOARDINFO	1
 
-/* Clock Defines */
-#define V_OSCK			26000000	/* Clock output from T2 */
-#define V_SCLK			(V_OSCK >> 1)
-
 #define CONFIG_MISC_INIT_R
 
 #define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */
