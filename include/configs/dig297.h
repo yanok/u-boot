@@ -60,13 +60,6 @@
 #define CONFIG_DISPLAY_CPUINFO
 #define CONFIG_DISPLAY_BOARDINFO
 /*
- * Size of malloc() pool
- */
-#define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB */
-						/* Sector */
-#define CONFIG_SYS_MALLOC_LEN		(1024 << 10) /* UBI needs >= 512 kB */
-
-/*
  * Hardware drivers
  */
 

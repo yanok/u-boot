@@ -237,11 +237,6 @@
 #define CONFIG_ENV_ADDR			ONENAND_ENV_OFFSET
 
 /*
- * Size of malloc() pool
- */
-#define CONFIG_SYS_MALLOC_LEN		(CONFIG_ENV_SIZE + (128 << 10))
-
-/*
  * SMSC911x Ethernet
  */
 #if defined(CONFIG_CMD_NET)

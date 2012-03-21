@@ -44,11 +44,6 @@
 #define CONFIG_DISPLAY_BOARDINFO	1
 
 /*
- * Size of malloc() pool
- */
-#define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB sector */
-#define CONFIG_SYS_MALLOC_LEN		(CONFIG_ENV_SIZE + (128 << 10))
-/*
  * DDR related
  */
 #define CONFIG_SYS_CS0_SIZE		(256 * 1024 * 1024)

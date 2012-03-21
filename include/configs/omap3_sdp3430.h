@@ -54,15 +54,8 @@
 #define CONFIG_DISPLAY_CPUINFO		1
 #define CONFIG_DISPLAY_BOARDINFO	1
 
-/*
- * Size of malloc() pool
- * Total Size Environment - 256k
- * Malloc - add 256k
- */
+/* We have 256KiB for environment. */
 #define CONFIG_ENV_SIZE			(256 << 10)
-#define CONFIG_SYS_MALLOC_LEN		(CONFIG_ENV_SIZE + (256 << 10))
-
-/*--------------------------------------------------------------------------*/
 
 /*
  * Hardware drivers

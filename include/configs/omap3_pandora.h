@@ -42,12 +42,6 @@
 #define CONFIG_DISPLAY_BOARDINFO	1
 
 /*
- * Size of malloc() pool
- */
-#define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB */
-#define CONFIG_SYS_MALLOC_LEN		(1024 * 1024 + CONFIG_ENV_SIZE)
-
-/*
  * Hardware drivers
  */
 
