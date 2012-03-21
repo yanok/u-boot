@@ -84,11 +84,6 @@
  * ----------------------------------------------------------------------------
  */
 
-/* MMC */
-#define CONFIG_MMC
-#define CONFIG_GENERIC_MMC
-#define CONFIG_OMAP_HSMMC
-
 /* SPL */
 #define CONFIG_SPL_MMC_SUPPORT
 #define CONFIG_SPL_FAT_SUPPORT
@@ -97,12 +92,10 @@
 #define CONFIG_SYS_MMC_SD_FAT_BOOT_PARTITION	1
 #define CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME	"u-boot.img"
 
-/* Partition tables */
-/* Only need DOS partition support for SPL, currently */
+/* We can't use EFI partitions in SPL currently. */
 #ifndef CONFIG_SPL_BUILD
 #define CONFIG_EFI_PARTITION
 #endif
-#define CONFIG_DOS_PARTITION
 
 /* USB
  *

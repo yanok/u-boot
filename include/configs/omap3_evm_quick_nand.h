@@ -25,6 +25,7 @@
  */
 #define CONFIG_CMD_NAND
 #define CONFIG_ENV_IS_NOWHERE
+#undef CONFIG_CMD_MMC
 
 /* Platform defaults */
 #include "omap3_evm_common.h"

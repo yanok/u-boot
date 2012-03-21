@@ -146,13 +146,6 @@
  * MMC boot support
  */
 
-#if defined(CONFIG_CMD_MMC)
-#define CONFIG_GENERIC_MMC		1
-#define CONFIG_MMC			1
-#define CONFIG_OMAP_HSMMC		1
-#define CONFIG_DOS_PARTITION		1
-#endif
-
 /*----------------------------------------------------------------------------
  * SMSC9115 Ethernet from SMSC9118 family
  *----------------------------------------------------------------------------

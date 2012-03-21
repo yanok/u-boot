@@ -57,11 +57,6 @@
 #define CONFIG_SYS_NS16550_COM3		OMAP34XX_UART3
 #define CONFIG_BAUDRATE			115200
 
-#define CONFIG_GENERIC_MMC		1
-#define CONFIG_MMC			1
-#define CONFIG_OMAP_HSMMC		1
-#define CONFIG_DOS_PARTITION		1
-
 /*
  * USB configuration
  * Enable CONFIG_MUSB_HCD for Host functionalities MSC, keyboard
