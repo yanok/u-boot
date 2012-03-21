@@ -35,6 +35,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+#define CONFIG_SERIAL_TAG		/* Add SERIAL ATAG */
 
 /* Platform defaults */
 #include <configs/omap3_common.h>
@@ -48,14 +49,6 @@
  */
 #define CONFIG_MVBLX			/* working with mvBlueLYNX-X */
 #define CONFIG_MACH_TYPE		MACH_TYPE_MVBLX
-
-#define CONFIG_OF_LIBFDT		1
-
-#define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */
-#define CONFIG_SETUP_MEMORY_TAGS	1
-#define CONFIG_INITRD_TAG		1
-#define CONFIG_REVISION_TAG		1
-#define CONFIG_SERIAL_TAG		1
 
 /*
  * Size of malloc() pool

@@ -42,11 +42,6 @@
 
 #define CONFIG_SYS_CACHELINE_SIZE	64
 
-#define CONFIG_CMDLINE_TAG			/* enable passing of ATAGs */
-#define CONFIG_SETUP_MEMORY_TAGS
-#define CONFIG_INITRD_TAG
-#define CONFIG_REVISION_TAG
-
 /*
  * Size of malloc() pool
  */
@@ -275,7 +270,6 @@
 #define CONFIG_SYS_NAND_U_BOOT_OFFS	0x80000
 #define CONFIG_SYS_NAND_U_BOOT_SIZE	0x80000
 
-#define CONFIG_OF_LIBFDT
 #define CONFIG_FIT
 #define CONFIG_CMD_UBI
 #define CONFIG_CMD_UBIFS

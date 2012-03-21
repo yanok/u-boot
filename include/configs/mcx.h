@@ -42,7 +42,6 @@
 
 #define CONFIG_SYS_CACHELINE_SIZE	64
 
-#define CONFIG_OF_LIBFDT
 #define CONFIG_FIT
 
 /*
@@ -50,11 +49,6 @@
  * and older u-boot.bin with the new U-Boot SPL.
  */
 #define CONFIG_SYS_TEXT_BASE		0x80008000
-
-#define CONFIG_CMDLINE_TAG			/* enable passing of ATAGs */
-#define CONFIG_SETUP_MEMORY_TAGS
-#define CONFIG_INITRD_TAG
-#define CONFIG_REVISION_TAG
 
 /*
  * Size of malloc() pool
