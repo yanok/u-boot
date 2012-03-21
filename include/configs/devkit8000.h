@@ -52,13 +52,6 @@
  */
 #define CONFIG_SYS_TEXT_BASE	0x80100000
 
-#define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */
-#define CONFIG_SETUP_MEMORY_TAGS	1
-#define CONFIG_INITRD_TAG		1
-#define CONFIG_REVISION_TAG		1
-
-#define CONFIG_OF_LIBFDT		1
-
 /* Size of malloc() pool */
 #define CONFIG_ENV_SIZE			(128 << 10)	/* 128 KiB */
 						/* Sector */

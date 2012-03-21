@@ -41,11 +41,6 @@
 
 #define CONFIG_SYS_TEXT_BASE	0x80400000
 
-#define CONFIG_CMDLINE_TAG			/* enable passing of ATAGs */
-#define CONFIG_SETUP_MEMORY_TAGS
-#define CONFIG_INITRD_TAG
-#define CONFIG_REVISION_TAG
-
 #define CONFIG_CMDLINE_EDITING			/* cmd line edit/history */
 #define CONFIG_ZERO_BOOTDELAY_CHECK		/* check keypress w/no delay */
 

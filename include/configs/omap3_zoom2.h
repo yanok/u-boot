@@ -42,13 +42,6 @@
  */
 #define CONFIG_OMAP3_ZOOM2		/* working with Zoom II */
 
-#define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */
-#define CONFIG_SETUP_MEMORY_TAGS	1
-#define CONFIG_INITRD_TAG		1
-#define CONFIG_REVISION_TAG		1
-
-#define CONFIG_OF_LIBFDT		1
-
 /*
  * Size of malloc() pool
  */

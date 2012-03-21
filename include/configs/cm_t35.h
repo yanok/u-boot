@@ -38,6 +38,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+#define CONFIG_SERIAL_TAG		/* Add SERIAL ATAG */
 
 /*
  * Other configuration options
@@ -46,7 +47,6 @@
 
 #define CONFIG_SYS_TEXT_BASE	0x80008000
 
-#define CONFIG_OF_LIBFDT		1
 /*
  * The early kernel mapping on ARM currently only maps from the base of DRAM
  * to the end of the kernel image.  The kernel is loaded at DRAM base + 0x8000.
@@ -54,12 +54,6 @@
  * so that leaves DRAM base to DRAM base + 0x4000 available.
  */
 #define CONFIG_SYS_BOOTMAPSZ	        0x4000
-
-#define CONFIG_CMDLINE_TAG		/* enable passing of ATAGs */
-#define CONFIG_SETUP_MEMORY_TAGS
-#define CONFIG_INITRD_TAG
-#define CONFIG_REVISION_TAG
-#define CONFIG_SERIAL_TAG
 
 /*
  * Size of malloc() pool
