@@ -37,7 +37,6 @@
 
 #define CONFIG_SYS_CACHELINE_SIZE	64
 
-#define CONFIG_OF_LIBFDT
 #define CONFIG_FIT
 
 /*
@@ -51,11 +50,6 @@
  */
 #define CONFIG_DISPLAY_CPUINFO
 #define CONFIG_DISPLAY_BOARDINFO
-
-#define CONFIG_CMDLINE_TAG			/* enable passing of ATAGs */
-#define CONFIG_SETUP_MEMORY_TAGS
-#define CONFIG_INITRD_TAG
-#define CONFIG_REVISION_TAG
 
 /*
  * Size of malloc() pool

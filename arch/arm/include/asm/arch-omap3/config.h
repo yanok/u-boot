@@ -47,4 +47,11 @@
 /* Portions of the init sequence that we want */
 #define CONFIG_MISC_INIT_R
 
+/* Enable support for both device trees and ATAGS */
+#define CONFIG_OF_LIBFDT
+#define CONFIG_CMDLINE_TAG
+#define CONFIG_SETUP_MEMORY_TAGS
+#define CONFIG_INITRD_TAG
+#define CONFIG_REVISION_TAG
+
 #endif /* __ASM_CONFIG_ARCH_COMMON_H */

@@ -43,11 +43,6 @@
 #define CONFIG_DISPLAY_CPUINFO		1
 #define CONFIG_DISPLAY_BOARDINFO	1
 
-#define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */
-#define CONFIG_SETUP_MEMORY_TAGS	1
-#define CONFIG_INITRD_TAG		1
-#define CONFIG_REVISION_TAG		1
-
 /*
  * Size of malloc() pool
  */
