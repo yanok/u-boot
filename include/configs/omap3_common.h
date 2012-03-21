@@ -52,4 +52,7 @@
 /* no support for IRQs */
 #undef CONFIG_USE_IRQ
 
+/* Portions of the init sequence that we want */
+#define CONFIG_MISC_INIT_R
+
 #endif /* __CONFIG_OMAP3_COMMON_H */

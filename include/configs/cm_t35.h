@@ -51,8 +51,6 @@
 
 #define CONFIG_SYS_TEXT_BASE	0x80008000
 
-#define CONFIG_MISC_INIT_R
-
 #define CONFIG_OF_LIBFDT		1
 /*
  * The early kernel mapping on ARM currently only maps from the base of DRAM

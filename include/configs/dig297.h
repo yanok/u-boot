@@ -58,8 +58,6 @@
 
 #define CONFIG_SYS_TEXT_BASE	0x80008000
 
-#define CONFIG_MISC_INIT_R
-
 #define CONFIG_CMDLINE_TAG			/* enable passing of ATAGs */
 #define CONFIG_SETUP_MEMORY_TAGS
 #define CONFIG_INITRD_TAG
