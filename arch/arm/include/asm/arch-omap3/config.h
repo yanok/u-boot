@@ -68,4 +68,22 @@
 #define CONFIG_SYS_MALLOC_LEN		(1024 << 10)
 #endif
 
+/*
+ * Default serial port configuration is an NS16550-compatible UART.
+ * Boards can override this as needed with CONFIG_SERIAL_MULTI
+ */
+#ifndef CONFIG_SERIAL_MULTI
+#define CONFIG_SYS_NS16550
+#define CONFIG_SYS_NS16550_SERIAL
+#define CONFIG_SYS_NS16550_REG_SIZE	(-4)
+#define CONFIG_SYS_NS16550_CLK		48000000
+#define CONFIG_SYS_BAUDRATE_TABLE	{4800, 9600, 19200, 38400, 57600,\
+					115200}
+#endif
+
+/*
+ * Environmnet
+ */
+#define CONFIG_ENV_OVERWRITE	/* Allow to overwrite serial and ethaddr */
+
 #endif /* __ASM_CONFIG_ARCH_COMMON_H */

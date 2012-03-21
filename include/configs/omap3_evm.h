@@ -76,9 +76,6 @@
 #define CONFIG_DISPLAY_CPUINFO
 #define CONFIG_DISPLAY_BOARDINFO
 
-/* Allow to overwrite serial and ethaddr */
-#define CONFIG_ENV_OVERWRITE
-
 /* Add auto-completion support */
 #define CONFIG_AUTO_COMPLETE
 

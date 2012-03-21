@@ -54,28 +54,11 @@
  * Hardware drivers
  */
 
-/*
- * NS16550 Configuration
- */
-#define V_NS16550_CLK			48000000	/* 48MHz (APLL96/2) */
-
-#define CONFIG_SYS_NS16550
-#define CONFIG_SYS_NS16550_SERIAL
-#define CONFIG_SYS_NS16550_REG_SIZE	(-4)
-#define CONFIG_SYS_NS16550_CLK		V_NS16550_CLK
-
-/*
- * select serial console configuration
- */
+/* Select serial console configuration. */
 #define CONFIG_CONS_INDEX		1
 #define CONFIG_SYS_NS16550_COM1		OMAP34XX_UART1
-#define CONFIG_SERIAL1			1	/* UART1 on OMAP Logic boards */
-
-/* allow to overwrite serial and ethaddr */
-#define CONFIG_ENV_OVERWRITE
 #define CONFIG_BAUDRATE			115200
-#define CONFIG_SYS_BAUDRATE_TABLE	{4800, 9600, 19200, 38400, 57600,\
-					115200}
+
 #define CONFIG_GENERIC_MMC
 #define CONFIG_MMC
 #define CONFIG_OMAP_HSMMC
