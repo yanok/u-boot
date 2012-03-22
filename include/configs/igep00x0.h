@@ -73,12 +73,8 @@
 #define CONFIG_CMD_MTDPARTS	/* Enable MTD parts commands	*/
 #define CONFIG_MTD_DEVICE
 
-#define CONFIG_HARD_I2C			1
-#define CONFIG_SYS_I2C_SPEED		100000
+/* Our i2c slave is 1 */
 #define CONFIG_SYS_I2C_SLAVE		1
-#define CONFIG_SYS_I2C_BUS		0
-#define CONFIG_SYS_I2C_BUS_SELECT	1
-#define CONFIG_DRIVER_OMAP34XX_I2C	1
 
 /*
  * TWL4030
