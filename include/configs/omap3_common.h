@@ -89,6 +89,17 @@
 					115200}
 #endif
 
+/*
+ * I2C support.  We default to standard speed but allow boards to specify
+ * fast or high-speed.
+ * */
+#define CONFIG_CMD_I2C
+#define CONFIG_HARD_I2C	
+#ifndef CONFIG_SYS_I2C_SPEED
+#define CONFIG_SYS_I2C_SPEED		100000
+#endif
+#define CONFIG_DRIVER_OMAP34XX_I2C
+
 /* MMC */
 #define CONFIG_CMD_MMC
 #if defined(CONFIG_CMD_MMC)

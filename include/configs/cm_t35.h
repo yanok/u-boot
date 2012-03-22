@@ -103,12 +103,8 @@
 #undef CONFIG_CMD_FPGA		/* FPGA configuration Support	*/
 #undef CONFIG_CMD_IMLS		/* List all found images	*/
 
-#define CONFIG_HARD_I2C
-#define CONFIG_SYS_I2C_SPEED		100000
+/* Our i2c slave is 1 */
 #define CONFIG_SYS_I2C_SLAVE		1
-#define CONFIG_SYS_I2C_BUS		0
-#define CONFIG_SYS_I2C_BUS_SELECT	1
-#define CONFIG_DRIVER_OMAP34XX_I2C
 #define CONFIG_SYS_I2C_EEPROM_ADDR	0x50
 #define CONFIG_SYS_I2C_EEPROM_ADDR_LEN	1
 

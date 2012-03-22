@@ -129,13 +129,8 @@
 #undef CONFIG_CMD_IMI		/* iminfo			*/
 #undef CONFIG_CMD_IMLS		/* List all found images	*/
 
-#define CONFIG_HARD_I2C			1
-#define CONFIG_SYS_I2C_SPEED		100000
+/* Our i2c slave is 1 */
 #define CONFIG_SYS_I2C_SLAVE		1
-#define CONFIG_SYS_I2C_BUS		0
-#define CONFIG_SYS_I2C_BUS_SELECT	1
-#define CONFIG_I2C_MULTI_BUS		1
-#define CONFIG_DRIVER_OMAP34XX_I2C	1
 #define CONFIG_VIDEO_OMAP3	/* DSS Support			*/
 
 /*

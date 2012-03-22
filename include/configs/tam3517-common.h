@@ -27,6 +27,7 @@
  */
 #define CONFIG_EMIF4			/* The chip has EMIF4 controller */
 #define CONFIG_CMD_NAND			/* NAND support */
+#define CONFIG_SYS_I2C_SPEED		400000 /* Use fast mode i2c */
 
 /* Platform defaults */
 #include <configs/omap3_common.h>
@@ -89,13 +90,8 @@
 #undef CONFIG_CMD_FLASH		/* only NAND on the SOM */
 #undef CONFIG_CMD_IMLS
 
-#define CONFIG_HARD_I2C
-#define CONFIG_SYS_I2C_SPEED		400000
+/* Our i2c slave is 1 */
 #define CONFIG_SYS_I2C_SLAVE		1
-#define CONFIG_SYS_I2C_BUS		0
-#define CONFIG_SYS_I2C_BUS_SELECT	1
-#define CONFIG_DRIVER_OMAP34XX_I2C
-
 
 #define CONFIG_AUTO_COMPLETE
 
