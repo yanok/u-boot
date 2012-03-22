@@ -29,6 +29,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+#define CONFIG_ENV_SIZE			(512 << 10) /* Total Size Environment */
 
 /*
  * Other configuration options
@@ -196,6 +197,7 @@
  * FLASH and environment organization
  */
 
+#define CONFIG_SYS_NO_FLASH
 #define PISMO1_ONEN_SIZE		GPMC_SIZE_128M /* Configure the PISMO */
 
 #define CONFIG_SYS_ONENAND_BASE		ONENAND_MAP
@@ -203,7 +205,6 @@
 #define ONENAND_ENV_OFFSET		0x260000 /* environment starts here */
 
 #define CONFIG_ENV_IS_IN_ONENAND	1
-#define CONFIG_ENV_SIZE			(512 << 10) /* Total Size Environment */
 #define CONFIG_ENV_ADDR			ONENAND_ENV_OFFSET
 
 /*

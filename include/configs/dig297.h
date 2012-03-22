@@ -45,6 +45,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+#define CONFIG_CMD_NAND			/* NAND support */
 
 /*
  * Other configuration options
@@ -82,7 +83,6 @@
 
 #define CONFIG_CMD_I2C		/* I2C serial bus support	*/
 #define CONFIG_CMD_MMC		/* MMC support			*/
-#define CONFIG_CMD_NAND		/* NAND support			*/
 
 #undef CONFIG_CMD_FPGA		/* FPGA configuration Support	*/
 #undef CONFIG_CMD_IMI		/* iminfo			*/
@@ -101,19 +101,6 @@
  */
 #define CONFIG_TWL4030_POWER
 #define CONFIG_TWL4030_LED
-
-/*
- * Board NAND Info.
- */
-#define CONFIG_NAND_OMAP_GPMC
-#define CONFIG_SYS_NAND_ADDR		NAND_BASE	/* physical address */
-							/* to access nand */
-#define CONFIG_SYS_NAND_BASE		NAND_BASE	/* physical address */
-							/* to access nand at */
-							/* CS0 */
-#define GPMC_NAND_ECC_LP_x16_LAYOUT
-
-#define CONFIG_SYS_MAX_NAND_DEVICE	1		/* Max number of NAND */
 
 #if defined(CONFIG_CMD_NET)
 /*
