@@ -108,15 +108,6 @@
 /*
  * NAND
  */
-/* Physical address to access NAND */
-#define CONFIG_SYS_NAND_ADDR		NAND_BASE
-
-/* Physical address to access NAND at CS0 */
-#define CONFIG_SYS_NAND_BASE		NAND_BASE
-
-/* Max number of NAND devices */
-#define CONFIG_SYS_MAX_NAND_DEVICE	1
-
 /* Timeout values (in ticks) */
 #define CONFIG_SYS_FLASH_ERASE_TOUT	(100 * CONFIG_SYS_HZ)
 #define CONFIG_SYS_FLASH_WRITE_TOUT	(100 * CONFIG_SYS_HZ)
@@ -196,9 +187,6 @@
  */
 #if defined(CONFIG_CMD_NAND)
 #define CONFIG_SYS_FLASH_BASE		PISMO1_NAND_BASE
-
-#define CONFIG_NAND_OMAP_GPMC
-#define GPMC_NAND_ECC_LP_x16_LAYOUT
 #define CONFIG_ENV_OFFSET		SMNAND_ENV_OFFSET
 #elif defined(CONFIG_CMD_ONENAND)
 #define CONFIG_SYS_FLASH_BASE		PISMO1_ONEN_BASE

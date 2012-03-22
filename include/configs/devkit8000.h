@@ -35,6 +35,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+#define CONFIG_CMD_NAND			/* NAND support */
 
 /* Platform defaults */
 #include <configs/omap3_common.h>
@@ -85,7 +86,6 @@
 #define CONFIG_TWL4030_LED		1
 
 /* Board NAND Info */
-#define CONFIG_SYS_NO_FLASH		/* no NOR flash */
 #define CONFIG_MTD_DEVICE		/* needed for mtdparts commands */
 #define MTDIDS_DEFAULT			"nand0=nand"
 #define MTDPARTS_DEFAULT		"mtdparts=nand:" \
@@ -95,16 +95,6 @@
 						"4m(kernel)," \
 						"-(fs)"
 
-#define CONFIG_NAND_OMAP_GPMC
-#define CONFIG_SYS_NAND_ADDR		NAND_BASE	/* physical address */
-							/* to access nand */
-#define CONFIG_SYS_NAND_BASE		NAND_BASE	/* physical address */
-							/* to access nand at */
-							/* CS0 */
-#define GPMC_NAND_ECC_LP_x16_LAYOUT	1
-
-#define CONFIG_SYS_MAX_NAND_DEVICE	1		/* Max number of NAND */
-							/* devices */
 #define CONFIG_JFFS2_NAND
 /* nand device jffs2 lives on */
 #define CONFIG_JFFS2_DEV		"nand0"
@@ -123,7 +113,6 @@
 #define CONFIG_CMD_JFFS2		/* JFFS2 Support		*/
 #define CONFIG_CMD_MMC			/* MMC support			*/
 #define CONFIG_CMD_MTDPARTS		/* Enable MTD parts commands	*/
-#define CONFIG_CMD_NAND			/* NAND support			*/
 #define CONFIG_CMD_NAND_LOCK_UNLOCK	/* nand (un)lock commands	*/
 
 #undef CONFIG_CMD_FPGA			/* FPGA configuration Support	*/

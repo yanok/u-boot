@@ -43,6 +43,8 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+/* We have 256KiB for environment. */
+#define CONFIG_ENV_SIZE			(256 << 10)
 
 /* Platform defaults */
 #include <configs/omap3_common.h>
@@ -55,9 +57,6 @@
  * Other configuration options
  */
 #define CONFIG_OMAP3_3430SDP		/* working with SDP Rev2 */
-
-/* We have 256KiB for environment. */
-#define CONFIG_ENV_SIZE			(256 << 10)
 
 /*
  * Hardware drivers

@@ -27,6 +27,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+#define CONFIG_CMD_NAND			/* NAND support */
 
 /* Platform defaults */
 #include <configs/omap3_common.h>
@@ -69,7 +70,6 @@
 
 #define CONFIG_CMD_I2C		/* I2C serial bus support	*/
 #define CONFIG_CMD_MMC		/* MMC support			*/
-#define CONFIG_CMD_NAND		/* NAND support			*/
 #define CONFIG_CMD_CACHE	/* Cache control		*/
 
 #undef CONFIG_CMD_FLASH		/* flinfo, erase, protect	*/
@@ -79,7 +79,6 @@
 #undef CONFIG_CMD_NET		/* bootp, tftpboot, rarpboot	*/
 #undef CONFIG_CMD_NFS		/* NFS support			*/
 
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_HARD_I2C			1
 #define CONFIG_SYS_I2C_SPEED		100000
 #define CONFIG_SYS_I2C_SLAVE		1
@@ -92,20 +91,6 @@
  */
 #define CONFIG_TWL4030_POWER		1
 #define CONFIG_TWL4030_LED		1
-
-/*
- * Board NAND Info.
- */
-#define CONFIG_NAND_OMAP_GPMC
-#define CONFIG_SYS_NAND_ADDR		NAND_BASE	/* physical address */
-							/* to access nand */
-#define CONFIG_SYS_NAND_BASE		NAND_BASE	/* physical address */
-							/* to access nand */
-							/* at CS0 */
-#define GPMC_NAND_ECC_LP_x16_LAYOUT	1
-
-#define CONFIG_SYS_MAX_NAND_DEVICE	1	/* Max number of NAND */
-						/* devices */
 
 #ifdef CONFIG_CMD_NAND
 #define CONFIG_CMD_MTDPARTS

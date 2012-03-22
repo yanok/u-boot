@@ -25,6 +25,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_EMIF4			/* The chip has EMIF4 controller */
+#define CONFIG_CMD_NAND			/* NAND support */
 
 /* Platform defaults */
 #include <configs/omap3_common.h>
@@ -88,7 +89,6 @@
 #define CONFIG_CMD_MMC		/* MMC support			*/
 #define CONFIG_CMD_FAT		/* FAT support			*/
 #define CONFIG_CMD_USB
-#define CONFIG_CMD_NAND		/* NAND support			*/
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_CACHE
@@ -105,7 +105,6 @@
 #undef CONFIG_CMD_IMI		/* iminfo			*/
 #undef CONFIG_CMD_IMLS		/* List all found images	*/
 
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_HARD_I2C
 #define CONFIG_SYS_I2C_SPEED		100000
 #define CONFIG_SYS_I2C_SLAVE		1
@@ -119,17 +118,7 @@
 #define CONFIG_CMD_NET
 #define CONFIG_CMD_MII
 #define CONFIG_CMD_NFS
-/*
- * Board NAND Info.
- */
-#define CONFIG_SYS_NAND_ADDR		NAND_BASE	/* physical address */
-							/* to access nand */
-#define CONFIG_SYS_NAND_BASE		NAND_BASE	/* physical address */
-							/* to access */
-							/* nand at CS0 */
 
-#define CONFIG_SYS_MAX_NAND_DEVICE	1		/* Max number of */
-							/* NAND devices */
 #define CONFIG_JFFS2_NAND
 /* nand device jffs2 lives on */
 #define CONFIG_JFFS2_DEV		"nand0"
@@ -236,8 +225,6 @@
 /* Configure the PISMO */
 #define PISMO1_NAND_SIZE		GPMC_SIZE_128M
 
-#define CONFIG_NAND_OMAP_GPMC
-#define GPMC_NAND_ECC_LP_x16_LAYOUT
 #define CONFIG_ENV_IS_IN_NAND
 #define SMNAND_ENV_OFFSET		0x260000 /* environment starts here */
 

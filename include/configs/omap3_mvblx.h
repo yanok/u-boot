@@ -36,6 +36,8 @@
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
 #define CONFIG_SERIAL_TAG		/* Add SERIAL ATAG */
+/* We have a 2KiB sector size */
+#define CONFIG_ENV_SIZE			(2 << 10)
 
 /* Platform defaults */
 #include <configs/omap3_common.h>
@@ -53,8 +55,6 @@
 #define CONFIG_MVBLX			/* working with mvBlueLYNX-X */
 #define CONFIG_MACH_TYPE		MACH_TYPE_MVBLX
 
-/* We have a 2KiB sector size */
-#define CONFIG_ENV_SIZE			(2 << 10)
 
 /*
  * Hardware drivers

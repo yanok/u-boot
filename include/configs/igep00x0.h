@@ -27,6 +27,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+#define CONFIG_ENV_SIZE			(512 << 10) /* Total Size Environment */
 
 /* Platform defaults */
 #include <configs/omap3_common.h>
@@ -79,7 +80,6 @@
 #undef CONFIG_CMD_FLASH		/* flinfo, erase, protect	*/
 #undef CONFIG_CMD_IMLS		/* List all found images	*/
 
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_HARD_I2C			1
 #define CONFIG_SYS_I2C_SPEED		100000
 #define CONFIG_SYS_I2C_SLAVE		1
@@ -204,6 +204,7 @@
  * FLASH and environment organization
  */
 
+#define CONFIG_SYS_NO_FLASH
 #define PISMO1_ONEN_SIZE		GPMC_SIZE_128M /* Configure the PISMO */
 
 #define CONFIG_SYS_ONENAND_BASE		ONENAND_MAP
@@ -211,7 +212,6 @@
 #define ONENAND_ENV_OFFSET		0x260000 /* environment starts here */
 
 #define CONFIG_ENV_IS_IN_ONENAND	1
-#define CONFIG_ENV_SIZE			(512 << 10) /* Total Size Environment */
 #define CONFIG_ENV_ADDR			ONENAND_ENV_OFFSET
 
 /*
