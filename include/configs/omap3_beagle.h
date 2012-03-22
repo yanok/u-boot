@@ -34,6 +34,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+#define CONFIG_CMD_NAND			/* NAND support */
 
 /*
  * Other configuration options
@@ -117,7 +118,6 @@
 #define CONFIG_CMD_I2C		/* I2C serial bus support	*/
 #define CONFIG_CMD_MMC		/* MMC support			*/
 #define CONFIG_USB_STORAGE	/* USB storage support		*/
-#define CONFIG_CMD_NAND		/* NAND support			*/
 #define CONFIG_CMD_LED		/* LED support			*/
 #define CONFIG_CMD_NET      /* bootp, tftpboot, rarpboot    */
 #define CONFIG_CMD_NFS      /* NFS support          */
@@ -147,20 +147,7 @@
 #define CONFIG_TWL4030_POWER		1
 #define CONFIG_TWL4030_LED		1
 
-/*
- * Board NAND Info.
- */
-#define CONFIG_SYS_NAND_QUIET_TEST	1
-#define CONFIG_NAND_OMAP_GPMC
-#define CONFIG_SYS_NAND_ADDR		NAND_BASE	/* physical address */
-							/* to access nand */
-#define CONFIG_SYS_NAND_BASE		NAND_BASE	/* physical address */
-							/* to access nand at */
-							/* CS0 */
-#define GPMC_NAND_ECC_LP_x16_LAYOUT	1
 
-#define CONFIG_SYS_MAX_NAND_DEVICE	1		/* Max number of NAND */
-							/* devices */
 #define CONFIG_JFFS2_NAND
 /* nand device jffs2 lives on */
 #define CONFIG_JFFS2_DEV		"nand0"

@@ -31,6 +31,7 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_EMIF4			/* The chip has EMIF4 controller */
+#define CONFIG_CMD_NAND			/* NAND support */
 
 /*
  * Other configuration options
@@ -104,7 +105,6 @@
 
 #define CONFIG_CMD_I2C		/* I2C serial bus support	*/
 #define CONFIG_CMD_MMC		/* MMC support			*/
-#define CONFIG_CMD_NAND		/* NAND support			*/
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_PING
 
@@ -123,17 +123,6 @@
 
 #undef CONFIG_CMD_NET
 #undef CONFIG_CMD_NFS
-/*
- * Board NAND Info.
- */
-#define CONFIG_SYS_NAND_ADDR		NAND_BASE	/* physical address */
-							/* to access nand */
-#define CONFIG_SYS_NAND_BASE		NAND_BASE	/* physical address */
-							/* to access */
-							/* nand at CS0 */
-
-#define CONFIG_SYS_MAX_NAND_DEVICE	1		/* Max number of */
-							/* NAND devices */
 
 #define CONFIG_JFFS2_NAND
 /* nand device jffs2 lives on */
@@ -250,8 +239,6 @@
 /* Monitor at start of flash */
 #define CONFIG_SYS_MONITOR_BASE		CONFIG_SYS_FLASH_BASE
 
-#define CONFIG_NAND_OMAP_GPMC
-#define GPMC_NAND_ECC_LP_x16_LAYOUT	1
 #define CONFIG_ENV_IS_IN_NAND		1
 #define SMNAND_ENV_OFFSET		0x260000 /* environment starts here */
 

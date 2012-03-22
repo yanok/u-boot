@@ -38,6 +38,8 @@
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
 #define CONFIG_SERIAL_TAG		/* Add SERIAL ATAG */
+/* We have a 2KiB sector size */
+#define CONFIG_ENV_SIZE			(2 << 10)
 
 /*
  * Other configuration options
@@ -51,8 +53,6 @@
 #define CONFIG_DISPLAY_CPUINFO		1
 #define CONFIG_DISPLAY_BOARDINFO	1
 
-/* We have a 2KiB sector size */
-#define CONFIG_ENV_SIZE			(2 << 10)
 
 /* disallow overwriting serial# and ethaddr */
 #undef CONFIG_ENV_OVERWRITE

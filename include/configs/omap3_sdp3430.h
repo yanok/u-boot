@@ -45,6 +45,8 @@
  * Values that differ from platform defaults or are unspecified.
  */
 #define CONFIG_SDRC			/* The chip has SDRC controller */
+/* We have 256KiB for environment. */
+#define CONFIG_ENV_SIZE			(256 << 10)
 
 /*
  * Other configuration options
@@ -53,9 +55,6 @@
 
 #define CONFIG_DISPLAY_CPUINFO		1
 #define CONFIG_DISPLAY_BOARDINFO	1
-
-/* We have 256KiB for environment. */
-#define CONFIG_ENV_SIZE			(256 << 10)
 
 /*
  * Hardware drivers

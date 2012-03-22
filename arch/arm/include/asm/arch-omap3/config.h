@@ -91,6 +91,20 @@
 #endif
 
 /*
+ * Default NAND information.
+ */
+#if defined(CONFIG_CMD_NAND)
+#define CONFIG_SYS_NO_FLASH
+#define CONFIG_SYS_NAND_QUIET_TEST
+#define CONFIG_NAND_OMAP_GPMC
+#define CONFIG_SYS_NAND_ADDR		NAND_BASE
+#define CONFIG_SYS_NAND_BASE		NAND_BASE
+#define GPMC_NAND_ECC_LP_x16_LAYOUT
+/* At most, one NAND device will be supported. */
+#define CONFIG_SYS_MAX_NAND_DEVICE	1
+#endif
+
+/*
  * Environmnet
  */
 #define CONFIG_ENV_OVERWRITE	/* Allow to overwrite serial and ethaddr */
