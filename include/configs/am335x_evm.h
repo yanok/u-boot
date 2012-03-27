@@ -53,6 +53,10 @@
 
 #define CONFIG_CMD_ECHO
 
+/* Cache configuration */
+#define CONFIG_CMD_CACHE
+#define CONFIG_SYS_ARM_CACHE_WRITETHROUGH
+
 /* max number of command args */
 #define CONFIG_SYS_MAXARGS		16
 

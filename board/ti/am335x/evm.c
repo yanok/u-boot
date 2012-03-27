@@ -131,6 +131,14 @@ int spl_board_init(void)
 }
 #endif
 
+#ifndef CONFIG_SYS_DCACHE_OFF
+void enable_caches(void)
+{
+       /* Enable D-cache. I-cache is already enabled in start.S */
+	dcache_enable();
+}
+#endif
+
 #ifdef CONFIG_DRIVER_TI_CPSW
 static void cpsw_control(int enabled)
 {
