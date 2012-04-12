@@ -23,4 +23,8 @@
 
 #define CONFIG_LMB
 #define CONFIG_SYS_BOOT_RAMDISK_HIGH
+
+/* Allow CPU / SoC defaults */
+#include <asm/arch/config.h>
+
 #endif

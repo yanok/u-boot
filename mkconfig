@@ -102,6 +102,7 @@ fi
 if [ "$SRCTREE" != "$OBJTREE" ] ; then
 	mkdir -p ${OBJTREE}/include
 	mkdir -p ${OBJTREE}/include2
+	mkdir -p ${OBJTREE}/include3
 	cd ${OBJTREE}/include2
 	rm -f asm
 	ln -s ${SRCTREE}/arch/${arch}/include/asm asm
@@ -114,17 +115,28 @@ else
 	ln -s ../arch/${arch}/include/asm asm
 fi
 
-rm -f asm/arch
+rm -rf asm/arch
 
-if [ -z "${soc}" ] ; then
+if [ ! -z "${soc}" ] ; then
+	ln -s ${LNPREFIX}arch-${soc} asm/arch
+elif [ -d ${LNPREFIX}arch-${cpu} ]; then
 	ln -s ${LNPREFIX}arch-${cpu} asm/arch
 else
-	ln -s ${LNPREFIX}arch-${soc} asm/arch
+	mkdir asm/arch
 fi
 
 if [ "${arch}" = "arm" ] ; then
 	rm -f asm/proc
 	ln -s ${LNPREFIX}proc-armv asm/proc
+	if [ ! -f asm/arch/config.h ]; then
+		if [ "$SRCTREE" != "$OBJTREE" ] ; then
+			(cd ../include3
+			mkdir -p asm/arch
+			touch asm/arch/config.h)
+		else
+			touch asm/arch/config.h
+		fi
+	fi
 fi
 
 #
