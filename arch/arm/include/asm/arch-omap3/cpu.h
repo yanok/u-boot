@@ -28,6 +28,7 @@
 #if !(defined(__KERNEL_STRICT_NAMES) || defined(__ASSEMBLY__))
 #include <asm/types.h>
 #endif /* !(__KERNEL_STRICT_NAMES || __ASSEMBLY__) */
+#include <asm/arch/omap3.h>
 
 /* Register offsets of common modules */
 /* Control */
