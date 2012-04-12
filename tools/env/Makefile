@@ -28,6 +28,7 @@ HEADERS	:= fw_env.h
 
 # Compile for a hosted environment on the target
 HOSTCPPFLAGS  = -idirafter $(SRCTREE)/include \
+		-idirafter $(OBJTREE)/include3 \
 		-idirafter $(OBJTREE)/include2 \
 		-idirafter $(OBJTREE)/include \
 		-DUSE_HOSTCC
