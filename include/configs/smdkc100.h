@@ -76,10 +76,9 @@
 /***********************************************************
  * Command definition
  ***********************************************************/
+#define CONFIG_SYS_NO_FLASH
 #include <config_cmd_default.h>
 
-#undef CONFIG_CMD_FLASH
-#undef CONFIG_CMD_IMLS
 #undef CONFIG_CMD_NAND
 
 #define CONFIG_CMD_CACHE
@@ -203,8 +202,6 @@
 /*-----------------------------------------------------------------------
  * FLASH and environment organization
  */
-#define CONFIG_SYS_NO_FLASH		1
-
 #define CONFIG_SYS_MONITOR_LEN		(256 << 10)	/* 256 KiB */
 #define CONFIG_IDENT_STRING		" for SMDKC100"
 

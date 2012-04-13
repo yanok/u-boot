@@ -142,10 +142,10 @@
  * Command definition
  ***********************************************************/
 
+#define CONFIG_SYS_NO_FLASH
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_SPI
-#undef CONFIG_CMD_IMLS
 
 #define CONFIG_BOOTDELAY        3
 
@@ -206,8 +206,6 @@
 /* 166 MHz DDR RAM */
 #define CONFIG_SYS_DDR_CLKSEL		0
 #define CONFIG_SYS_CLKTL_CBCDR		0x19239100
-
-#define CONFIG_SYS_NO_FLASH
 
 /*
  * Framebuffer and LCD

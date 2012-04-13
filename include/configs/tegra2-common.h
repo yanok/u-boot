@@ -98,13 +98,12 @@
 #define TEGRA_I2C_NUM_CONTROLLERS	4
 
 /* include default commands */
+#define CONFIG_SYS_NO_FLASH
 #include <config_cmd_default.h>
 
 /* remove unused commands */
-#undef CONFIG_CMD_FLASH		/* flinfo, erase, protect */
 #undef CONFIG_CMD_FPGA		/* FPGA configuration support */
 #undef CONFIG_CMD_IMI
-#undef CONFIG_CMD_IMLS
 #undef CONFIG_CMD_NFS		/* NFS support */
 #undef CONFIG_CMD_NET		/* network support */
 
@@ -112,8 +111,6 @@
 #define CONFIG_CMDLINE_EDITING
 #define CONFIG_COMMAND_HISTORY
 #define CONFIG_AUTO_COMPLETE
-
-#define CONFIG_SYS_NO_FLASH
 
 /* Environment information */
 #define CONFIG_EXTRA_ENV_SETTINGS \

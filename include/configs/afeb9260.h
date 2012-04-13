@@ -72,11 +72,11 @@
 /*
  * Command line configuration.
  */
+#define CONFIG_SYS_NO_FLASH	/* NOR flash - no real flash on this board */
 #include <config_cmd_default.h>
 #undef CONFIG_CMD_BDI
 #undef CONFIG_CMD_FPGA
 #undef CONFIG_CMD_IMI
-#undef CONFIG_CMD_IMLS
 #undef CONFIG_CMD_LOADS
 #undef CONFIG_CMD_SOURCE
 
@@ -116,9 +116,6 @@
 #define CONFIG_SYS_NAND_READY_PIN		AT91_PIN_PC13
 
 #endif
-
-/* NOR flash - no real flash on this board */
-#define CONFIG_SYS_NO_FLASH
 
 /* Ethernet */
 #define CONFIG_MACB

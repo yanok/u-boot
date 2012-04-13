@@ -109,6 +109,7 @@
 /* #define CONFIG_EHCI_DCACHE */
 
 /* commands to include */
+#define CONFIG_SYS_NO_FLASH	/* No CFI flash */
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_CACHE
@@ -125,10 +126,6 @@
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_USB
 
-#undef CONFIG_CMD_FLASH		/* only NAND on the SOM */
-#undef CONFIG_CMD_IMLS
-
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_HARD_I2C
 #define CONFIG_SYS_I2C_SPEED		400000
 #define CONFIG_SYS_I2C_SLAVE		1

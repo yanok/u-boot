@@ -145,11 +145,6 @@
 #define CONFIG_EHCI_HCD_INIT_AFTER_RESET /* re-init HCD after CMD_RESET */
 #endif /* CONFIG_CMD_USB */
 
-#if !defined(CONFIG_VCT_NOR)
-#undef CONFIG_CMD_FLASH
-#undef CONFIG_CMD_IMLS
-#endif
-
 #if defined(CONFIG_VCT_NAND)
 #define CONFIG_CMD_NAND
 #endif

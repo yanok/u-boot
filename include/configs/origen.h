@@ -80,6 +80,7 @@
 #define CONFIG_ENV_OVERWRITE
 
 /* Command definition*/
+#define CONFIG_SYS_NO_FLASH
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_PING
@@ -135,8 +136,6 @@
 #define PHYS_SDRAM_4_SIZE	SDRAM_BANK_SIZE
 
 /* FLASH and environment organization */
-#define CONFIG_SYS_NO_FLASH		1
-#undef CONFIG_CMD_IMLS
 #define CONFIG_IDENT_STRING		" for ORIGEN"
 
 #ifdef CONFIG_USE_IRQ

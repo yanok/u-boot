@@ -119,10 +119,8 @@
 #define CONFIG_USBD_MANUFACTURER		"MATRIX VISION GmbH"
 #define CONFIG_USBD_PRODUCT_NAME		"mvBlueLYNX-X"
 
-/* no FLASH available */
-#define CONFIG_SYS_NO_FLASH
-
 /* commands to include */
+#define CONFIG_SYS_NO_FLASH	/* No CFI flash */
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_CACHE
@@ -132,7 +130,6 @@
 #define CONFIG_CMD_MMC		/* MMC support			*/
 #define CONFIG_CMD_EEPROM
 #define CONFIG_CMD_IMI		/* iminfo			*/
-#undef CONFIG_CMD_IMLS		/* List all found images	*/
 #define CONFIG_CMD_NET		/* bootp, tftpboot, rarpboot	*/
 #define CONFIG_CMD_NFS		/* NFS support			*/
 #define CONFIG_CMD_DHCP

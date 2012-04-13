@@ -89,14 +89,6 @@
 /* Uncomment next line to use fixed MAC address */
 /* #define CONFIG_ETHADDR	02:80:ad:20:31:42 */
 
-
-/*
- * Flash Settings
- */
-/* We don't have a parallel flash chip there */
-#define CONFIG_SYS_NO_FLASH
-
-
 /*
  * SPI Settings
  */
@@ -148,6 +140,7 @@
 # define CONFIG_BOOTDELAY	5
 #endif
 
+#define CONFIG_SYS_NO_FLASH	/* We don't have a parallel flash chip there */
 #include <config_cmd_default.h>
 
 #ifdef CONFIG_BFIN_MAC
@@ -162,9 +155,7 @@
 #define CONFIG_CMD_CACHE
 #define CONFIG_CMD_DATE
 #define CONFIG_CMD_ELF
-#undef CONFIG_CMD_FLASH
 #define CONFIG_CMD_I2C
-#undef CONFIG_CMD_IMLS
 #define CONFIG_CMD_SF
 
 #define CONFIG_BOOTCOMMAND	"run ramboot"

@@ -155,10 +155,10 @@
 /*
  * Command line configuration.
  */
+#define CONFIG_SYS_NO_FLASH			/* NOR flash is not populated */
 #include <config_cmd_default.h>
 #undef CONFIG_CMD_FPGA
 #undef CONFIG_CMD_LOADS
-#undef CONFIG_CMD_IMLS
 
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_DHCP
@@ -201,9 +201,6 @@
 # define DATAFLASH_TCSS				(0x1a << 16)
 # define DATAFLASH_TCHS				(0x1 << 24)
 #endif
-
-/* NOR flash is not populated, disable it */
-#define CONFIG_SYS_NO_FLASH
 
 /* NAND flash */
 #ifdef CONFIG_CMD_NAND

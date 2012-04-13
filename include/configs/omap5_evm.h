@@ -117,14 +117,12 @@
 
 #define CONFIG_SYS_CONSOLE_IS_IN_ENV
 
-/* Flash */
-#define CONFIG_SYS_NO_FLASH
-
 /* Cache */
 #define CONFIG_SYS_CACHELINE_SIZE	64
 #define CONFIG_SYS_CACHELINE_SHIFT	6
 
 /* commands to include */
+#define CONFIG_SYS_NO_FLASH	/* No CFI flash */
 #include <config_cmd_default.h>
 
 /* Enabled commands */
@@ -138,7 +136,6 @@
 #undef CONFIG_CMD_NET
 #undef CONFIG_CMD_NFS
 #undef CONFIG_CMD_FPGA		/* FPGA configuration Support   */
-#undef CONFIG_CMD_IMLS		/* List all found images        */
 
 /*
  * Environment setup

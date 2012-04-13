@@ -103,6 +103,7 @@
 /*-----------------------------------------------------------------------
  * Command line configuration.
  */
+#define CONFIG_SYS_NO_FLASH
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_BDI
@@ -110,10 +111,8 @@
 #define CONFIG_CMD_CONSOLE
 #define CONFIG_CMD_DATE
 #define CONFIG_CMD_ECHO
-#undef CONFIG_CMD_FLASH
 #define CONFIG_CMD_FPGA
 #define CONFIG_CMD_IMI
-#undef CONFIG_CMD_IMLS
 #define CONFIG_CMD_IRQ
 #define CONFIG_CMD_ITEST
 #define CONFIG_CMD_LOADB
@@ -196,14 +195,6 @@
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
-
-/*-----------------------------------------------------------------------
- * FLASH configuration
- */
-#define CONFIG_SYS_NO_FLASH
-#undef CONFIG_FLASH_CFI_DRIVER
-#define CONFIG_SYS_MAX_FLASH_SECT		1
-#define CONFIG_SYS_MAX_FLASH_BANKS		1
 
 /*-----------------------------------------------------------------------
  * Environment configuration

@@ -105,8 +105,6 @@
 /*
  * FLASH on the Local Bus
  */
-#define CONFIG_SYS_NO_FLASH
-
 #if !defined(CONFIG_NAND_SPL)
 #define CONFIG_SYS_RAMBOOT
 #endif
@@ -347,9 +345,8 @@
 /*
  * Command line configuration.
  */
+#define CONFIG_SYS_NO_FLASH
 #include <config_cmd_default.h>
-#undef CONFIG_CMD_IMLS
-#undef CONFIG_CMD_FLASH
 
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_DHCP

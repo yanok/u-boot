@@ -91,6 +91,7 @@
  * Command definition
  ***********************************************************/
 
+#define CONFIG_SYS_NO_FLASH		/* No NOR flash present */
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_MII
@@ -99,12 +100,6 @@
 #define CONFIG_CMD_SPI
 #define CONFIG_CMD_DATE
 #define CONFIG_CMD_NAND
-
-/*
- * Disabled due to compilation errors in cmd_bootm.c (IMLS seems to require
- * that CFG_NO_FLASH is undefined).
- */
-#undef CONFIG_CMD_IMLS
 
 #define CONFIG_BOARD_LATE_INIT
 
@@ -176,9 +171,6 @@
 /*-----------------------------------------------------------------------
  * FLASH and environment organization
  */
-/* No NOR flash present */
-#define CONFIG_SYS_NO_FLASH
-
 #define CONFIG_ENV_IS_IN_NAND
 #define CONFIG_ENV_OFFSET		0x40000
 #define CONFIG_ENV_OFFSET_REDUND	0x60000

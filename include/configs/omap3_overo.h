@@ -90,6 +90,7 @@
 #define CONFIG_DOS_PARTITION
 
 /* commands to include */
+#define CONFIG_SYS_NO_FLASH	/* No CFI flash */
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_CACHE
@@ -101,14 +102,11 @@
 #define CONFIG_CMD_MMC		/* MMC support			*/
 #define CONFIG_CMD_NAND		/* NAND support			*/
 
-#undef CONFIG_CMD_FLASH		/* flinfo, erase, protect	*/
 #undef CONFIG_CMD_FPGA		/* FPGA configuration Support	*/
 #undef CONFIG_CMD_IMI		/* iminfo			*/
-#undef CONFIG_CMD_IMLS		/* List all found images	*/
 #undef CONFIG_CMD_NFS		/* NFS support			*/
 #define CONFIG_CMD_NET		/* bootp, tftpboot, rarpboot	*/
 
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_HARD_I2C
 #define CONFIG_SYS_I2C_SPEED		100000
 #define CONFIG_SYS_I2C_SLAVE		1

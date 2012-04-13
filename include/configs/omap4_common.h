@@ -117,13 +117,11 @@
 #define CONFIG_USB_TTY			1
 #define CONFIG_SYS_CONSOLE_IS_IN_ENV	1
 
-/* Flash */
-#define CONFIG_SYS_NO_FLASH	1
-
 /* clocks */
 #define CONFIG_SYS_CLOCKS_ENABLE_ALL
 
 /* commands to include */
+#define CONFIG_SYS_NO_FLASH	/* No CFI flash */
 #include <config_cmd_default.h>
 
 /* Enabled commands */
@@ -136,7 +134,6 @@
 #undef CONFIG_CMD_NET
 #undef CONFIG_CMD_NFS
 #undef CONFIG_CMD_FPGA		/* FPGA configuration Support   */
-#undef CONFIG_CMD_IMLS		/* List all found images        */
 
 /*
  * Environment setup

@@ -83,9 +83,8 @@
 #define CONFIG_SYS_BAUDRATE_TABLE	{9600, 19200, 38400, 57600, 115200}
 
 /* Command definition */
+#define CONFIG_SYS_NO_FLASH
 #include <config_cmd_default.h>
-
-#undef CONFIG_CMD_IMLS
 
 #define CONFIG_BOOTDELAY	3
 
@@ -179,8 +178,6 @@
 	(CONFIG_SYS_INIT_RAM_ADDR + CONFIG_SYS_INIT_SP_OFFSET)
 
 /* FLASH and environment organization */
-#define CONFIG_SYS_NO_FLASH
-
 #define CONFIG_ENV_OFFSET      (6 * 64 * 1024)
 #define CONFIG_ENV_SIZE        (8 * 1024)
 #define CONFIG_ENV_IS_IN_MMC

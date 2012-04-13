@@ -98,6 +98,7 @@
 #define CONFIG_USBD_PRODUCT_NAME	"IGEP"
 
 /* commands to include */
+#define CONFIG_SYS_NO_FLASH	/* No CFI flash */
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_CACHE
@@ -113,10 +114,6 @@
 #define CONFIG_CMD_MTDPARTS	/* Enable MTD parts commands	*/
 #define CONFIG_MTD_DEVICE
 
-#undef CONFIG_CMD_FLASH		/* flinfo, erase, protect	*/
-#undef CONFIG_CMD_IMLS		/* List all found images	*/
-
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_HARD_I2C			1
 #define CONFIG_SYS_I2C_SPEED		100000
 #define CONFIG_SYS_I2C_SLAVE		1

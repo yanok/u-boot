@@ -62,9 +62,6 @@
 #define CONFIG_SYS_MONITOR_LEN	(320 * 1024)
 #define CONFIG_SYS_MALLOC_LEN	(320 * 1024)
 
-/* We don't have a parallel flash chip */
-#define CONFIG_SYS_NO_FLASH
-
 /* support for serial flash */
 #define CONFIG_BFIN_SPI
 #define CONFIG_SPI_FLASH
@@ -94,9 +91,9 @@
 		"bootm 0x1000000\0"
 
 /* this sets up the default list of enabled commands */
+#define CONFIG_SYS_NO_FLASH	/* We don't have a parallel flash chip */
 #include <config_cmd_default.h>
 #undef CONFIG_CMD_NET	/* bootp, tftpboot, rarpboot */
 #undef CONFIG_CMD_NFS
-#undef CONFIG_CMD_IMLS
 
 #endif

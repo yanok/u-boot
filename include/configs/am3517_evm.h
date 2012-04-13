@@ -135,6 +135,7 @@
 #endif /* CONFIG_USB_AM35X */
 
 /* commands to include */
+#define CONFIG_SYS_NO_FLASH	/* No CFI flash */
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_EXT2		/* EXT2 Support			*/
@@ -147,12 +148,9 @@
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_PING
 
-#undef CONFIG_CMD_FLASH		/* flinfo, erase, protect	*/
 #undef CONFIG_CMD_FPGA		/* FPGA configuration Support	*/
 #undef CONFIG_CMD_IMI		/* iminfo			*/
-#undef CONFIG_CMD_IMLS		/* List all found images	*/
 
-#define CONFIG_SYS_NO_FLASH
 #define CONFIG_HARD_I2C			1
 #define CONFIG_SYS_I2C_SPEED		100000
 #define CONFIG_SYS_I2C_SLAVE		1

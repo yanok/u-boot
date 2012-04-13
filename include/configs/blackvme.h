@@ -156,6 +156,11 @@
 #define CONFIG_CMDLINE_EDITING	1
 #define CONFIG_AUTO_COMPLETE	1
 
+/*
+ * No Parallel Flash on this board
+ */
+#define CONFIG_SYS_NO_FLASH
+
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_BOOTLDR
@@ -231,13 +236,5 @@
 # define CONFIG_SYS_I2C_SPEED		50000
 # define CONFIG_SYS_I2C_SLAVE		0xFE
 #endif
-
-/*
- * No Parallel Flash on this board
- */
-#define CONFIG_SYS_NO_FLASH
-#undef CONFIG_CMD_IMLS
-#undef CONFIG_CMD_JFFS2
-#undef CONFIG_CMD_FLASH
 
 #endif

@@ -56,13 +56,12 @@
 /*
  * Command line configuration.
  */
+#define CONFIG_SYS_NO_FLASH		/* There is no FLASH memory	*/
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_PCI
 #define CONFIG_CMD_BSP
 
-#undef CONFIG_CMD_FLASH
-#undef CONFIG_CMD_IMLS
 #undef CONFIG_CMD_LOADS
 #undef CONFIG_CMD_SAVEENV
 #undef CONFIG_CMD_SOURCE
@@ -156,8 +155,6 @@
 #define CONFIG_SYS_INIT_RAM_SIZE	0x1000
 #define CONFIG_SYS_GBL_DATA_OFFSET	(CONFIG_SYS_INIT_RAM_SIZE - GENERATED_GBL_DATA_SIZE)
 
-
-#define CONFIG_SYS_NO_FLASH		1		/* There is no FLASH memory	*/
 
 #define CONFIG_ENV_IS_NOWHERE	1		/* Store ENV in memory only	*/
 #define CONFIG_ENV_OFFSET		0x00004000	/* Offset of Environment Sector */

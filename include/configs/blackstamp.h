@@ -106,6 +106,12 @@
 #define CONFIG_AUTO_COMPLETE	1
 #define CONFIG_ENV_OVERWRITE	1
 
+/* Even though Rev C boards have Parallel Flash
+ * We aren't supporting it. Newer versions of the
+ * hardware don't support Parallel Flash at all.
+ */
+#define CONFIG_SYS_NO_FLASH
+
 #include <config_cmd_default.h>
 
 #ifdef CONFIG_SMC91111
@@ -235,14 +241,5 @@
 #define CONFIG_EBIU_AMBCTL1_VAL		0x99B39983
 #define CONFIG_EBIU_SDRRC_VAL		0x268
 #define CONFIG_EBIU_SDGCTL_VAL		0x911109
-
-/* Even though Rev C boards have Parallel Flash
- * We aren't supporting it. Newer versions of the
- * hardware don't support Parallel Flash at all.
- */
-#define CONFIG_SYS_NO_FLASH
-#undef CONFIG_CMD_IMLS
-#undef CONFIG_CMD_JFFS2
-#undef CONFIG_CMD_FLASH
 
 #endif

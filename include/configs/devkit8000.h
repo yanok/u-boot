@@ -116,7 +116,6 @@
 #define CONFIG_TWL4030_LED		1
 
 /* Board NAND Info */
-#define CONFIG_SYS_NO_FLASH		/* no NOR flash */
 #define CONFIG_MTD_DEVICE		/* needed for mtdparts commands */
 #define MTDIDS_DEFAULT			"nand0=nand"
 #define MTDPARTS_DEFAULT		"mtdparts=nand:" \
@@ -145,6 +144,7 @@
 							/* partition */
 
 /* commands to include */
+#define CONFIG_SYS_NO_FLASH		/* no NOR flash */
 #include <config_cmd_default.h>
 
 #define CONFIG_CMD_DHCP			/* DHCP support			*/

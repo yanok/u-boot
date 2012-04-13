@@ -87,9 +87,9 @@
 /*
  * Command line configuration.
  */
+#define CONFIG_SYS_NO_FLASH		/* NOR flash is not available */
 #include <config_cmd_default.h>
 #undef CONFIG_CMD_FPGA
-#undef CONFIG_CMD_IMLS
 
 #define CONFIG_CMD_CACHE
 #define CONFIG_CMD_PING		1
@@ -108,10 +108,6 @@
 #define CONFIG_NR_DRAM_BANKS		1
 #define PHYS_SDRAM			0x70000000
 #define PHYS_SDRAM_SIZE			0x08000000	/* 128 megs */
-
-/* NOR flash, not available */
-#define CONFIG_SYS_NO_FLASH		1
-#undef CONFIG_CMD_FLASH
 
 /* NAND flash */
 #ifdef CONFIG_CMD_NAND
