@@ -126,8 +126,6 @@
 
 #define	CONFIG_SYS_HZ		        1000	/* decrementer freq: 1 ms ticks */
 
-#define CONFIG_SYS_BAUDRATE_TABLE	{ 2400, 4800, 9600, 19200 }
-
 /*
  * Low Level Configuration Settings
  * (address mappings, register initial values, etc.)

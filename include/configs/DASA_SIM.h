@@ -102,10 +102,6 @@
 #define CONFIG_SYS_MEMTEST_START	0x0400000	/* memtest works on	*/
 #define CONFIG_SYS_MEMTEST_END		0x0C00000	/* 4 ... 12 MB in DRAM	*/
 
-/* The following table includes the supported baudrates */
-#define CONFIG_SYS_BAUDRATE_TABLE	\
-	{ 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 }
-
 #define CONFIG_SYS_LOAD_ADDR	0x100000	/* default load address */
 
 #define CONFIG_SYS_HZ		1000		/* decrementer freq: 1 ms ticks */

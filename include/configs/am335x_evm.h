@@ -112,9 +112,6 @@
 #define CONFIG_DRIVER_OMAP24XX_I2C
 
 #define CONFIG_BAUDRATE		115200
-#define CONFIG_SYS_BAUDRATE_TABLE	{ 110, 300, 600, 1200, 2400, \
-4800, 9600, 14400, 19200, 28800, 38400, 56000, 57600, 115200 }
-
 /*
  * select serial console configuration
  */

@@ -375,9 +375,6 @@ boards, we say we have two, but don't display a message if we find only one. */
 #define CONFIG_SYS_NS16550_REG_SIZE	1
 #define CONFIG_SYS_NS16550_CLK		get_bus_freq(0)
 
-#define CONFIG_SYS_BAUDRATE_TABLE  \
-		{300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 115200}
-
 #define CONFIG_CONSOLE		ttyS0
 #define CONFIG_BAUDRATE		115200
 

@@ -89,6 +89,7 @@
 #define CONFIG_SYS_NS16550_REG_SIZE	(-2)
 #define CONFIG_SYS_NS16550_CLK		V_NS16550_CLK
 #define CONFIG_BAUDRATE			115200
+#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE	{115200}
 
 /* allow to overwrite serial and ethaddr */

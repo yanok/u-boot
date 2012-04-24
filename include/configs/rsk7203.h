@@ -63,6 +63,7 @@
 /* Buffer size for Boot Arguments passed to kernel */
 #define CONFIG_SYS_BARGSIZE	512
 /* List of legal baudrate settings for this board */
+#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 115200 }
 
 /* SCIF */

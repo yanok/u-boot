@@ -171,6 +171,7 @@
 #define CONFIG_SYS_EXT_SERIAL_CLOCK	3868400	/* use external serial clock */
 #undef  CONFIG_SYS_BASE_BAUD
 #define CONFIG_BAUDRATE		38400	/* Default baud rate */
+#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE      \
     { 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400 }
 

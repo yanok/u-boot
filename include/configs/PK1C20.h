@@ -102,6 +102,7 @@
 
 #define CONFIG_SYS_NIOS_FIXEDBAUD	1		/* Baudrate is fixed	*/
 #define CONFIG_BAUDRATE		115200		/* Initial baudrate	*/
+#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE	{115200}	/* It's fixed ;-)	*/
 
 #define CONFIG_SYS_CONSOLE_INFO_QUIET	1		/* Suppress console info*/

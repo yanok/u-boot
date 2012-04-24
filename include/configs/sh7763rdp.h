@@ -65,6 +65,7 @@
 #define CONFIG_SYS_MAXARGS		16	/* max args accepted for monitor commands */
 #define CONFIG_SYS_BARGSIZE	512	/* Buffer size for Boot Arguments
 								passed to kernel */
+#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 115200 }	/* List of legal baudrate
 												settings for this board */
 
