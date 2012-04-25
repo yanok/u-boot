@@ -146,7 +146,6 @@
 
 
 /* The following table includes the supported baudrates */
-#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE	{9600}
 
 #define CONFIG_SYS_LOAD_ADDR		0x100000	/* default load address		*/

@@ -140,7 +140,6 @@
  * drives the system clock.
  */
 #define CONFIG_SYS_BASE_BAUD       403225
-#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE  \
     {300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400}
 

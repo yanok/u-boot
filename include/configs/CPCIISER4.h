@@ -120,7 +120,6 @@
 #define CONFIG_SYS_EXT_SERIAL_CLOCK	1843200	 /* use external serial clock	*/
 
 /* The following table includes the supported baudrates */
-#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE	\
 	{ 300, 600, 1200, 2400, 4800, 9600, 19200, 38400,     \
 	 57600, 115200, 230400, 460800, 921600 }

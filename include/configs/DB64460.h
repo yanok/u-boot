@@ -266,7 +266,6 @@ ip=${ipaddr}:${serverip}${bootargs_end}; bootm 0x400000;\0"
 #define CONFIG_SYS_TCLK		133000000
 
 
-#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200, 230400 }
 
 #define CONFIG_SYS_750FX_HID0		0x8000c084

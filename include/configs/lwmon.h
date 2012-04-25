@@ -242,7 +242,6 @@
  * When the watchdog is enabled, output must be fast enough in Linux.
  */
 #ifdef CONFIG_WATCHDOG
-#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE	{		38400, 57600, 115200 }
 #endif
 

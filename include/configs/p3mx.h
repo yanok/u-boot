@@ -108,7 +108,6 @@
 #define CONFIG_MPSC			/* MV64460 Serial		*/
 #define CONFIG_MPSC_PORT	0
 #define CONFIG_BAUDRATE		115200	/* console baudrate		*/
-#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200, 230400 }
 #define CONFIG_LOADS_ECHO	1	/* echo on for serial download	*/
 #define CONFIG_SYS_LOADS_BAUD_CHANGE	1	/* allow baudrate change	*/

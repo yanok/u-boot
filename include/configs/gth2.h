@@ -49,7 +49,6 @@
 #define CONFIG_BAUDRATE		115200
 
 /* valid baudrates */
-#undef CONFIG_SYS_BAUDRATE_TABLE
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 115200 }
 
 /* Only interrupt boot if space is pressed */
