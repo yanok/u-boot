@@ -800,7 +800,6 @@ Manfred Rudigier <manfred.rudigier@omicron.at>
 
 Tom Rini <trini@ti.com>
 
-	am335x_evm	ARM ARMV7 (AM33xx Soc)
 	omap3_beagle	ARM ARMV7 (OMAP3xx SoC)
 	omap3_evm	ARM ARMV7 (OMAP3xx SoC)
 
