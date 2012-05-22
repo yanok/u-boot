@@ -65,6 +65,11 @@
 /* Boot Argument Buffer Size */
 #define CONFIG_SYS_BARGSIZE		CONFIG_SYS_CBSIZE
 
+#define CONFIG_CMDLINE_TAG			/* enable passing of ATAGs */
+#define CONFIG_SETUP_MEMORY_TAGS
+#define CONFIG_INITRD_TAG
+#define CONFIG_REVISION_TAG
+
 /*
  * memtest works on 8 MB in DRAM after skipping 32MB from
  * start addr of ram disk
