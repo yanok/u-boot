@@ -37,6 +37,7 @@ ifneq ($(CONFIG_OMAP44XX)$(CONFIG_OMAP54XX),)
 COBJS	+= hwinit-common.o
 COBJS	+= clocks-common.o
 COBJS	+= emif-common.o
+COBJS	+= dmm-common.o
 COBJS	+= vc.o
 endif
 

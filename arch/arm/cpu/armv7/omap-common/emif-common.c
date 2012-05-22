@@ -679,24 +679,6 @@ static u32 get_emif_mem_size(struct emif_device_details *devices)
 	return size_mbytes << 20;
 }
 
-/* Gets the encoding corresponding to a given DMM section size */
-u32 get_dmm_section_size_map(u32 section_size)
-{
-	/*
-	 * Section size mapping:
-	 * 0x0: 16-MiB section
-	 * 0x1: 32-MiB section
-	 * 0x2: 64-MiB section
-	 * 0x3: 128-MiB section
-	 * 0x4: 256-MiB section
-	 * 0x5: 512-MiB section
-	 * 0x6: 1-GiB section
-	 * 0x7: 2-GiB section
-	 */
-	section_size >>= 24; /* divide by 16 MB */
-	return log_2_n_round_down(section_size);
-}
-
 static void emif_calculate_regs(
 		const struct emif_device_details *emif_dev_details,
 		u32 freq, struct emif_regs *regs)
@@ -1100,118 +1082,6 @@ void emif_post_init_config(u32 base)
 		writel(0x80000000, &emif->emif_pwr_mgmt_ctrl);
 }
 
-void dmm_init(u32 base)
-{
-	const struct dmm_lisa_map_regs *lisa_map_regs;
-
-#ifdef CONFIG_SYS_EMIF_PRECALCULATED_TIMING_REGS
-	emif_get_dmm_regs(&lisa_map_regs);
-#else
-	u32 emif1_size, emif2_size, mapped_size, section_map = 0;
-	u32 section_cnt, sys_addr;
-	struct dmm_lisa_map_regs lis_map_regs_calculated = {0};
-
-	mapped_size = 0;
-	section_cnt = 3;
-	sys_addr = CONFIG_SYS_SDRAM_BASE;
-	emif1_size = emif_sizes[0];
-	emif2_size = emif_sizes[1];
-	debug("emif1_size 0x%x emif2_size 0x%x\n", emif1_size, emif2_size);
-
-	if (!emif1_size && !emif2_size)
-		return;
-
-	/* symmetric interleaved section */
-	if (emif1_size && emif2_size) {
-		mapped_size = min(emif1_size, emif2_size);
-		section_map = DMM_LISA_MAP_INTERLEAVED_BASE_VAL;
-		section_map |= 0 << EMIF_SDRC_ADDR_SHIFT;
-		/* only MSB */
-		section_map |= (sys_addr >> 24) <<
-				EMIF_SYS_ADDR_SHIFT;
-		section_map |= get_dmm_section_size_map(mapped_size * 2)
-				<< EMIF_SYS_SIZE_SHIFT;
-		lis_map_regs_calculated.dmm_lisa_map_3 = section_map;
-		emif1_size -= mapped_size;
-		emif2_size -= mapped_size;
-		sys_addr += (mapped_size * 2);
-		section_cnt--;
-	}
-
-	/*
-	 * Single EMIF section(we can have a maximum of 1 single EMIF
-	 * section- either EMIF1 or EMIF2 or none, but not both)
-	 */
-	if (emif1_size) {
-		section_map = DMM_LISA_MAP_EMIF1_ONLY_BASE_VAL;
-		section_map |= get_dmm_section_size_map(emif1_size)
-				<< EMIF_SYS_SIZE_SHIFT;
-		/* only MSB */
-		section_map |= (mapped_size >> 24) <<
-				EMIF_SDRC_ADDR_SHIFT;
-		/* only MSB */
-		section_map |= (sys_addr >> 24) << EMIF_SYS_ADDR_SHIFT;
-		section_cnt--;
-	}
-	if (emif2_size) {
-		section_map = DMM_LISA_MAP_EMIF2_ONLY_BASE_VAL;
-		section_map |= get_dmm_section_size_map(emif2_size) <<
-				EMIF_SYS_SIZE_SHIFT;
-		/* only MSB */
-		section_map |= mapped_size >> 24 << EMIF_SDRC_ADDR_SHIFT;
-		/* only MSB */
-		section_map |= sys_addr >> 24 << EMIF_SYS_ADDR_SHIFT;
-		section_cnt--;
-	}
-
-	if (section_cnt == 2) {
-		/* Only 1 section - either symmetric or single EMIF */
-		lis_map_regs_calculated.dmm_lisa_map_3 = section_map;
-		lis_map_regs_calculated.dmm_lisa_map_2 = 0;
-		lis_map_regs_calculated.dmm_lisa_map_1 = 0;
-	} else {
-		/* 2 sections - 1 symmetric, 1 single EMIF */
-		lis_map_regs_calculated.dmm_lisa_map_2 = section_map;
-		lis_map_regs_calculated.dmm_lisa_map_1 = 0;
-	}
-
-	/* TRAP for invalid TILER mappings in section 0 */
-	lis_map_regs_calculated.dmm_lisa_map_0 = DMM_LISA_MAP_0_INVAL_ADDR_TRAP;
-
-	lisa_map_regs = &lis_map_regs_calculated;
-#endif
-	struct dmm_lisa_map_regs *hw_lisa_map_regs =
-	    (struct dmm_lisa_map_regs *)base;
-
-	writel(0, &hw_lisa_map_regs->dmm_lisa_map_3);
-	writel(0, &hw_lisa_map_regs->dmm_lisa_map_2);
-	writel(0, &hw_lisa_map_regs->dmm_lisa_map_1);
-	writel(0, &hw_lisa_map_regs->dmm_lisa_map_0);
-
-	writel(lisa_map_regs->dmm_lisa_map_3,
-		&hw_lisa_map_regs->dmm_lisa_map_3);
-	writel(lisa_map_regs->dmm_lisa_map_2,
-		&hw_lisa_map_regs->dmm_lisa_map_2);
-	writel(lisa_map_regs->dmm_lisa_map_1,
-		&hw_lisa_map_regs->dmm_lisa_map_1);
-	writel(lisa_map_regs->dmm_lisa_map_0,
-		&hw_lisa_map_regs->dmm_lisa_map_0);
-
-	if (omap_revision() >= OMAP4460_ES1_0) {
-		hw_lisa_map_regs =
-		    (struct dmm_lisa_map_regs *)MA_BASE;
-
-		writel(lisa_map_regs->dmm_lisa_map_3,
-			&hw_lisa_map_regs->dmm_lisa_map_3);
-		writel(lisa_map_regs->dmm_lisa_map_2,
-			&hw_lisa_map_regs->dmm_lisa_map_2);
-		writel(lisa_map_regs->dmm_lisa_map_1,
-			&hw_lisa_map_regs->dmm_lisa_map_1);
-		writel(lisa_map_regs->dmm_lisa_map_0,
-			&hw_lisa_map_regs->dmm_lisa_map_0);
-	}
-}
-
 /*
  * SDRAM initialization:
  * SDRAM initialization has two parts:
@@ -1253,7 +1123,9 @@ void sdram_init(void)
 	do_sdram_init(EMIF2_BASE);
 
 	if (!in_sdram) {
+#if defined(CONFIG_OMAP44XX) || defined(CONFIG_OMAP54XX)
 		dmm_init(DMM_BASE);
+#endif
 		emif_post_init_config(EMIF1_BASE);
 		emif_post_init_config(EMIF2_BASE);
 	}
