@@ -47,59 +47,6 @@ void dram_init_banksize(void)
 
 
 #ifdef CONFIG_SPL_BUILD
-static void data_macro_config(int dataMacroNum)
-{
-	struct ddr_data data;
-
-	data.datardsratio0 = ((DDR2_RD_DQS<<30)|(DDR2_RD_DQS<<20)
-				|(DDR2_RD_DQS<<10)|(DDR2_RD_DQS<<0));
-	data.datardsratio1 = DDR2_RD_DQS>>2;
-	data.datawdsratio0 = ((DDR2_WR_DQS<<30)|(DDR2_WR_DQS<<20)
-				|(DDR2_WR_DQS<<10)|(DDR2_WR_DQS<<0));
-	data.datawdsratio1 = DDR2_WR_DQS>>2;
-	data.datawiratio0 = ((DDR2_PHY_WRLVL<<30)|(DDR2_PHY_WRLVL<<20)
-				|(DDR2_PHY_WRLVL<<10)|(DDR2_PHY_WRLVL<<0));
-	data.datawiratio1 = DDR2_PHY_WRLVL>>2;
-	data.datagiratio0 = ((DDR2_PHY_GATELVL<<30)|(DDR2_PHY_GATELVL<<20)
-				|(DDR2_PHY_GATELVL<<10)|(DDR2_PHY_GATELVL<<0));
-	data.datagiratio1 = DDR2_PHY_GATELVL>>2;
-	data.datafwsratio0 = ((DDR2_PHY_FIFO_WE<<30)|(DDR2_PHY_FIFO_WE<<20)
-				|(DDR2_PHY_FIFO_WE<<10)|(DDR2_PHY_FIFO_WE<<0));
-	data.datafwsratio1 = DDR2_PHY_FIFO_WE>>2;
-	data.datawrsratio0 = ((DDR2_PHY_WR_DATA<<30)|(DDR2_PHY_WR_DATA<<20)
-				|(DDR2_PHY_WR_DATA<<10)|(DDR2_PHY_WR_DATA<<0));
-	data.datawrsratio1 = DDR2_PHY_WR_DATA>>2;
-	data.datadldiff0 = PHY_DLL_LOCK_DIFF;
-
-	config_ddr_data(dataMacroNum, &data);
-}
-
-static void cmd_macro_config(void)
-{
-	struct cmd_control cmd;
-
-	cmd.cmd0csratio = DDR2_RATIO;
-	cmd.cmd0csforce = CMD_FORCE;
-	cmd.cmd0csdelay = CMD_DELAY;
-	cmd.cmd0dldiff = DDR2_DLL_LOCK_DIFF;
-	cmd.cmd0iclkout = DDR2_INVERT_CLKOUT;
-
-	cmd.cmd1csratio = DDR2_RATIO;
-	cmd.cmd1csforce = CMD_FORCE;
-	cmd.cmd1csdelay = CMD_DELAY;
-	cmd.cmd1dldiff = DDR2_DLL_LOCK_DIFF;
-	cmd.cmd1iclkout = DDR2_INVERT_CLKOUT;
-
-	cmd.cmd2csratio = DDR2_RATIO;
-	cmd.cmd2csforce = CMD_FORCE;
-	cmd.cmd2csdelay = CMD_DELAY;
-	cmd.cmd2dldiff = DDR2_DLL_LOCK_DIFF;
-	cmd.cmd2iclkout = DDR2_INVERT_CLKOUT;
-
-	config_cmd_ctrl(&cmd);
-
-}
-
 static void config_vtp(void)
 {
 	writel(readl(&vtpreg->vtp0ctrlreg) | VTP_CTRL_ENABLE,
@@ -115,87 +62,143 @@ static void config_vtp(void)
 		;
 }
 
-static void config_emif_ddr2(void)
+#define DDR3_RATIO		0x40
+#define DDR3_CMD_FORCE		0x00
+#define DDR3_CMD_DELAY		0x00
+#define DDR3_EMIF_READ_LATENCY	0x06
+#define DDR3_EMIF_TIM1		0x0888A39B
+#define DDR3_EMIF_TIM2		0x26337FDA
+#define	DDR3_EMIF_TIM3		0x501F830F
+#define DDR3_EMIF_SDCFG		0x61C04AB2
+#define DDR3_EMIF_SDREF		0x0000093B
+#define DDR3_ZQ_CFG		0x50074BE4
+#define DDR3_DLL_LOCK_DIFF	0x1
+#define DDR3_RD_DQS		0x3B
+#define DDR3_PHY_FIFO_WE	0x100
+#define DDR3_INVERT_CLKOUT	0x1
+#define DDR3_WR_DQS		0x85
+#define DDR3_PHY_WRLVL		0x00
+#define DDR3_PHY_GATELVL	0x00
+#define DDR3_PHY_WR_DATA	0xC1
+#define	DDR3_PHY_RANK0_DELAY	0x01
+#define DDR3_PHY_DLL_LOCK_DIFF	0x0
+#define DDR3_IOCTRL_VALUE	0x18B
+
+#define	CMD0_CTRL_SLAVE_RATIO_0		(DDR_PHY_BASE_ADDR + 0x01C)
+#define	CMD0_INVERT_CLKOUT_0		(DDR_PHY_BASE_ADDR + 0x02C)
+
+#define	CMD1_CTRL_SLAVE_RATIO_0		(DDR_PHY_BASE_ADDR + 0x050)
+#define	CMD1_INVERT_CLKOUT_0		(DDR_PHY_BASE_ADDR + 0x060)
+
+#define	CMD2_CTRL_SLAVE_RATIO_0		(DDR_PHY_BASE_ADDR + 0x084)
+#define	CMD2_INVERT_CLKOUT_0		(DDR_PHY_BASE_ADDR + 0x094)
+static void phy_config_cmd(void)
 {
-	int i;
-	int ret;
-	struct sdram_config cfg;
-	struct sdram_timing tmg;
-	struct ddr_phy_control phyc;
+	struct cmd_control cmd;
+	cmd.cmd0csratio = DDR3_RATIO;
+	cmd.cmd0csforce = CMD_FORCE;
+	cmd.cmd0csdelay = CMD_DELAY;
+	cmd.cmd0dldiff = DDR3_DLL_LOCK_DIFF;
+	cmd.cmd0iclkout = DDR3_INVERT_CLKOUT;
 
+	cmd.cmd1csratio = DDR3_RATIO;
+	cmd.cmd1csforce = CMD_FORCE;
+	cmd.cmd1csdelay = CMD_DELAY;
+	cmd.cmd1dldiff = DDR3_DLL_LOCK_DIFF;
+	cmd.cmd1iclkout = DDR3_INVERT_CLKOUT;
+
+	cmd.cmd2csratio = DDR3_RATIO;
+	cmd.cmd2csforce = CMD_FORCE;
+	cmd.cmd2csdelay = CMD_DELAY;
+	cmd.cmd2dldiff = DDR3_DLL_LOCK_DIFF;
+	cmd.cmd2iclkout = DDR3_INVERT_CLKOUT;
+
+	config_cmd_ctrl(&cmd);
+}
+
+#define DATA0_RD_DQS_SLAVE_RATIO_0	(DDR_PHY_BASE_ADDR + 0x0C8)
+#define	DATA0_WR_DQS_SLAVE_RATIO_0	(DDR_PHY_BASE_ADDR + 0x0DC)
+#define	DATA0_FIFO_WE_SLAVE_RATIO_0	(DDR_PHY_BASE_ADDR + 0x108)
+#define	DATA0_WR_DATA_SLAVE_RATIO_0	(DDR_PHY_BASE_ADDR + 0x120)
+#define DATA1_RD_DQS_SLAVE_RATIO_0	(DDR_PHY_BASE_ADDR + 0x16C)
+#define DATA1_WR_DQS_SLAVE_RATIO_0	(DDR_PHY_BASE_ADDR + 0x180)
+#define DATA1_FIFO_WE_SLAVE_RATIO_0 	(DDR_PHY_BASE_ADDR + 0x1AC)
+#define DATA1_WR_DATA_SLAVE_RATIO_0	(DDR_PHY_BASE_ADDR + 0x1C4)
+static void phy_config_data(void)
+{
+	writel(DDR3_RD_DQS, DATA0_RD_DQS_SLAVE_RATIO_0);
+	writel(DDR3_WR_DQS, DATA0_WR_DQS_SLAVE_RATIO_0);
+	writel(DDR3_PHY_FIFO_WE, DATA0_FIFO_WE_SLAVE_RATIO_0);
+	writel(DDR3_PHY_WR_DATA, DATA0_WR_DATA_SLAVE_RATIO_0);
+
+	writel(DDR3_RD_DQS, DATA1_RD_DQS_SLAVE_RATIO_0);
+	writel(DDR3_WR_DQS, DATA1_WR_DQS_SLAVE_RATIO_0);
+	writel(DDR3_PHY_FIFO_WE, DATA1_FIFO_WE_SLAVE_RATIO_0);
+	writel(DDR3_PHY_WR_DATA, DATA1_WR_DATA_SLAVE_RATIO_0);
+}
+
+static void config_emif_ddr3(void)
+{
+#define EMIF4_0_SDRAM_CONFIG            (EMIF4_0_CFG_BASE + 0x08)
+#define EMIF4_0_SDRAM_REF_CTRL          (EMIF4_0_CFG_BASE + 0x10)
+#define EMIF4_0_SDRAM_REF_CTRL_SHADOW   (EMIF4_0_CFG_BASE + 0x14)
+#define EMIF4_0_SDRAM_TIM_1             (EMIF4_0_CFG_BASE + 0x18)
+#define EMIF4_0_SDRAM_TIM_1_SHADOW      (EMIF4_0_CFG_BASE + 0x1C)
+#define EMIF4_0_SDRAM_TIM_2             (EMIF4_0_CFG_BASE + 0x20)
+#define EMIF4_0_SDRAM_TIM_2_SHADOW      (EMIF4_0_CFG_BASE + 0x24)
+#define EMIF4_0_SDRAM_TIM_3             (EMIF4_0_CFG_BASE + 0x28)
+#define EMIF4_0_SDRAM_TIM_3_SHADOW      (EMIF4_0_CFG_BASE + 0x2C)
+#define EMIF0_0_ZQ_CONFIG		(EMIF4_0_CFG_BASE + 0xC8)
+#define EMIF4_0_DDR_PHY_CTRL_1          (EMIF4_0_CFG_BASE + 0xE4)
+#define EMIF4_0_DDR_PHY_CTRL_1_SHADOW   (EMIF4_0_CFG_BASE + 0xE8)
+#define EMIF4_0_DDR_PHY_CTRL_2          (EMIF4_0_CFG_BASE + 0xEC)
 	/*Program EMIF0 CFG Registers*/
-	phyc.reg = EMIF_READ_LATENCY;
-	phyc.reg_sh = EMIF_READ_LATENCY;
-	phyc.reg2 = EMIF_READ_LATENCY;
+	writel(DDR3_EMIF_READ_LATENCY, EMIF4_0_DDR_PHY_CTRL_1);
+	writel(DDR3_EMIF_READ_LATENCY, EMIF4_0_DDR_PHY_CTRL_1_SHADOW);
+	writel(DDR3_EMIF_READ_LATENCY, EMIF4_0_DDR_PHY_CTRL_2);
+	writel(DDR3_EMIF_TIM1, EMIF4_0_SDRAM_TIM_1);
+	writel(DDR3_EMIF_TIM1, EMIF4_0_SDRAM_TIM_1_SHADOW);
+	writel(DDR3_EMIF_TIM2, EMIF4_0_SDRAM_TIM_2);
+	writel(DDR3_EMIF_TIM2, EMIF4_0_SDRAM_TIM_2_SHADOW);
+	writel(DDR3_EMIF_TIM3, EMIF4_0_SDRAM_TIM_3);
+	writel(DDR3_EMIF_TIM3, EMIF4_0_SDRAM_TIM_3_SHADOW);
 
-	tmg.time1 = EMIF_TIM1;
-	tmg.time1_sh = EMIF_TIM1;
-	tmg.time2 = EMIF_TIM2;
-	tmg.time2_sh = EMIF_TIM2;
-	tmg.time3 = EMIF_TIM3;
-	tmg.time3_sh = EMIF_TIM3;
 
-	cfg.sdrcr = EMIF_SDCFG;
-	cfg.sdrcr2 = EMIF_SDCFG;
-	cfg.refresh = 0x00004650;
-	cfg.refresh_sh = 0x00004650;
+	writel(DDR3_EMIF_SDREF, EMIF4_0_SDRAM_REF_CTRL);
+	writel(DDR3_EMIF_SDREF, EMIF4_0_SDRAM_REF_CTRL_SHADOW);
+	writel(DDR3_ZQ_CFG, EMIF0_0_ZQ_CONFIG);
 
-	/* Program EMIF instance */
-	ret = config_ddr_phy(&phyc);
-	if (ret < 0)
-		printf("Couldn't configure phyc\n");
+	writel(DDR3_EMIF_SDCFG, EMIF4_0_SDRAM_CONFIG);
 
-	ret = config_sdram(&cfg);
-	if (ret < 0)
-		printf("Couldn't configure SDRAM\n");
-
-	ret = set_sdram_timings(&tmg);
-	if (ret < 0)
-		printf("Couldn't configure timings\n");
-
-	/* Delay */
-	for (i = 0; i < 5000; i++)
-		;
-
-	cfg.refresh = EMIF_SDREF;
-	cfg.refresh_sh = EMIF_SDREF;
-	cfg.sdrcr = EMIF_SDCFG;
-	cfg.sdrcr2 = EMIF_SDCFG;
-
-	ret = config_sdram(&cfg);
-	if (ret < 0)
-		printf("Couldn't configure SDRAM\n");
 }
 
 void config_ddr(void)
 {
-	int data_macro_0 = 0;
-	int data_macro_1 = 1;
 	struct ddr_ioctrl ioctrl;
 
 	enable_emif_clocks();
 
 	config_vtp();
 
-	cmd_macro_config();
+	phy_config_cmd();
+	phy_config_data();
 
-	data_macro_config(data_macro_0);
-	data_macro_config(data_macro_1);
-
-	writel(PHY_RANK0_DELAY, &ddrregs->dt0rdelays0);
-	writel(PHY_RANK0_DELAY, &ddrregs->dt1rdelays0);
-
-	ioctrl.cmd1ctl = DDR_IOCTRL_VALUE;
-	ioctrl.cmd2ctl = DDR_IOCTRL_VALUE;
-	ioctrl.cmd3ctl = DDR_IOCTRL_VALUE;
-	ioctrl.data1ctl = DDR_IOCTRL_VALUE;
-	ioctrl.data2ctl = DDR_IOCTRL_VALUE;
-
+	/* set IO control registers */
+#define DDR3_IOCTRL_VALUE	0x18B
+	ioctrl.cmd1ctl = DDR3_IOCTRL_VALUE;
+	ioctrl.cmd2ctl = DDR3_IOCTRL_VALUE;
+	ioctrl.cmd3ctl = DDR3_IOCTRL_VALUE;
+	ioctrl.data1ctl = DDR3_IOCTRL_VALUE;
+	ioctrl.data2ctl = DDR3_IOCTRL_VALUE;
 	config_io_ctrl(&ioctrl);
 
-	writel(readl(&ddrctrl->ddrioctrl) & 0xefffffff, &ddrctrl->ddrioctrl);
-	writel(readl(&ddrctrl->ddrckectrl) | 0x00000001, &ddrctrl->ddrckectrl);
+	/* IOs set for DDR3 */
+#define MDDR_SEL_DDR2		0xefffffff
+	writel(readl(ddrctrl) & MDDR_SEL_DDR2, ddrctrl);
+	/* CKE controlled by EMIF/DDR_PHY */
+#define CKE_NORMAL_OP		0x00000001
+	writel(readl(DDR_CKE_CTRL_ADDR) | CKE_NORMAL_OP, DDR_CKE_CTRL_ADDR);
 
-	config_emif_ddr2();
+	config_emif_ddr3();
 }
 #endif
