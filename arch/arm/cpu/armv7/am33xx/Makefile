@@ -16,9 +16,9 @@ include $(TOPDIR)/config.mk
 
 LIB	= $(obj)lib$(SOC).o
 
+COBJS	+= sdram.o
 COBJS	+= clock.o
 COBJS	+= sys_info.o
-COBJS	+= ddr.o
 COBJS	+= emif4.o
 COBJS	+= board.o
 

@@ -36,7 +36,6 @@ endif
 ifneq ($(CONFIG_OMAP44XX)$(CONFIG_OMAP54XX),)
 COBJS	+= hwinit-common.o
 COBJS	+= clocks-common.o
-COBJS	+= emif-common.o
 COBJS	+= dmm-common.o
 COBJS	+= vc.o
 endif
@@ -44,6 +43,7 @@ endif
 ifneq ($(CONFIG_AM33XX)$(CONFIG_OMAP44XX)$(CONFIG_OMAP54XX),)
 COBJS	+= boot-common.o
 SOBJS	+= lowlevel_init.o
+COBJS	+= emif-common.o
 endif
 
 ifdef CONFIG_SPL_BUILD

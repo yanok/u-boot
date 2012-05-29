@@ -82,7 +82,7 @@
 #define CONFIG_CMD_FAT
 #define CONFIG_CMD_EXT2
 
- /* Physical Memory Map */
+/* Physical Memory Map */
 #define CONFIG_NR_DRAM_BANKS		1		/*  1 bank of DRAM */
 #define PHYS_DRAM_1			0x80000000	/* DRAM Bank #1 */
 #define PHYS_DRAM_1_SIZE		0x10000000 /*(0x80000000 / 8) 256 MB */
@@ -91,7 +91,11 @@
 #define CONFIG_SYS_SDRAM_BASE		PHYS_DRAM_1
 #define CONFIG_SYS_INIT_SP_ADDR         (CONFIG_SYS_SDRAM_BASE + 0x1000 - \
 						GENERATED_GBL_DATA_SIZE)
- /* Platform/Board specific defs */
+
+/* Defines for SDRAM init */
+#define CONFIG_SYS_EMIF_PRECALCULATED_TIMING_REGS
+
+/* Platform/Board specific defs */
 #define CONFIG_SYS_TIMERBASE		0x48040000	/* Use Timer2 */
 #define CONFIG_SYS_PTV			2	/* Divisor: 2^(PTV+1) => 8 */
 #define CONFIG_SYS_HZ			1000

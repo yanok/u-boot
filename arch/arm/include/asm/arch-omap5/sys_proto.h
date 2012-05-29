@@ -67,14 +67,6 @@ int omap_vc_bypass_send_value(u8 sa, u8 reg_addr, u8 reg_data);
  */
 extern struct omap_boot_parameters boot_params;
 
-static inline u32 running_from_sdram(void)
-{
-	u32 pc;
-	asm volatile ("mov %0, pc" : "=r" (pc));
-	return ((pc >= OMAP54XX_DRAM_ADDR_SPACE_START) &&
-	    (pc < OMAP54XX_DRAM_ADDR_SPACE_END));
-}
-
 static inline u8 uboot_loaded_by_spl(void)
 {
 	/*

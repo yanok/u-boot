@@ -25,6 +25,8 @@
 #ifndef	_OMAP_COMMON_H_
 #define	_OMAP_COMMON_H_
 
+#include <asm/arch/omap.h>
+
 /* Max value for DPLL multiplier M */
 #define OMAP_DPLL_MAX_N	127
 
@@ -115,6 +117,14 @@ static inline u32 omap_revision(void)
 {
 	extern u32 *const omap_si_rev;
 	return *omap_si_rev;
+}
+
+static inline u32 running_from_sdram(void)
+{
+	u32 pc;
+	asm volatile ("mov %0, pc" : "=r" (pc));
+	return ((pc >= DRAM_ADDR_SPACE_START) &&
+	    (pc < DRAM_ADDR_SPACE_END));
 }
 
 /*

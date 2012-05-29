@@ -25,7 +25,9 @@
  * MA 02111-1307 USA
  */
 
+#define DEBUG
 #include <common.h>
+#include <asm/io.h>
 #include <asm/emif.h>
 #include <asm/arch/clocks.h>
 #include <asm/arch/sys_proto.h>
@@ -190,6 +192,8 @@ void emif_update_timings(u32 base, const struct emif_regs *regs)
 	writel(regs->temp_alert_config, &emif->emif_temp_alert_config);
 	writel(regs->emif_ddr_phy_ctlr_1, &emif->emif_ddr_phy_ctrl_1_shdw);
 
+#if defined(CONFIG_OMAP44XX) || defined(CONFIG_OMAP54XX)
+	/* OMAP4 and OMAP5 have the EMIF_L3_CONFIG register defined */
 	if (omap_revision() >= OMAP5430_ES1_0) {
 		writel(EMIF_L3_CONFIG_VAL_SYS_10_MPU_5_LL_0,
 			&emif->emif_l3_config);
@@ -200,8 +204,10 @@ void emif_update_timings(u32 base, const struct emif_regs *regs)
 		writel(EMIF_L3_CONFIG_VAL_SYS_10_LL_0,
 			&emif->emif_l3_config);
 	}
+#endif
 }
 
+#ifdef CONFIG_OMAP54XX
 static void ddr3_leveling(u32 base, const struct emif_regs *regs)
 {
 	struct emif_reg_struct *emif = (struct emif_reg_struct *)base;
@@ -243,6 +249,7 @@ static void ddr3_leveling(u32 base, const struct emif_regs *regs)
 	writel(DDR3_INC_LVL, &emif->emif_rd_wr_lvl_ctl);
 	__udelay(130);
 }
+#endif
 
 static void ddr3_init(u32 base, const struct emif_regs *regs)
 {
@@ -257,22 +264,37 @@ static void ddr3_init(u32 base, const struct emif_regs *regs)
 	 * defined, contents of mode Registers must be fully initialized.
 	 * H/W takes care of this initialization
 	 */
+	debug(">>%s(): %d\n", __func__, __LINE__);
+	debug("writel(0x%08x, 0x%08x)\n", regs->sdram_config_init, &emif->emif_sdram_config);
 	writel(regs->sdram_config_init, &emif->emif_sdram_config);
+	debug(">>%s(): %d\n", __func__, __LINE__);
 
 	writel(regs->emif_ddr_phy_ctlr_1_init, &emif->emif_ddr_phy_ctrl_1);
 
 	/* Update timing registers */
+	debug(">>%s(): %d\n", __func__, __LINE__);
 	writel(regs->sdram_tim1, &emif->emif_sdram_tim_1);
+	debug(">>%s(): %d\n", __func__, __LINE__);
 	writel(regs->sdram_tim2, &emif->emif_sdram_tim_2);
+	debug(">>%s(): %d\n", __func__, __LINE__);
 	writel(regs->sdram_tim3, &emif->emif_sdram_tim_3);
 
+	debug(">>%s(): %d\n", __func__, __LINE__);
 	writel(regs->ref_ctrl, &emif->emif_sdram_ref_ctrl);
+	debug(">>%s(): %d\n", __func__, __LINE__);
 	writel(regs->read_idle_ctrl, &emif->emif_read_idlectrl);
 
+	debug(">>%s(): %d\n", __func__, __LINE__);
 	ext_phy_ctrl_base = (u32 *) &(regs->emif_ddr_ext_phy_ctrl_1);
+	debug(">>%s(): %d\n", __func__, __LINE__);
 	emif_ext_phy_ctrl_base = (u32 *) &(emif->emif_ddr_ext_phy_ctrl_1);
+	debug(">>%s(): %d\n", __func__, __LINE__);
 
-	/* Configure external phy control timing registers */
+#ifdef CONFIG_OMAP54XX
+	/*
+	 * OMAP5 has an external DDR PHY design.  We must configure the
+	 * timing registers there.
+	 */
 	for (i = 0; i < EMIF_EXT_PHY_CTRL_TIMING_REG; i++) {
 		writel(*ext_phy_ctrl_base, emif_ext_phy_ctrl_base++);
 		/* Update shadow registers */
@@ -290,11 +312,16 @@ static void ddr3_init(u32 base, const struct emif_regs *regs)
 		writel(ddr3_ext_phy_ctrl_const_base[i],
 					emif_ext_phy_ctrl_base++);
 	}
+#endif
 
-	/* enable leveling */
+#ifdef CONFIG_OMAP54XX
+	/*
+	 * Read and write leveling is not yet supported on the AM33XX design.
+	 */
 	writel(regs->emif_rd_wr_lvl_rmp_ctl, &emif->emif_rd_wr_lvl_rmp_ctl);
 
 	ddr3_leveling(base, regs);
+#endif
 }
 
 #ifndef CONFIG_SYS_EMIF_PRECALCULATED_TIMING_REGS
@@ -994,14 +1021,17 @@ static void do_sdram_init(u32 base)
 	debug(">>do_sdram_init() %x\n", base);
 
 	in_sdram = running_from_sdram();
+	debug(">>running_from_sdram() %d\n", in_sdram);
 	emif_nr = (base == EMIF1_BASE) ? 1 : 2;
+	debug(">>emif_nr: %d\n", emif_nr);
 
 #ifdef CONFIG_SYS_EMIF_PRECALCULATED_TIMING_REGS
 	emif_get_reg_dump(emif_nr, &regs);
 	if (!regs) {
 		debug("EMIF: reg dump not provided\n");
 		return;
-	}
+	} else
+		debug("Have regs\n");
 #else
 	/*
 	 * The user has not provided the register values. We need to
@@ -1052,12 +1082,7 @@ static void do_sdram_init(u32 base)
 	 * Changing the timing registers in EMIF can happen(going from one
 	 * OPP to another)
 	 */
-	if (!in_sdram) {
-		if (omap_revision() != OMAP5432_ES1_0)
-			lpddr2_init(base, regs);
-		else
 			ddr3_init(base, regs);
-	}
 
 	/* Write to the shadow registers */
 	emif_update_timings(base, regs);
@@ -1081,6 +1106,53 @@ void emif_post_init_config(u32 base)
 	if (omap_rev == OMAP4430_ES1_0)
 		writel(0x80000000, &emif->emif_pwr_mgmt_ctrl);
 }
+
+#ifdef CONFIG_AM33XX
+#include <asm/arch/cpu.h>
+#include <asm/arch/ddr_defs.h>
+struct ddr_regs *ddrregs = (struct ddr_regs *)DDR_PHY_BASE_ADDR;
+struct vtp_reg *vtpreg = (struct vtp_reg *)VTP0_CTRL_ADDR;
+struct ddr_ctrl *ddrctrl = (struct ddr_ctrl *)DDR_CTRL_ADDR;
+
+static void config_vtp(void)
+{
+	writel(readl(&vtpreg->vtp0ctrlreg) | VTP_CTRL_ENABLE,
+			&vtpreg->vtp0ctrlreg);
+	writel(readl(&vtpreg->vtp0ctrlreg) & (~VTP_CTRL_START_EN),
+			&vtpreg->vtp0ctrlreg);
+	writel(readl(&vtpreg->vtp0ctrlreg) | VTP_CTRL_START_EN,
+			&vtpreg->vtp0ctrlreg);
+
+	/* Poll for READY */
+	while ((readl(&vtpreg->vtp0ctrlreg) & VTP_CTRL_READY) !=
+			VTP_CTRL_READY)
+		;
+}
+
+static void phy_config_cmd(void)
+{
+	writel(DDR3_RATIO, CMD0_CTRL_SLAVE_RATIO_0);
+	writel(DDR3_INVERT_CLKOUT, CMD0_INVERT_CLKOUT_0);
+	writel(DDR3_RATIO, CMD1_CTRL_SLAVE_RATIO_0);
+	writel(DDR3_INVERT_CLKOUT, CMD1_INVERT_CLKOUT_0);
+	writel(DDR3_RATIO, CMD2_CTRL_SLAVE_RATIO_0);
+	writel(DDR3_INVERT_CLKOUT, CMD2_INVERT_CLKOUT_0);
+}
+
+static void phy_config_data(void)
+{
+
+	writel(DDR3_RD_DQS, DATA0_RD_DQS_SLAVE_RATIO_0);
+	writel(DDR3_WR_DQS, DATA0_WR_DQS_SLAVE_RATIO_0);
+	writel(DDR3_PHY_FIFO_WE, DATA0_FIFO_WE_SLAVE_RATIO_0);
+	writel(DDR3_PHY_WR_DATA, DATA0_WR_DATA_SLAVE_RATIO_0);
+
+	writel(DDR3_RD_DQS, DATA1_RD_DQS_SLAVE_RATIO_0);
+	writel(DDR3_WR_DQS, DATA1_WR_DQS_SLAVE_RATIO_0);
+	writel(DDR3_PHY_FIFO_WE, DATA1_FIFO_WE_SLAVE_RATIO_0);
+	writel(DDR3_PHY_WR_DATA, DATA1_WR_DATA_SLAVE_RATIO_0);
+}
+#endif
 
 /*
  * SDRAM initialization:
@@ -1112,15 +1184,46 @@ void sdram_init(void)
 	in_sdram = running_from_sdram();
 	debug("in_sdram = %d\n", in_sdram);
 
+#if defined(CONFIG_OMAP44XX) || defined(CONFIG_OMAP54XX)
 	if (!in_sdram) {
 		if (omap_rev != OMAP5432_ES1_0)
 			bypass_dpll(&prcm->cm_clkmode_dpll_core);
 		else
 			writel(CM_DLL_CTRL_NO_OVERRIDE, &prcm->cm_dll_ctrl);
 	}
+#endif
+
+#ifdef CONFIG_AM33XX
+#define PRCM_MOD_EN 0x2
+#define MDDR_SEL_DDR2             0xefffffff
+#define CKE_NORMAL_OP             0x00000001 
+	/* Enable the  EMIF_FW Functional clock */
+	writel(PRCM_MOD_EN, CM_PER_EMIF_FW_CLKCTRL);
+	/* Enable EMIF0 Clock */
+	writel(PRCM_MOD_EN, CM_PER_EMIF_CLKCTRL);
+	/* Poll if module is functional */
+	while ((readl(CM_PER_EMIF_CLKCTRL)) != PRCM_MOD_EN);
+
+	config_vtp();
+
+	phy_config_cmd();
+	phy_config_data();
+
+	/* set IO control registers */
+	writel(DDR3_IOCTRL_VALUE, DDR_CMD0_IOCTRL);
+	writel(DDR3_IOCTRL_VALUE, DDR_CMD1_IOCTRL);
+	writel(DDR3_IOCTRL_VALUE, DDR_CMD2_IOCTRL);
+	writel(DDR3_IOCTRL_VALUE, DDR_DATA0_IOCTRL);
+	writel(DDR3_IOCTRL_VALUE, DDR_DATA1_IOCTRL);
+
+	/* IOs set for DDR3 */
+	writel(readl(DDR_IO_CTRL) & MDDR_SEL_DDR2, DDR_IO_CTRL);
+	/* CKE controlled by EMIF/DDR_PHY */
+	writel(readl(DDR_CKE_CTRL) | CKE_NORMAL_OP, DDR_CKE_CTRL);
+#endif
 
 	do_sdram_init(EMIF1_BASE);
-	do_sdram_init(EMIF2_BASE);
+	//do_sdram_init(EMIF2_BASE);
 
 	if (!in_sdram) {
 #if defined(CONFIG_OMAP44XX) || defined(CONFIG_OMAP54XX)
@@ -1130,9 +1233,13 @@ void sdram_init(void)
 		emif_post_init_config(EMIF2_BASE);
 	}
 
+#if defined(CONFIG_OMAP44XX) || defined(CONFIG_OMAP54XX)
 	/* for the shadow registers to take effect */
 	if (omap_rev != OMAP5432_ES1_0)
 		freq_update_core();
+#elif defined(CONFIG_AM33XX)
+#warning "What do we need to do to make sure shadow registers take effect?"
+#endif
 
 	/* Do some testing after the init */
 	if (!in_sdram) {

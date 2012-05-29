@@ -55,32 +55,59 @@
 #define PHY_DLL_LOCK_DIFF	0x0
 #define DDR_IOCTRL_VALUE	0x18B
 
-/**
- * This structure represents the EMIF registers on AM33XX devices.
- */
-struct emif_regs {
-	unsigned int sdrrev;		/* offset 0x00 */
-	unsigned int sdrstat;		/* offset 0x04 */
-	unsigned int sdrcr;		/* offset 0x08 */
-	unsigned int sdrcr2;		/* offset 0x0C */
-	unsigned int sdrrcr;		/* offset 0x10 */
-	unsigned int sdrrcsr;		/* offset 0x14 */
-	unsigned int sdrtim1;		/* offset 0x18 */
-	unsigned int sdrtim1sr;		/* offset 0x1C */
-	unsigned int sdrtim2;		/* offset 0x20 */
-	unsigned int sdrtim2sr;		/* offset 0x24 */
-	unsigned int sdrtim3;		/* offset 0x28 */
-	unsigned int sdrtim3sr;		/* offset 0x2C */
-	unsigned int res1[2];
-	unsigned int sdrmcr;		/* offset 0x38 */
-	unsigned int sdrmcsr;		/* offset 0x3C */
-	unsigned int res2[8];
-	unsigned int sdritr;		/* offset 0x60 */
-	unsigned int res3[32];
-	unsigned int ddrphycr;		/* offset 0xE4 */
-	unsigned int ddrphycsr;		/* offset 0xE8 */
-	unsigned int ddrphycr2;		/* offset 0xEC */
-};
+#define DDR2_EMIF_SDMGT		0x80000000
+#define EMIF_SDRAM		0x00004650
+#define EMIF_PHYCFG		0x2
+#define DDR_PHY_RESET		(0x1 << 10)
+#define DDR_FUNCTIONAL_MODE_EN	0x1
+#define DDR_PHY_READY		(0x1 << 2)
+#define	VTP_CTRL_READY		(0x1 << 5)
+#define VTP_CTRL_ENABLE		(0x1 << 6)
+#define VTP_CTRL_LOCK_EN	(0x1 << 4)
+#define VTP_CTRL_START_EN	(0x1)
+#define DDR2_RATIO		0x80	/* for mDDR */
+#define DDR2_CMD_FORCE		0x00	/* common #def */
+#define DDR2_CMD_DELAY		0x00
+#define DDR3_RATIO		0x40
+#define DDR3_CMD_FORCE		0x00
+#define DDR3_CMD_DELAY		0x00
+#define DDR2_EMIF_READ_LATENCY	0x100005	/* Enable Dynamic Power Down */
+#define DDR2_EMIF_TIM1		0x0666B3C9
+#define DDR2_EMIF_TIM2		0x243631CA
+#define DDR2_EMIF_TIM3		0x0000033F
+#define DDR2_EMIF_SDCFG		0x41805332
+#define DDR2_EMIF_SDREF1	0x00004650
+#define DDR2_EMIF_SDREF2	0x0000081a
+#define DDR2_DLL_LOCK_DIFF	0x0
+#define DDR2_RD_DQS		0x12
+#define DDR2_PHY_FIFO_WE	0x80
+#define DDR3_EMIF_READ_LATENCY	0x06
+#define DDR3_EMIF_TIM1		0x0888A39B
+#define DDR3_EMIF_TIM2		0x26337FDA
+#define	DDR3_EMIF_TIM3		0x501F830F
+#define DDR3_EMIF_SDCFG		0x61C04AB2
+#define DDR3_EMIF_SDREF		0x0000093B
+#define DDR3_ZQ_CFG		0x50074BE4
+#define DDR3_DLL_LOCK_DIFF	0x1
+#define DDR3_RD_DQS		0x3B
+#define DDR3_PHY_FIFO_WE	0x100
+#define	DDR2_INVERT_CLKOUT	0x00
+#define	DDR2_WR_DQS		0x00
+#define	DDR2_PHY_WRLVL		0x00
+#define	DDR2_PHY_GATELVL	0x00
+#define	DDR2_PHY_WR_DATA	0x40
+#define	DDR2_PHY_RANK0_DELAY	0x01
+#define DDR2_PHY_DLL_LOCK_DIFF	0x0
+#define DDR2_IOCTRL_VALUE	0x18B
+#define DDR3_INVERT_CLKOUT	0x1
+#define DDR3_WR_DQS		0x85
+#define DDR3_PHY_WRLVL		0x00
+#define DDR3_PHY_GATELVL	0x00
+#define DDR3_PHY_WR_DATA	0xC1
+#define	DDR3_PHY_RANK0_DELAY	0x01
+#define DDR3_PHY_DLL_LOCK_DIFF	0x0
+#define DDR3_IOCTRL_VALUE	0x18B
+#define EMIF_RDWR_LVL_VALUE	0x80000000
 
 /**
  * Encapsulates DDR PHY control and corresponding shadow registers.

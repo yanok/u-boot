@@ -33,12 +33,35 @@ struct wd_timer *wdtimer = (struct wd_timer *)WDT_BASE;
 struct gptimer *timer_base = (struct gptimer *)CONFIG_SYS_TIMERBASE;
 struct uart_sys *uart_base = (struct uart_sys *)DEFAULT_UART_BASE;
 
+u32 *const omap_si_rev = (u32 *)AM33XX_SRAM_SCRATCH_AM33XX_REV;
+
 /* UART Defines */
 #ifdef CONFIG_SPL_BUILD
 #define UART_RESET		(0x1 << 1)
 #define UART_CLK_RUNNING_MASK	0x1
 #define UART_SMART_IDLE_EN	(0x1 << 0x3)
 #endif
+
+u32 omap_sdram_size(void)
+{
+	return get_ram_size((void *)CONFIG_SYS_SDRAM_BASE,
+			CONFIG_MAX_RAM_BANK_SIZE);
+}
+ 
+int dram_init(void)
+{
+	/* dram_init must store complete ramsize in gd->ram_size */
+	gd->ram_size = get_ram_size(
+			(void *)CONFIG_SYS_SDRAM_BASE,
+			CONFIG_MAX_RAM_BANK_SIZE);
+	return 0;
+}
+
+void dram_init_banksize(void)
+{
+	gd->bd->bi_dram[0].start = CONFIG_SYS_SDRAM_BASE;
+	gd->bd->bi_dram[0].size = gd->ram_size;
+}
 
 #ifdef CONFIG_SPL_BUILD
 /* Initialize timer */
@@ -61,6 +84,7 @@ static void init_timer(void)
  */
 void s_init(void)
 {
+	*omap_si_rev = 0x0b94402e; /* ES1.0 */
 	/* WDT1 is already running when the bootloader gets control
 	 * Disable it to avoid "random" resets
 	 */
@@ -97,7 +121,7 @@ void s_init(void)
 
 	preloader_console_init();
 
-	config_ddr();
+	sdram_init();
 #endif
 
 	/* Enable MMC0 */
