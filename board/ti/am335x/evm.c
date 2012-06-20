@@ -119,6 +119,18 @@ int board_init(void)
 	return 0;
 }
 
+#ifdef CONFIG_SPL_BUILD
+int spl_board_init(void)
+{
+	enable_i2c0_pin_mux();
+	i2c_init(CONFIG_SYS_I2C_SPEED, CONFIG_SYS_I2C_SLAVE);
+	if (read_eeprom() < 0)
+		printf("Could not get board ID.\n");
+
+	return 0;
+}
+#endif
+
 #ifdef CONFIG_DRIVER_TI_CPSW
 static void cpsw_control(int enabled)
 {
