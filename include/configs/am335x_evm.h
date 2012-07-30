@@ -224,6 +224,25 @@
 #define CONFIG_SKIP_LOWLEVEL_INIT
 #endif
 
+
+/*
+ * USB configuration
+ */
+
+#define CONFIG_USB_AM335X
+#define CONFIG_MUSB_GADGET
+#define CONFIG_MUSB_GADGET_PORT0
+#define CONFIG_MUSB_PIO_ONLY
+#define CONFIG_USB_GADGET_DUALSPEED
+
+#ifdef CONFIG_MUSB_GADGET
+#define CONFIG_USB_ETHER
+#define CONFIG_USB_ETH_RNDIS
+#define CONFIG_CMD_NET
+#define CONFIG_CMD_DHCP
+#define CONFIG_CMD_TFTP
+#endif /* CONFIG_MUSB_GADGET */
+
 /* Unsupported features */
 #undef CONFIG_USE_IRQ
 
