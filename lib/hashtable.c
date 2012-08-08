@@ -431,6 +431,7 @@ int hdelete_r(const char *key, struct hsearch_data *htab)
  * hexport()
  */
 
+#ifndef CONFIG_SPL_BUILD
 /*
  * Export the data stored in the hash table in linearized form.
  *
@@ -597,6 +598,7 @@ ssize_t hexport_r(struct hsearch_data *htab, const char sep,
 
 	return size;
 }
+#endif
 
 
 /*

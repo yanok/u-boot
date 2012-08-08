@@ -152,6 +152,8 @@ void board_init_r(gd_t *id, ulong dummy)
 	mem_malloc_init(CONFIG_SYS_SPL_MALLOC_START,
 			CONFIG_SYS_SPL_MALLOC_SIZE);
 
+	timer_init();
+
 #ifdef CONFIG_SPL_BOARD_INIT
 	spl_board_init();
 #endif
@@ -174,6 +176,15 @@ void board_init_r(gd_t *id, ulong dummy)
 #ifdef CONFIG_SPL_YMODEM_SUPPORT
 	case BOOT_DEVICE_UART:
 		spl_ymodem_load_image();
+		break;
+#endif
+#ifdef CONFIG_SPL_ETH_SUPPORT
+	case BOOT_DEVICE_CPGMAC:
+#ifdef CONFIG_SPL_ETH_DEVICE
+		spl_net_load_image(CONFIG_SPL_ETH_DEVICE);
+#else
+		spl_net_load_image(NULL);
+#endif
 		break;
 #endif
 	default:

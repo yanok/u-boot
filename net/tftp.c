@@ -7,6 +7,10 @@
  */
 
 #include <common.h>
+#ifdef CONFIG_SPL_BUILD
+#undef CONFIG_CMD_TFTPPUT
+#undef CONFIG_CMD_TFTPSRV
+#endif
 #include <command.h>
 #include <net.h>
 #include "tftp.h"
