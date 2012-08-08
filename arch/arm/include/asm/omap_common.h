@@ -69,6 +69,7 @@ void preloader_console_init(void);
 #define BOOT_DEVICE_MMC1	8
 #define BOOT_DEVICE_MMC2	0
 #define BOOT_DEVICE_UART	65
+#define BOOT_DEVICE_USB		68
 #define BOOT_DEVICE_CPGMAC	70
 #define BOOT_DEVICE_MMC2_2      0xFF
 #endif
