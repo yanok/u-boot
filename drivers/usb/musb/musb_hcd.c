@@ -485,8 +485,8 @@ static int ctrlreq_in_status_phase(struct usb_device *dev)
  */
 static u8 get_dev_speed(struct usb_device *dev)
 {
-	return (dev->speed & USB_SPEED_HIGH) ? MUSB_TYPE_SPEED_HIGH :
-		((dev->speed & USB_SPEED_LOW) ? MUSB_TYPE_SPEED_LOW :
+	return (dev->speed == USB_SPEED_HIGH) ? MUSB_TYPE_SPEED_HIGH :
+		((dev->speed == USB_SPEED_LOW) ? MUSB_TYPE_SPEED_LOW :
 						MUSB_TYPE_SPEED_FULL);
 }
 
