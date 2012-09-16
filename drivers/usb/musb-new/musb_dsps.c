@@ -29,6 +29,8 @@
  * da8xx.c would be merged to this file after testing.
  */
 
+#define __UBOOT__
+#ifndef __UBOOT__
 #include <linux/init.h>
 #include <linux/io.h>
 #include <linux/err.h>
@@ -42,6 +44,11 @@
 #include <linux/of_address.h>
 
 #include <plat/usb.h>
+#else
+#include <common.h>
+#include <asm/omap_musb.h>
+#include "linux-compat.h"
+#endif
 
 #include "musb_core.h"
 
