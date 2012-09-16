@@ -94,7 +94,15 @@ struct musb_ep;
 
 /****************************** PERIPHERAL ROLE *****************************/
 
+#ifndef __UBOOT__
 #define	is_peripheral_capable()	(1)
+#else
+#ifdef CONFIG_MUSB_GADGET
+#define	is_peripheral_capable()	(1)
+#else
+#define	is_peripheral_capable()	(0)
+#endif
+#endif
 
 extern irqreturn_t musb_g_ep0_irq(struct musb *);
 extern void musb_g_tx(struct musb *, u8);
@@ -107,7 +115,15 @@ extern void musb_g_disconnect(struct musb *);
 
 /****************************** HOST ROLE ***********************************/
 
+#ifndef __UBOOT__
 #define	is_host_capable()	(1)
+#else
+#ifdef CONFIG_MUSB_HOST
+#define	is_host_capable()	(1)
+#else
+#define	is_host_capable()	(0)
+#endif
+#endif
 
 extern irqreturn_t musb_h_ep0_irq(struct musb *);
 extern void musb_host_tx(struct musb *, u8);
