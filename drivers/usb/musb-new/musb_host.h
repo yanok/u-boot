@@ -108,4 +108,7 @@ static inline struct urb *next_urb(struct musb_qh *qh)
 	return list_entry(queue->next, struct urb, urb_list);
 }
 
+#ifdef __UBOOT__
+int musb_urb_enqueue(struct usb_hcd *hcd, struct urb *urb, gfp_t mem_flags);
+#endif
 #endif				/* _MUSB_HOST_H */
