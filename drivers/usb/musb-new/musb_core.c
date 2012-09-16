@@ -1897,12 +1897,22 @@ static void musb_free(struct musb *musb)
  * @mregs: virtual address of controller registers,
  *	not yet corrected for platform-specific offsets
  */
+#ifndef __UBOOT__
 static int __devinit
 musb_init_controller(struct device *dev, int nIrq, void __iomem *ctrl)
+#else
+struct musb *
+musb_init_controller(struct musb_hdrc_platform_data *plat, struct device *dev,
+			     void *ctrl)
+#endif
 {
 	int			status;
 	struct musb		*musb;
+#ifndef __UBOOT__
 	struct musb_hdrc_platform_data *plat = dev->platform_data;
+#else
+	int nIrq = 0;
+#endif
 
 	/* The driver might handle more features than the board; OK.
 	 * Fail when the board needs a feature that's not enabled.
@@ -2085,7 +2095,11 @@ musb_init_controller(struct device *dev, int nIrq, void __iomem *ctrl)
 			? "DMA" : "PIO",
 			musb->nIrq);
 
+#ifndef __UBOOT__
 	return 0;
+#else
+	return status == 0 ? musb : NULL;
+#endif
 
 fail5:
 	musb_exit_debugfs(musb);
@@ -2112,7 +2126,11 @@ fail1:
 
 fail0:
 
+#ifndef __UBOOT__
 	return status;
+#else
+	return status == 0 ? musb : NULL;
+#endif
 
 }
 
