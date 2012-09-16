@@ -134,15 +134,18 @@ MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:" MUSB_DRIVER_NAME);
 
 
+#ifndef __UBOOT__
 /*-------------------------------------------------------------------------*/
 
 static inline struct musb *dev_to_musb(struct device *dev)
 {
 	return dev_get_drvdata(dev);
 }
+#endif
 
 /*-------------------------------------------------------------------------*/
 
+#ifndef __UBOOT__
 #ifndef CONFIG_BLACKFIN
 static int musb_ulpi_read(struct usb_phy *phy, u32 offset)
 {
@@ -234,6 +237,7 @@ static struct usb_phy_io_ops musb_ulpi_access = {
 	.read = musb_ulpi_read,
 	.write = musb_ulpi_write,
 };
+#endif
 
 /*-------------------------------------------------------------------------*/
 
@@ -356,6 +360,7 @@ void musb_load_testpacket(struct musb *musb)
 	musb_writew(regs, MUSB_CSR0, MUSB_CSR0_TXPKTRDY);
 }
 
+#ifndef __UBOOT__
 /*-------------------------------------------------------------------------*/
 
 /*
@@ -428,6 +433,7 @@ void musb_hnp_stop(struct musb *musb)
 	 */
 	musb->port1_status &= ~(USB_PORT_STAT_C_CONNECTION << 16);
 }
+#endif
 
 /*
  * Interrupt Service Routine to record USB "global" interrupts.
@@ -444,12 +450,15 @@ void musb_hnp_stop(struct musb *musb)
 static irqreturn_t musb_stage0_irq(struct musb *musb, u8 int_usb,
 				u8 devctl, u8 power)
 {
+#ifndef __UBOOT__
 	struct usb_otg *otg = musb->xceiv->otg;
+#endif
 	irqreturn_t handled = IRQ_NONE;
 
 	dev_dbg(musb->controller, "<== Power=%02x, DevCtl=%02x, int_usb=0x%x\n", power, devctl,
 		int_usb);
 
+#ifndef __UBOOT__
 	/* in host mode, the peripheral may issue remote wakeup.
 	 * in peripheral mode, the host may resume the link.
 	 * spurious RESUME irqs happen too, paired with SUSPEND.
@@ -686,6 +695,7 @@ static irqreturn_t musb_stage0_irq(struct musb *musb, u8 int_usb,
 			break;
 		}
 	}
+#endif
 
 	if (int_usb & MUSB_INTR_CONNECT) {
 		struct usb_hcd *hcd = musb_to_hcd(musb);
@@ -702,6 +712,7 @@ static irqreturn_t musb_stage0_irq(struct musb *musb, u8 int_usb,
 		musb_writew(musb->mregs, MUSB_INTRTXE, musb->epmask);
 		musb_writew(musb->mregs, MUSB_INTRRXE, musb->epmask & 0xfffe);
 		musb_writeb(musb->mregs, MUSB_INTRUSBE, 0xf7);
+#ifndef __UBOOT__
 		musb->port1_status &= ~(USB_PORT_STAT_LOW_SPEED
 					|USB_PORT_STAT_HIGH_SPEED
 					|USB_PORT_STAT_ENABLE
@@ -749,8 +760,10 @@ b_host:
 
 		dev_dbg(musb->controller, "CONNECT (%s) devctl %02x\n",
 				otg_state_string(musb->xceiv->state), devctl);
+#endif
 	}
 
+#ifndef __UBOOT__
 	if ((int_usb & MUSB_INTR_DISCONNECT) && !musb->ignore_disconnect) {
 		dev_dbg(musb->controller, "DISCONNECT (%s) as %s, devctl %02x\n",
 				otg_state_string(musb->xceiv->state),
@@ -857,6 +870,7 @@ b_host:
 			}
 		}
 	}
+#endif
 
 #if 0
 /* REVISIT ... this would be for multiplexing periodic endpoints, or
@@ -939,6 +953,7 @@ void musb_start(struct musb *musb)
 	devctl &= ~MUSB_DEVCTL_SESSION;
 
 	if (is_otg_enabled(musb)) {
+#ifndef __UBOOT__
 		/* session started after:
 		 * (a) ID-grounded irq, host mode;
 		 * (b) vbus present/connect IRQ, peripheral mode;
@@ -948,6 +963,7 @@ void musb_start(struct musb *musb)
 			musb->is_active = 1;
 		else
 			devctl |= MUSB_DEVCTL_SESSION;
+#endif
 
 	} else if (is_host_enabled(musb)) {
 		/* assume ID pin is hard-wired to ground */
@@ -1006,6 +1022,7 @@ void musb_stop(struct musb *musb)
 	musb_platform_try_idle(musb, 0);
 }
 
+#ifndef __UBOOT__
 static void musb_shutdown(struct platform_device *pdev)
 {
 	struct musb	*musb = dev_to_musb(&pdev->dev);
@@ -1028,6 +1045,7 @@ static void musb_shutdown(struct platform_device *pdev)
 	pm_runtime_put(musb->controller);
 	/* FIXME power down */
 }
+#endif
 
 
 /*-------------------------------------------------------------------------*/
@@ -1797,6 +1815,7 @@ static const struct attribute_group musb_attr_group = {
 
 #endif	/* sysfs */
 
+#ifndef __UBOOT__
 /* Only used to provide driver mode change events */
 static void musb_irq_work(struct work_struct *data)
 {
@@ -1808,6 +1827,7 @@ static void musb_irq_work(struct work_struct *data)
 		sysfs_notify(&musb->controller->kobj, NULL, "mode");
 	}
 }
+#endif
 
 /* --------------------------------------------------------------------------
  * Init support
@@ -1961,11 +1981,13 @@ musb_init_controller(struct musb_hdrc_platform_data *plat, struct device *dev,
 		goto fail2;
 	}
 
+#ifndef __UBOOT__
 	if (!musb->xceiv->io_ops) {
 		musb->xceiv->io_dev = musb->controller;
 		musb->xceiv->io_priv = musb->mregs;
 		musb->xceiv->io_ops = &musb_ulpi_access;
 	}
+#endif
 
 	pm_runtime_get_sync(musb->controller);
 
@@ -1979,9 +2001,11 @@ musb_init_controller(struct musb_hdrc_platform_data *plat, struct device *dev,
 			(void) c->start(c);
 	}
 #endif
+#ifndef __UBOOT__
 	/* ideally this would be abstracted in platform setup */
 	if (!is_dma_capable() || !musb->dma_controller)
 		dev->dma_mask = NULL;
+#endif
 
 	/* be sure interrupts are disabled before connecting ISR */
 	musb_platform_disable(musb);
@@ -2014,6 +2038,7 @@ musb_init_controller(struct musb_hdrc_platform_data *plat, struct device *dev,
 		musb->irq_wake = 0;
 	}
 
+#ifndef __UBOOT__
 	/* host side needs more setup */
 	if (is_host_enabled(musb)) {
 		struct usb_hcd	*hcd = musb_to_hcd(musb);
@@ -2032,6 +2057,7 @@ musb_init_controller(struct musb_hdrc_platform_data *plat, struct device *dev,
 			musb_write_ulpi_buscontrol(musb->mregs, busctl);
 		}
 	}
+#endif
 
 	/* For the host-only role, we can activate right away.
 	 * (We expect the ID pin to be forcibly grounded!!)
@@ -2041,6 +2067,7 @@ musb_init_controller(struct musb_hdrc_platform_data *plat, struct device *dev,
 		struct usb_hcd	*hcd = musb_to_hcd(musb);
 
 		MUSB_HST_MODE(musb);
+#ifndef __UBOOT__
 		musb->xceiv->otg->default_a = 1;
 		musb->xceiv->state = OTG_STATE_A_IDLE;
 
@@ -2053,19 +2080,24 @@ musb_init_controller(struct musb_hdrc_platform_data *plat, struct device *dev,
 			(musb_readb(musb->mregs, MUSB_DEVCTL)
 					& MUSB_DEVCTL_BDEVICE
 				? 'B' : 'A'));
+#endif
 
 	} else /* peripheral is enabled */ {
 		MUSB_DEV_MODE(musb);
+#ifndef __UBOOT__
 		musb->xceiv->otg->default_a = 0;
 		musb->xceiv->state = OTG_STATE_B_IDLE;
+#endif
 
 		if (is_peripheral_capable())
 			status = musb_gadget_setup(musb);
 
+#ifndef __UBOOT__
 		dev_dbg(musb->controller, "%s mode, status %d, dev%02x\n",
 			is_otg_enabled(musb) ? "OTG" : "PERIPHERAL",
 			status,
 			musb_readb(musb->mregs, MUSB_DEVCTL));
+#endif
 
 	}
 	if (status < 0)
@@ -2105,9 +2137,11 @@ fail5:
 	musb_exit_debugfs(musb);
 
 fail4:
+#ifndef __UBOOT__
 	if (!is_otg_enabled(musb) && is_host_enabled(musb))
 		usb_remove_hcd(musb_to_hcd(musb));
 	else
+#endif
 		musb_gadget_cleanup(musb);
 
 fail3:
@@ -2144,6 +2178,7 @@ fail0:
 static u64	*orig_dma_mask;
 #endif
 
+#ifndef __UBOOT__
 static int __devinit musb_probe(struct platform_device *pdev)
 {
 	struct device	*dev = &pdev->dev;
@@ -2459,3 +2494,4 @@ static void __exit musb_cleanup(void)
 	platform_driver_unregister(&musb_driver);
 }
 module_exit(musb_cleanup);
+#endif
