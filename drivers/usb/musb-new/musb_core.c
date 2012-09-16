@@ -1817,6 +1817,7 @@ allocate_instance(struct device *dev,
 	struct musb		*musb;
 	struct musb_hw_ep	*ep;
 	int			epnum;
+#ifndef __UBOOT__
 	struct usb_hcd	*hcd;
 
 	hcd = usb_create_hcd(&musb_hc_driver, dev, dev_name(dev));
@@ -1825,12 +1826,19 @@ allocate_instance(struct device *dev,
 	/* usbcore sets dev->driver_data to hcd, and sometimes uses that... */
 
 	musb = hcd_to_musb(hcd);
+#else
+	musb = malloc(sizeof(*musb));
+	if (!musb)
+		return NULL;
+#endif
 	INIT_LIST_HEAD(&musb->control);
 	INIT_LIST_HEAD(&musb->in_bulk);
 	INIT_LIST_HEAD(&musb->out_bulk);
 
+#ifndef __UBOOT__
 	hcd->uses_new_polling = 1;
 	hcd->has_tt = 1;
+#endif
 
 	musb->vbuserr_retry = VBUSERR_RETRY_COUNT;
 	musb->a_wait_bcon = OTG_TIME_A_WAIT_BCON;
