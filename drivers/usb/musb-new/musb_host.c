@@ -237,12 +237,14 @@ musb_start_urb(struct musb *musb, int is_in, struct musb_qh *qh)
 		buf = urb->setup_packet;
 		len = 8;
 		break;
+#ifndef __UBOOT__
 	case USB_ENDPOINT_XFER_ISOC:
 		qh->iso_idx = 0;
 		qh->frame = 0;
 		offset = urb->iso_frame_desc[0].offset;
 		len = urb->iso_frame_desc[0].length;
 		break;
+#endif
 	default:		/* bulk, interrupt */
 		/* actual_length may be nonzero on retry paths */
 		buf = urb->transfer_buffer + urb->actual_length;
@@ -255,7 +257,9 @@ musb_start_urb(struct musb *musb, int is_in, struct musb_qh *qh)
 			({char *s; switch (qh->type) {
 			case USB_ENDPOINT_XFER_CONTROL:	s = ""; break;
 			case USB_ENDPOINT_XFER_BULK:	s = "-bulk"; break;
+#ifndef __UBOOT__
 			case USB_ENDPOINT_XFER_ISOC:	s = "-iso"; break;
+#endif
 			default:			s = "-intr"; break;
 			}; s; }),
 			epnum, buf + offset, len);
@@ -270,13 +274,16 @@ musb_start_urb(struct musb *musb, int is_in, struct musb_qh *qh)
 
 	/* determine if the time is right for a periodic transfer */
 	switch (qh->type) {
+#ifndef __UBOOT__
 	case USB_ENDPOINT_XFER_ISOC:
+#endif
 	case USB_ENDPOINT_XFER_INT:
 		dev_dbg(musb->controller, "check whether there's still time for periodic Tx\n");
 		frame = musb_readw(mbase, MUSB_FRAME);
 		/* FIXME this doesn't implement that scheduling policy ...
 		 * or handle framecounter wrapping
 		 */
+#ifndef __UBOOT__
 		if ((urb->transfer_flags & URB_ISO_ASAP)
 				|| (frame >= urb->start_frame)) {
 			/* REVISIT the SOF irq handler shouldn't duplicate
@@ -285,13 +292,16 @@ musb_start_urb(struct musb *musb, int is_in, struct musb_qh *qh)
 			qh->frame = 0;
 			goto start;
 		} else {
+#endif
 			qh->frame = urb->start_frame;
 			/* enable SOF interrupt so we can count down */
 			dev_dbg(musb->controller, "SOF for %d\n", epnum);
 #if 1 /* ifndef	CONFIG_ARCH_DAVINCI */
 			musb_writeb(mbase, MUSB_INTRUSBE, 0xff);
 #endif
+#ifndef __UBOOT__
 		}
+#endif
 		break;
 	default:
 start:
@@ -368,10 +378,12 @@ static void musb_advance_schedule(struct musb *musb, struct urb *urb,
 	case USB_ENDPOINT_XFER_INT:
 		musb_save_toggle(qh, is_in, urb);
 		break;
+#ifndef __UBOOT__
 	case USB_ENDPOINT_XFER_ISOC:
 		if (status == 0 && urb->error_count)
 			status = -EXDEV;
 		break;
+#endif
 	}
 
 	qh->is_ready = 0;
@@ -481,6 +493,7 @@ musb_host_packet_rx(struct musb *musb, struct urb *urb, u8 epnum, u8 iso_err)
 			urb->transfer_buffer_length);
 
 	/* unload FIFO */
+#ifndef __UBOOT__
 	if (usb_pipeisoc(pipe)) {
 		int					status = 0;
 		struct usb_iso_packet_descriptor	*d;
@@ -510,6 +523,7 @@ musb_host_packet_rx(struct musb *musb, struct urb *urb, u8 epnum, u8 iso_err)
 		/* see if we are done */
 		done = (++qh->iso_idx >= urb->number_of_packets);
 	} else {
+#endif
 		/* non-isoch */
 		buf = buffer + qh->offset;
 		length = urb->transfer_buffer_length - qh->offset;
@@ -533,7 +547,9 @@ musb_host_packet_rx(struct musb *musb, struct urb *urb, u8 epnum, u8 iso_err)
 				&& (urb->actual_length
 					< urb->transfer_buffer_length))
 			urb->status = -EREMOTEIO;
+#ifndef __UBOOT__
 	}
+#endif
 
 	musb_read_fifo(hw_ep, length, buf);
 
@@ -1272,6 +1288,7 @@ void musb_host_tx(struct musb *musb, u8 epnum)
 		qh->offset += length;
 
 		if (usb_pipeisoc(pipe)) {
+#ifndef __UBOOT__
 			struct usb_iso_packet_descriptor	*d;
 
 			d = urb->iso_frame_desc + qh->iso_idx;
@@ -1284,6 +1301,7 @@ void musb_host_tx(struct musb *musb, u8 epnum)
 				offset = d->offset;
 				length = d->length;
 			}
+#endif
 		} else if (dma && urb->transfer_buffer_length == qh->offset) {
 			done = true;
 		} else {
@@ -2114,6 +2132,7 @@ done:
 }
 
 
+#ifndef __UBOOT__
 /*
  * abort a transfer that's at the head of a hardware queue.
  * called with controller locked, irqs blocked
@@ -2378,3 +2397,4 @@ const struct hc_driver musb_hc_driver = {
 	/* .start_port_reset	= NULL, */
 	/* .hub_irq_enable	= NULL, */
 };
+#endif
