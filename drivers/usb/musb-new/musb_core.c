@@ -89,6 +89,8 @@
  * Most of the conditional compilation will (someday) vanish.
  */
 
+#define __UBOOT__
+#ifndef __UBOOT__
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/sched.h>
@@ -99,6 +101,17 @@
 #include <linux/prefetch.h>
 #include <linux/platform_device.h>
 #include <linux/io.h>
+#else
+#include <common.h>
+#include <usb.h>
+#include <asm/errno.h>
+#include <linux/usb/ch9.h>
+#include <linux/usb/gadget.h>
+#include <linux/usb/musb.h>
+#include <asm/io.h>
+#include "linux-compat.h"
+#include "usb-compat.h"
+#endif
 
 #include "musb_core.h"
 
