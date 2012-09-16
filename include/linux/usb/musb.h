@@ -10,6 +10,10 @@
 #ifndef __LINUX_USB_MUSB_H
 #define __LINUX_USB_MUSB_H
 
+#ifndef __deprecated
+#define __deprecated
+#endif
+
 /* The USB role is defined by the connector used on the board, so long as
  * standards are being followed.  (Developer boards sometimes won't.)
  */
