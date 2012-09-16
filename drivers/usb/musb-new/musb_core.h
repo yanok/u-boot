@@ -615,4 +615,9 @@ static inline int musb_platform_exit(struct musb *musb)
 	return musb->ops->exit(musb);
 }
 
+#ifdef __UBOOT__
+struct musb *
+musb_init_controller(struct musb_hdrc_platform_data *plat, struct device *dev,
+			     void *ctrl);
+#endif
 #endif	/* __MUSB_CORE_H__ */
