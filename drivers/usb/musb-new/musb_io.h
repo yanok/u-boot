@@ -35,7 +35,11 @@
 #ifndef __MUSB_LINUX_PLATFORM_ARCH_H__
 #define __MUSB_LINUX_PLATFORM_ARCH_H__
 
+#ifndef __UBOOT__
 #include <linux/io.h>
+#else
+#include <asm/io.h>
+#endif
 
 #if !defined(CONFIG_ARM) && !defined(CONFIG_SUPERH) \
 	&& !defined(CONFIG_AVR32) && !defined(CONFIG_PPC32) \
