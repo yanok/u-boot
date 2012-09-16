@@ -1570,10 +1570,13 @@ irqreturn_t musb_interrupt(struct musb *musb)
 
 	/* handle endpoint 0 first */
 	if (musb->int_tx & 1) {
-		if (devctl & MUSB_DEVCTL_HM)
-			retval |= musb_h_ep0_irq(musb);
-		else
-			retval |= musb_g_ep0_irq(musb);
+		if (devctl & MUSB_DEVCTL_HM) {
+			if (is_host_capable())
+				retval |= musb_h_ep0_irq(musb);
+		} else {
+			if (is_peripheral_capable())
+				retval |= musb_g_ep0_irq(musb);
+		}
 	}
 
 	/* RX on endpoints 1-15 */
@@ -2046,7 +2049,8 @@ musb_init_controller(struct device *dev, int nIrq, void __iomem *ctrl)
 		musb->xceiv->otg->default_a = 0;
 		musb->xceiv->state = OTG_STATE_B_IDLE;
 
-		status = musb_gadget_setup(musb);
+		if (is_peripheral_capable())
+			status = musb_gadget_setup(musb);
 
 		dev_dbg(musb->controller, "%s mode, status %d, dev%02x\n",
 			is_otg_enabled(musb) ? "OTG" : "PERIPHERAL",
