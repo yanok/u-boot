@@ -100,6 +100,7 @@
 #define is_buffer_mapped(req) (is_dma_capable() && \
 					(req->map_state != UN_MAPPED))
 
+#ifndef CONFIG_MUSB_PIO_ONLY
 /* Maps the buffer to dma  */
 
 static inline void map_dma_buffer(struct musb_request *request,
@@ -174,6 +175,17 @@ static inline void unmap_dma_buffer(struct musb_request *request,
 	}
 	request->map_state = UN_MAPPED;
 }
+#else
+static inline void map_dma_buffer(struct musb_request *request,
+			struct musb *musb, struct musb_ep *musb_ep)
+{
+}
+
+static inline void unmap_dma_buffer(struct musb_request *request,
+				struct musb *musb)
+{
+}
+#endif
 
 /*
  * Immediately complete a request.
