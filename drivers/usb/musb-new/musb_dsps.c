@@ -494,7 +494,11 @@ static int dsps_musb_exit(struct musb *musb)
 	return 0;
 }
 
+#ifndef __UBOOT__
 static struct musb_platform_ops dsps_ops = {
+#else
+struct musb_platform_ops musb_dsps_ops = {
+#endif
 	.init		= dsps_musb_init,
 	.exit		= dsps_musb_exit,
 
