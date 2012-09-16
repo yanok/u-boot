@@ -35,16 +35,20 @@
 #ifndef __MUSB_CORE_H__
 #define __MUSB_CORE_H__
 
+#ifndef __UBOOT__
 #include <linux/slab.h>
 #include <linux/list.h>
 #include <linux/interrupt.h>
 #include <linux/errno.h>
 #include <linux/timer.h>
 #include <linux/device.h>
-#include <linux/usb/ch9.h>
-#include <linux/usb/gadget.h>
 #include <linux/usb.h>
 #include <linux/usb/otg.h>
+#else
+#include <asm/errno.h>
+#endif
+#include <linux/usb/ch9.h>
+#include <linux/usb/gadget.h>
 #include <linux/usb/musb.h>
 
 struct musb;
@@ -68,7 +72,9 @@ struct musb_ep;
 #include "musb_regs.h"
 
 #include "musb_gadget.h"
+#ifndef __UBOOT__
 #include <linux/usb/hcd.h>
+#endif
 #include "musb_host.h"
 
 #define	is_peripheral_enabled(musb)	((musb)->board_mode != MUSB_HOST)

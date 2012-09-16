@@ -33,6 +33,8 @@
  *
  */
 
+#define __UBOOT__
+#ifndef __UBOOT__
 #include <linux/kernel.h>
 #include <linux/list.h>
 #include <linux/timer.h>
@@ -42,6 +44,11 @@
 #include <linux/delay.h>
 #include <linux/dma-mapping.h>
 #include <linux/slab.h>
+#else
+#include <common.h>
+#include <linux/usb/ch9.h>
+#include "linux-compat.h"
+#endif
 
 #include "musb_core.h"
 

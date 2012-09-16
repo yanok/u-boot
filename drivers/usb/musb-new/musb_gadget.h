@@ -36,6 +36,12 @@
 #define __MUSB_GADGET_H
 
 #include <linux/list.h>
+#ifdef __UBOOT__
+#include <asm/byteorder.h>
+#include <asm/errno.h>
+#include <linux/usb/ch9.h>
+#include <linux/usb/gadget.h>
+#endif
 
 enum buffer_map_state {
 	UN_MAPPED = 0,

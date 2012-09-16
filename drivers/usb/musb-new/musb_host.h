@@ -34,6 +34,9 @@
 
 #ifndef _MUSB_HOST_H
 #define _MUSB_HOST_H
+#ifdef __UBOOT__
+#include "usb-compat.h"
+#endif
 
 static inline struct usb_hcd *musb_to_hcd(struct musb *musb)
 {
