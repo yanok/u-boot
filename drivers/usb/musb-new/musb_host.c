@@ -1903,7 +1903,11 @@ success:
 	return 0;
 }
 
+#ifndef __UBOOT__
 static int musb_urb_enqueue(
+#else
+int musb_urb_enqueue(
+#endif
 	struct usb_hcd			*hcd,
 	struct urb			*urb,
 	gfp_t				mem_flags)
