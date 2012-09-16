@@ -114,6 +114,36 @@ struct dsps_musb_wrapper {
 	u8		poll_seconds;
 };
 
+static const struct dsps_musb_wrapper ti81xx_driver_data __devinitconst = {
+	.revision		= 0x00,
+	.control		= 0x14,
+	.status			= 0x18,
+	.eoi			= 0x24,
+	.epintr_set		= 0x38,
+	.epintr_clear		= 0x40,
+	.epintr_status		= 0x30,
+	.coreintr_set		= 0x3c,
+	.coreintr_clear		= 0x44,
+	.coreintr_status	= 0x34,
+	.phy_utmi		= 0xe0,
+	.mode			= 0xe8,
+	.reset			= 0,
+	.otg_disable		= 21,
+	.iddig			= 8,
+	.usb_shift		= 0,
+	.usb_mask		= 0x1ff,
+	.usb_bitmap		= (0x1ff << 0),
+	.drvvbus		= 8,
+	.txep_shift		= 0,
+	.txep_mask		= 0xffff,
+	.txep_bitmap		= (0xffff << 0),
+	.rxep_shift		= 16,
+	.rxep_mask		= 0xfffe,
+	.rxep_bitmap		= (0xfffe << 16),
+	.musb_core_offset	= 0x400,
+	.poll_seconds		= 2,
+};
+
 /**
  * DSPS glue structure.
  */
@@ -129,10 +159,14 @@ struct dsps_glue {
  */
 static void dsps_musb_enable(struct musb *musb)
 {
+#ifndef __UBOOT__
 	struct device *dev = musb->controller;
 	struct platform_device *pdev = to_platform_device(dev->parent);
 	struct dsps_glue *glue = platform_get_drvdata(pdev);
 	const struct dsps_musb_wrapper *wrp = glue->wrp;
+#else
+	const struct dsps_musb_wrapper *wrp = &ti81xx_driver_data;
+#endif
 	void __iomem *reg_base = musb->ctrl_base;
 	u32 epmask, coremask;
 
@@ -258,15 +292,20 @@ static void dsps_musb_try_idle(struct musb *musb, unsigned long timeout)
 			jiffies_to_msecs(timeout - jiffies));
 	mod_timer(&glue->timer, timeout);
 }
+#endif
 
 static irqreturn_t dsps_interrupt(int irq, void *hci)
 {
 	struct musb  *musb = hci;
 	void __iomem *reg_base = musb->ctrl_base;
+#ifndef __UBOOT__
 	struct device *dev = musb->controller;
 	struct platform_device *pdev = to_platform_device(dev->parent);
 	struct dsps_glue *glue = platform_get_drvdata(pdev);
 	const struct dsps_musb_wrapper *wrp = glue->wrp;
+#else
+	const struct dsps_musb_wrapper *wrp = &ti81xx_driver_data;
+#endif
 	unsigned long flags;
 	irqreturn_t ret = IRQ_NONE;
 	u32 epintr, usbintr;
@@ -369,12 +408,18 @@ static irqreturn_t dsps_interrupt(int irq, void *hci)
 
 static int dsps_musb_init(struct musb *musb)
 {
+#ifndef __UBOOT__
 	struct device *dev = musb->controller;
 	struct musb_hdrc_platform_data *plat = dev->platform_data;
 	struct platform_device *pdev = to_platform_device(dev->parent);
 	struct dsps_glue *glue = platform_get_drvdata(pdev);
 	const struct dsps_musb_wrapper *wrp = glue->wrp;
 	struct omap_musb_board_data *data = plat->board_data;
+#else
+	struct omap_musb_board_data *data =
+			(struct omap_musb_board_data *)musb->controller;
+	const struct dsps_musb_wrapper *wrp = &ti81xx_driver_data;
+#endif
 	void __iomem *reg_base = musb->ctrl_base;
 	u32 rev, val;
 	int status;
@@ -424,11 +469,16 @@ err0:
 
 static int dsps_musb_exit(struct musb *musb)
 {
+#ifndef __UBOOT__
 	struct device *dev = musb->controller;
 	struct musb_hdrc_platform_data *plat = dev->platform_data;
 	struct omap_musb_board_data *data = plat->board_data;
 	struct platform_device *pdev = to_platform_device(dev->parent);
 	struct dsps_glue *glue = platform_get_drvdata(pdev);
+#else
+	struct omap_musb_board_data *data =
+			(struct omap_musb_board_data *)musb->controller;
+#endif
 
 	if (is_host_enabled(musb))
 		del_timer_sync(&glue->timer);
@@ -643,36 +693,6 @@ static int dsps_resume(struct device *dev)
 #endif
 
 static SIMPLE_DEV_PM_OPS(dsps_pm_ops, dsps_suspend, dsps_resume);
-
-static const struct dsps_musb_wrapper ti81xx_driver_data __devinitconst = {
-	.revision		= 0x00,
-	.control		= 0x14,
-	.status			= 0x18,
-	.eoi			= 0x24,
-	.epintr_set		= 0x38,
-	.epintr_clear		= 0x40,
-	.epintr_status		= 0x30,
-	.coreintr_set		= 0x3c,
-	.coreintr_clear		= 0x44,
-	.coreintr_status	= 0x34,
-	.phy_utmi		= 0xe0,
-	.mode			= 0xe8,
-	.reset			= 0,
-	.otg_disable		= 21,
-	.iddig			= 8,
-	.usb_shift		= 0,
-	.usb_mask		= 0x1ff,
-	.usb_bitmap		= (0x1ff << 0),
-	.drvvbus		= 8,
-	.txep_shift		= 0,
-	.txep_mask		= 0xffff,
-	.txep_bitmap		= (0xffff << 0),
-	.rxep_shift		= 16,
-	.rxep_mask		= 0xfffe,
-	.rxep_bitmap		= (0xfffe << 16),
-	.musb_core_offset	= 0x400,
-	.poll_seconds		= 2,
-};
 
 static const struct platform_device_id musb_dsps_id_table[] __devinitconst = {
 	{
