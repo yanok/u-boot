@@ -1903,6 +1903,17 @@ success:
 	return 0;
 }
 
+#ifdef __UBOOT__
+/* check if transaction translator is needed for device */
+static int tt_needed(struct musb *musb, struct usb_device *dev)
+{
+	if ((musb_readb(musb->mregs, MUSB_POWER) & MUSB_POWER_HSMODE) &&
+			(dev->speed < USB_SPEED_HIGH))
+		return 1;
+	return 0;
+}
+#endif
+
 #ifndef __UBOOT__
 static int musb_urb_enqueue(
 #else
@@ -2041,9 +2052,14 @@ int musb_urb_enqueue(
 	if (musb->is_multipoint) {
 		struct usb_device	*parent = urb->dev->parent;
 
+#ifndef __UBOOT__
 		if (parent != hcd->self.root_hub) {
+#else
+		if (parent) {
+#endif
 			qh->h_addr_reg = (u8) parent->devnum;
 
+#ifndef __UBOOT__
 			/* set up tt info if needed */
 			if (urb->dev->tt) {
 				qh->h_port_reg = (u8) urb->dev->ttport;
@@ -2053,6 +2069,13 @@ int musb_urb_enqueue(
 				if (urb->dev->tt->multi)
 					qh->h_addr_reg |= 0x80;
 			}
+#else
+			if (tt_needed(musb, urb->dev)) {
+				u16 hub_port = find_tt(urb->dev);
+				qh->h_addr_reg = (u8) (hub_port >> 8);
+				qh->h_port_reg = (u8) (hub_port & 0xff);
+			}
+#endif
 		}
 	}
 
