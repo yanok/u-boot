@@ -1946,8 +1946,13 @@ void musb_gadget_cleanup(struct musb *musb)
  * @param driver the gadget driver
  * @return <0 if error, 0 if everything is fine
  */
+#ifndef __UBOOT__
 static int musb_gadget_start(struct usb_gadget *g,
 		struct usb_gadget_driver *driver)
+#else
+int musb_gadget_start(struct usb_gadget *g,
+		struct usb_gadget_driver *driver)
+#endif
 {
 	struct musb		*musb = gadget_to_musb(g);
 	struct usb_otg		*otg = musb->xceiv->otg;

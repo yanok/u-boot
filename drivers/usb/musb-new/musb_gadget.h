@@ -124,4 +124,7 @@ extern void musb_g_giveback(struct musb_ep *, struct usb_request *, int);
 
 extern void musb_ep_restart(struct musb *, struct musb_request *);
 
+#ifdef __UBOOT__
+int musb_gadget_start(struct usb_gadget *g, struct usb_gadget_driver *driver);
+#endif
 #endif		/* __MUSB_GADGET_H */
