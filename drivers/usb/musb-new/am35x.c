@@ -26,6 +26,8 @@
  *
  */
 
+#define __UBOOT__
+#ifndef __UBOOT__
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/clk.h>
@@ -35,6 +37,11 @@
 #include <linux/dma-mapping.h>
 
 #include <plat/usb.h>
+#else
+#include <common.h>
+#include <asm/omap_musb.h>
+#include "linux-compat.h"
+#endif
 
 #include "musb_core.h"
 
