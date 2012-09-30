@@ -133,6 +133,7 @@ static void am35x_musb_disable(struct musb *musb)
 	musb_writel(reg_base, USB_END_OF_INTR_REG, 0);
 }
 
+#ifndef __UBOOT__
 #define portstate(stmt)		stmt
 
 static void am35x_musb_set_vbus(struct musb *musb, int is_on)
@@ -226,6 +227,7 @@ static void am35x_musb_try_idle(struct musb *musb, unsigned long timeout)
 		jiffies_to_msecs(timeout - jiffies));
 	mod_timer(&otg_workaround, timeout);
 }
+#endif
 
 static irqreturn_t am35x_musb_interrupt(int irq, void *hci)
 {
@@ -277,6 +279,7 @@ static irqreturn_t am35x_musb_interrupt(int irq, void *hci)
 		musb->int_usb =
 			(usbintr & AM35X_INTR_USB_MASK) >> AM35X_INTR_USB_SHIFT;
 	}
+#ifndef __UBOOT__
 	/*
 	 * DRVVBUS IRQs are the only proxy we have (a very poor one!) for
 	 * AM35x's missing ID change IRQ.  We need an ID change IRQ to
@@ -331,6 +334,7 @@ static irqreturn_t am35x_musb_interrupt(int irq, void *hci)
 				devctl);
 		ret = IRQ_HANDLED;
 	}
+#endif
 
 	if (musb->int_tx || musb->int_rx || musb->int_usb)
 		ret |= musb_interrupt(musb);
@@ -345,15 +349,18 @@ eoi:
 		musb_writel(reg_base, USB_END_OF_INTR_REG, 0);
 	}
 
+#ifndef __UBOOT__
 	/* Poll for ID change */
 	if (is_otg_enabled(musb) && musb->xceiv->state == OTG_STATE_B_IDLE)
 		mod_timer(&otg_workaround, jiffies + POLL_SECONDS * HZ);
+#endif
 
 	spin_unlock_irqrestore(&musb->lock, flags);
 
 	return ret;
 }
 
+#ifndef __UBOOT__
 static int am35x_musb_set_mode(struct musb *musb, u8 musb_mode)
 {
 	struct device *dev = musb->controller;
@@ -368,6 +375,7 @@ static int am35x_musb_set_mode(struct musb *musb, u8 musb_mode)
 
 	return retval;
 }
+#endif
 
 static int am35x_musb_init(struct musb *musb)
 {
@@ -389,6 +397,7 @@ static int am35x_musb_init(struct musb *musb)
 	if (!rev)
 		return -ENODEV;
 
+#ifndef __UBOOT__
 	usb_nop_xceiv_register();
 	musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
 	if (IS_ERR_OR_NULL(musb->xceiv))
@@ -396,6 +405,7 @@ static int am35x_musb_init(struct musb *musb)
 
 	if (is_host_enabled(musb))
 		setup_timer(&otg_workaround, otg_timer, (unsigned long) musb);
+#endif
 
 	/* Reset the musb */
 	if (data->reset)
@@ -430,15 +440,19 @@ static int am35x_musb_exit(struct musb *musb)
 		(struct omap_musb_board_data *)musb->controller;
 #endif
 
+#ifndef __UBOOT__
 	if (is_host_enabled(musb))
 		del_timer_sync(&otg_workaround);
+#endif
 
 	/* Shutdown the on-chip PHY and its PLL. */
 	if (data->set_phy_power)
 		data->set_phy_power(0);
 
+#ifndef __UBOOT__
 	usb_put_phy(musb->xceiv);
 	usb_nop_xceiv_unregister();
+#endif
 
 	return 0;
 }
@@ -484,12 +498,15 @@ const struct musb_platform_ops am35x_ops = {
 	.enable		= am35x_musb_enable,
 	.disable	= am35x_musb_disable,
 
+#ifndef __UBOOT__
 	.set_mode	= am35x_musb_set_mode,
 	.try_idle	= am35x_musb_try_idle,
 
 	.set_vbus	= am35x_musb_set_vbus,
+#endif
 };
 
+#ifndef __UBOOT__
 static u64 am35x_dmamask = DMA_BIT_MASK(32);
 
 static int __devinit am35x_probe(struct platform_device *pdev)
@@ -689,3 +706,4 @@ static void __exit am35x_exit(void)
 	platform_driver_unregister(&am35x_driver);
 }
 module_exit(am35x_exit);
+#endif
