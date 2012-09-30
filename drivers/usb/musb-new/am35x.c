@@ -231,10 +231,15 @@ static irqreturn_t am35x_musb_interrupt(int irq, void *hci)
 {
 	struct musb  *musb = hci;
 	void __iomem *reg_base = musb->ctrl_base;
+#ifndef __UBOOT__
 	struct device *dev = musb->controller;
 	struct musb_hdrc_platform_data *plat = dev->platform_data;
 	struct omap_musb_board_data *data = plat->board_data;
 	struct usb_otg *otg = musb->xceiv->otg;
+#else
+	struct omap_musb_board_data *data =
+		(struct omap_musb_board_data *)musb->controller;
+#endif
 	unsigned long flags;
 	irqreturn_t ret = IRQ_NONE;
 	u32 epintr, usbintr;
@@ -358,9 +363,14 @@ static int am35x_musb_set_mode(struct musb *musb, u8 musb_mode)
 
 static int am35x_musb_init(struct musb *musb)
 {
+#ifndef __UBOOT__
 	struct device *dev = musb->controller;
 	struct musb_hdrc_platform_data *plat = dev->platform_data;
 	struct omap_musb_board_data *data = plat->board_data;
+#else
+	struct omap_musb_board_data *data =
+		(struct omap_musb_board_data *)musb->controller;
+#endif
 	void __iomem *reg_base = musb->ctrl_base;
 	u32 rev;
 
@@ -403,9 +413,14 @@ static int am35x_musb_init(struct musb *musb)
 
 static int am35x_musb_exit(struct musb *musb)
 {
+#ifndef __UBOOT__
 	struct device *dev = musb->controller;
 	struct musb_hdrc_platform_data *plat = dev->platform_data;
 	struct omap_musb_board_data *data = plat->board_data;
+#else
+	struct omap_musb_board_data *data =
+		(struct omap_musb_board_data *)musb->controller;
+#endif
 
 	if (is_host_enabled(musb))
 		del_timer_sync(&otg_workaround);
