@@ -18,6 +18,7 @@
 #define __ASM_ARM_OMAP_MUSB_H
 
 extern struct musb_platform_ops musb_dsps_ops;
+extern const struct musb_platform_ops am35x_ops;
 
 struct omap_musb_board_data {
 	void (*set_phy_power)(u8 on);
