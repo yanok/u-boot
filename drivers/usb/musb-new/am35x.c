@@ -244,6 +244,14 @@ static irqreturn_t am35x_musb_interrupt(int irq, void *hci)
 	irqreturn_t ret = IRQ_NONE;
 	u32 epintr, usbintr;
 
+#ifdef __UBOOT__
+	/*
+	 * It seems that on AM35X interrupt registers can be updated
+	 * before core registers. This confuses the code.
+	 * As a workaround add a small delay here.
+	 */
+	udelay(10);
+#endif
 	spin_lock_irqsave(&musb->lock, flags);
 
 	/* Get endpoint interrupts */
