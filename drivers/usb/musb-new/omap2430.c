@@ -47,6 +47,7 @@
 #include "musb_core.h"
 #include "omap2430.h"
 
+#ifndef __UBOOT__
 struct omap2430_glue {
 	struct device		*dev;
 	struct platform_device	*musb;
@@ -216,6 +217,7 @@ static int omap2430_musb_set_mode(struct musb *musb, u8 musb_mode)
 
 	return 0;
 }
+#endif
 
 static inline void omap2430_low_level_exit(struct musb *musb)
 {
@@ -236,6 +238,7 @@ static inline void omap2430_low_level_init(struct musb *musb)
 	musb_writel(musb->mregs, OTG_FORCESTDBY, l);
 }
 
+#ifndef __UBOOT__
 void omap_musb_mailbox(enum omap_musb_vbus_id_status status)
 {
 	struct omap2430_glue	*glue = _glue;
@@ -313,6 +316,7 @@ static void omap_musb_mailbox_work(struct work_struct *mailbox_work)
 				struct omap2430_glue, omap_musb_mailbox_work);
 	omap_musb_set_mailbox(glue);
 }
+#endif
 
 static int omap2430_musb_init(struct musb *musb)
 {
@@ -323,6 +327,7 @@ static int omap2430_musb_init(struct musb *musb)
 	struct musb_hdrc_platform_data *plat = dev->platform_data;
 	struct omap_musb_board_data *data = plat->board_data;
 
+#ifndef __UBOOT__
 	/* We require some kind of external transceiver, hooked
 	 * up through ULPI.  TWL4030-family PMICs include one,
 	 * which needs a driver, drivers aren't always needed.
@@ -338,6 +343,7 @@ static int omap2430_musb_init(struct musb *musb)
 		dev_err(dev, "pm_runtime_get_sync FAILED %d\n", status);
 		goto err1;
 	}
+#endif
 
 	l = musb_readl(musb->mregs, OTG_INTERFSEL);
 
@@ -359,12 +365,14 @@ static int omap2430_musb_init(struct musb *musb)
 			musb_readl(musb->mregs, OTG_INTERFSEL),
 			musb_readl(musb->mregs, OTG_SIMENABLE));
 
+#ifndef __UBOOT__
 	setup_timer(&musb_idle_timer, musb_do_idle, (unsigned long) musb);
 
 	if (glue->status != OMAP_MUSB_UNKNOWN)
 		omap_musb_set_mailbox(glue);
 
 	pm_runtime_put_noidle(musb->controller);
+#endif
 	return 0;
 
 err1:
@@ -373,6 +381,7 @@ err1:
 
 static void omap2430_musb_enable(struct musb *musb)
 {
+#ifndef __UBOOT__
 	u8		devctl;
 	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
 	struct device *dev = musb->controller;
@@ -408,15 +417,25 @@ static void omap2430_musb_enable(struct musb *musb)
 	default:
 		break;
 	}
+#else
+#ifdef CONFIG_TWL4030_USB
+	if (twl4030_usb_ulpi_init()) {
+		serial_printf("ERROR: %s Could not initialize PHY\n",
+				__PRETTY_FUNCTION__);
+	}
+#endif
+#endif
 }
 
 static void omap2430_musb_disable(struct musb *musb)
 {
+#ifndef __UBOOT__
 	struct device *dev = musb->controller;
 	struct omap2430_glue *glue = dev_get_drvdata(dev->parent);
 
 	if (glue->status != OMAP_MUSB_UNKNOWN)
 		usb_phy_shutdown(musb->xceiv);
+#endif
 }
 
 static int omap2430_musb_exit(struct musb *musb)
@@ -432,15 +451,18 @@ static const struct musb_platform_ops omap2430_ops = {
 	.init		= omap2430_musb_init,
 	.exit		= omap2430_musb_exit,
 
+#ifndef __UBOOT__
 	.set_mode	= omap2430_musb_set_mode,
 	.try_idle	= omap2430_musb_try_idle,
 
 	.set_vbus	= omap2430_musb_set_vbus,
+#endif
 
 	.enable		= omap2430_musb_enable,
 	.disable	= omap2430_musb_disable,
 };
 
+#ifndef __UBOOT__
 static u64 omap2430_dmamask = DMA_BIT_MASK(32);
 
 static int __devinit omap2430_probe(struct platform_device *pdev)
@@ -591,3 +613,4 @@ static void __exit omap2430_exit(void)
 	platform_driver_unregister(&omap2430_driver);
 }
 module_exit(omap2430_exit);
+#endif
