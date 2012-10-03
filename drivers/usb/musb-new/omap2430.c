@@ -453,7 +453,11 @@ static int omap2430_musb_exit(struct musb *musb)
 	return 0;
 }
 
+#ifndef __UBOOT__
 static const struct musb_platform_ops omap2430_ops = {
+#else
+const struct musb_platform_ops omap2430_ops = {
+#endif
 	.init		= omap2430_musb_init,
 	.exit		= omap2430_musb_exit,
 
