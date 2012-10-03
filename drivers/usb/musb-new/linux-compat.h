@@ -108,4 +108,12 @@ typedef unsigned long dmaaddr_t;
 #endif
 
 #define msleep(a)	udelay(a * 1000)
+
+/*
+ * Map U-Boot config options to Linux ones
+ */
+#ifdef CONFIG_OMAP34XX
+#define CONFIG_SOC_OMAP3430
+#endif
+
 #endif /* __LINUX_COMPAT_H__ */
