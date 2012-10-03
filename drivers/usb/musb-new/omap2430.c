@@ -24,6 +24,8 @@
  * Suite 330, Boston, MA  02111-1307  USA
  *
  */
+#define __UBOOT__
+#ifndef __UBOOT__
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/sched.h>
@@ -35,6 +37,12 @@
 #include <linux/pm_runtime.h>
 #include <linux/err.h>
 #include <linux/usb/musb-omap.h>
+#else
+#include <common.h>
+#include <asm/omap_musb.h>
+#include <twl4030.h>
+#include "linux-compat.h"
+#endif
 
 #include "musb_core.h"
 #include "omap2430.h"

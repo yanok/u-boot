@@ -10,7 +10,11 @@
 #ifndef __MUSB_OMAP243X_H__
 #define __MUSB_OMAP243X_H__
 
+#ifndef __UBOOT__
 #include <plat/usb.h>
+#else
+#undef RESETDONE
+#endif
 
 /*
  * OMAP2430-specific definitions
