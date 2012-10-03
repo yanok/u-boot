@@ -322,10 +322,16 @@ static int omap2430_musb_init(struct musb *musb)
 {
 	u32 l;
 	int status = 0;
+#ifndef __UBOOT__
 	struct device *dev = musb->controller;
 	struct omap2430_glue *glue = dev_get_drvdata(dev->parent);
 	struct musb_hdrc_platform_data *plat = dev->platform_data;
 	struct omap_musb_board_data *data = plat->board_data;
+#else
+	struct omap_musb_board_data *data =
+		(struct omap_musb_board_data *)musb->controller;
+#endif
+
 
 #ifndef __UBOOT__
 	/* We require some kind of external transceiver, hooked
