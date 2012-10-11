@@ -22,6 +22,7 @@
  */
 
 #include <common.h>
+#include <usb.h>
 #include "musb_hcd.h"
 
 /* MSC control transfers */
